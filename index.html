@@ -1,0 +1,1430 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Foso Tycoon — Juego</title>
+<style>
+  :root{
+    --bg:#071026; --panel:#0b1220; --accent:#f59e0b; --muted:#93a3b8;
+    --glass: rgba(255,255,255,0.03);
+  }
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;color:#eef6ff;
+    /* Estética tipo Cookie Clicker: franjas azules y viñeta */
+    background:
+      radial-gradient(ellipse at center, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0) 60%),
+      repeating-linear-gradient( to bottom, #1b4b7a 0 10px, #1a456f 10px 20px),
+      #0a1f3b;
+  }
+  .wrap{max-width:1200px;margin:18px auto;padding:18px;display:grid;grid-template-columns:1fr 360px;gap:18px}
+  header{display:flex;align-items:center;gap:12px}
+  header h1{margin:0;font-size:20px}
+  .stage{background:linear-gradient(180deg,#071328,#061026);border-radius:12px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:0 12px 30px rgba(0,0,0,0.6)}
+  .topRow{width:100%;display:flex;justify-content:space-between;align-items:center}
+  .bigCounter{font-size:20px;font-weight:800}
+  .metaTiny{font-size:12px;color:var(--muted)}
+  .vaperWrap{width:300px;height:360px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  .vaperWrap svg{width:72%;height:auto;max-height:90%;cursor:pointer;user-select:none}
+  /* Smoke overlay */
+  .smoke-layer{position:absolute;inset:0;pointer-events:none;overflow:visible}
+  .smoke{position:absolute;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.6);filter:blur(0.5px);animation:smokeUp 1.2s ease-out forwards;will-change:transform,opacity}
+  @keyframes smokeUp{0%{transform:translateY(0) scale(0.8);opacity:.85}100%{transform:translateY(-120px) scale(1.6);opacity:0}}
+  /* Shop title fit for long names */
+  .shopGrid .shopCard > div[style*="font-weight:700"]{font-size:13px;text-align:center;line-height:1.15}
+  .controlsRow{display:flex;gap:10px;width:100%;justify-content:center}
+  .mata-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:none;background:#ff4d4d;color:#081018;font-weight:900;cursor:pointer}
+  .mata-btn[disabled]{opacity:.45;cursor:not-allowed}
+  .panel{background:var(--glass);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+  .shopGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;max-height:520px;overflow:auto;padding-right:6px}
+  .shopCard{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:8px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
+  .shopCard img, .shopCard svg{width:72px;height:auto}
+  .priceTag{background:rgba(0,0,0,0.25);padding:4px 6px;border-radius:6px;font-weight:700;font-size:13px}
+  .icon-sm{width:18px;height:18px;vertical-align:middle}
+  .hint{color:var(--muted);font-size:13px}
+  footer{grid-column:1/-1;margin-top:10px;text-align:center;color:var(--muted);font-size:13px}
+  @media (max-width:980px){.wrap{grid-template-columns:1fr;padding:12px}.vaperWrap{width:320px;height:420px}}
+  .modal {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.8);
+  display: flex; justify-content:center; align-items:center;
+  z-index: 9999;
+}
+.modal.hidden { display: none; }
+.modal-content {
+  background: #111;
+  border: 2px solid #0ff;
+  box-shadow: 0 0 20px #0ff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 80%; max-height: 80%; overflow-y: auto;
+  color: #eee;
+  font-family: monospace;
+}
+.close-btn {
+  float: right; font-size: 24px; cursor: pointer;
+  color: #0ff;
+}
+.powers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+.power-card {
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.power-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px #0ff;
+}
+.power-card button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 6px;
+  background: #0ff;
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+.power-card button:disabled {
+  background: #444; color:#999; cursor: not-allowed;
+}
+
+
+/* Humo animado */
+.smoke {
+  position: absolute;
+  bottom: 80px; /* punto de salida aprox. del foso */
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateX(-50%) scale(0.8);
+  animation: smokeUp 2.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes smokeUp {
+  0% {
+    transform: translate(-50%, 0) scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -150px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+</style>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f59e0b'/%3E%3Ctext x='16' y='21' font-size='14' text-anchor='middle' fill='%23081018' font-family='Arial'%3EΣ%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <!-- Pantalla de advertencia mejorada -->
+  <div id="advertencia" style="position:fixed;inset:0;background:#000;display:flex;justify-content:center;align-items:center;z-index:9999">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" style="width:80%;height:auto">
+      <defs>
+        <radialGradient id="gBg" cx="50%" cy="40%" r="70%">
+          <stop offset="0%" stop-color="#111"/>
+          <stop offset="100%" stop-color="#000"/>
+        </radialGradient>
+      </defs>
+      <rect width="800" height="600" fill="url(#gBg)"/>
+      <polygon points="400,100 500,300 300,300" fill="yellow" stroke="black" stroke-width="5"/>
+      <text x="400" y="270" text-anchor="middle" font-size="80" fill="black" font-weight="bold">!</text>
+      <text x="400" y="380" text-anchor="middle" font-size="28" fill="white" font-family="Arial" font-weight="bold">FOSO IDLE TYCOON es una obra de ficción.</text>
+      <text x="400" y="420" text-anchor="middle" font-size="24" fill="white" font-family="Arial">Fumar y vapear dañan la salud y generan adicción.</text>
+      <text x="400" y="460" text-anchor="middle" font-size="22" fill="white" font-family="Arial">Juega de forma responsable.</text>
+    </svg>
+  </div>
+  <script>
+    // Bloquear scroll y ocultar advertencia tras 3s
+    document.documentElement.style.overflow = 'hidden';
+    setTimeout(()=>{
+      const adv = document.getElementById('advertencia');
+      if(adv) adv.style.display = 'none';
+      document.documentElement.style.overflow = '';
+    }, 3000);
+  </script>
+  <div class="wrap">
+    <div>
+      <header>
+        <svg width="44" height="44" viewBox="0 0 64 64" aria-hidden>
+          <rect x="6" y="6" width="52" height="52" rx="10" fill="#081026" stroke="#f59e0b" stroke-width="2" />
+        </svg>
+        <div>
+          <h1>Foso Tycoon</h1>
+          <div class="hint">Haz click en el foso grande; compra fosos desde la tienda (clic en miniaturas).</div>
+        </div>
+      </header>
+
+      <main style="margin-top:14px">
+        <section class="stage">
+          <div class="topRow">
+            <div>
+              <div class="bigCounter">Sigmacoin: <span id="sigTotal">0</span> ΣC</div>
+              <div class="metaTiny">Por clic: <span id="perClick">1</span> ΣC • Clicks totales: <span id="totalClicks">0</span></div>
+            </div>
+
+          </div>
+
+          <!-- Vaper grande (click anywhere on SVG) -->
+          <div class="vaperWrap" id="vaperWrap" title="Haz click en cualquier parte del foso para generar ΣC">
+            <div id="smokeLayer"></div>
+            <!-- Ejemplo Foso Básico Tropical (inline SVG) -->
+            <svg id="centralFoso" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 260" role="img" aria-label="Foso central">
+              <rect x="20" y="20" width="60" height="220" rx="12" ry="12" fill="url(#g1)" stroke="#0b0c2a" stroke-width="3"/>
+              <rect x="20" y="0" width="60" height="20" rx="10" ry="10" fill="url(#mouth1)"/>
+<!-- Pantalla central -->
+<!--rect x="35" y="110" width="30" height="40" rx="4" ry="4" fill="#000" id="centralScreen"/-->
+<!-- PANTALLA CENTRAL (dentro del svg centralFoso) -->
+<rect x="35" y="100" width="30" height="50" rx="4" ry="4" fill="#000" id="centralScreen"/>
+<rect x="35" y="100" width="30" height="50" rx="4" ry="4" fill="#000" id="centralScreen"/>
+<text id="batteryText" x="50" y="125" font-size="10" fill="#0f0" text-anchor="middle">100%</text>
+
+  <!-- niveles: vamos a usar máscaras para "llenar" o simplemente cambiar color/opacity -->
+  <!-- para simplicidad controlamos solo el color/opacity del path según drops -->
+
+
+<!-- Texto de porcentaje -->
+
+
+
+
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f1c40f"/>
+                  <stop offset="50%" stop-color="#2ecc71"/>
+                  <stop offset="100%" stop-color="#1e3799"/>
+                </linearGradient>
+                <linearGradient id="mouth1" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2c2c54"/>
+                  <stop offset="100%" stop-color="#000"/>
+                </linearGradient>
+                <linearGradient id="batteryGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#00ff99"/>
+                  <stop offset="100%" stop-color="#00a86b"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+         <div class="controlsRow" id="controlsRow">
+  <!-- Power -->
+  <button id="btnPower" class="mata-btn" style="background:#10b981">
+    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 2v10h10v2H12v10h-2V14H0v-2h10V2h2z"/></svg>
+    Power
+  </button>
+
+  <!-- Cargar -->
+  <button id="btnChargeToggle" class="mata-btn" style="background:#00cfff">
+    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 2L4 20h16L12 2z"/></svg>
+    Cargar
+  </button>
+
+  <!-- Nuevo/Reparar Foso -->
+  <button id="btnNuevoFoso" class="mata-btn" style="background:#ffa726">
+    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6h2c0-4.42-3.58-8-8-8z"/></svg>
+    Nuevo Foso
+  </button>
+
+  <!-- Mata Foso -->
+  <button id="btnMata" class="mata-btn" style="background:#ff4d4d">
+    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+    <span id="mataLabel">Mata Foso</span>
+  </button>
+
+  <!-- Poderes -->
+  <button id="btnPowers" class="mata-btn" style="background:#60a5fa">
+    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 2L15.09 8.26L22 9.27l-5 4.87L18.18 22L12 18.56L5.82 22L7 14.14l-5-4.87l6.91-1.01L12 2z"/></svg>
+    Poderes
+  </button>
+
+  <!-- Configuración -->
+  <button id="btnConfig" class="mata-btn" style="background:#c084fc">
+    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7zM19.43 12.97a7.962 7.962 0 0 0 0-1.94l2.11-1.65a.5.5 0 0 0 .11-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.902 7.902 0 0 0-1.68-.97l-.38-2.65a.5.5 0 0 0-.5-.42h-4a.5.5 0 0 0-.5.42l-.38 2.65c-.61.25-1.18.58-1.68.97l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .11.64l2.11 1.65c-.05.32-.07.65-.07.97s.02.65.07.97l-2.11 1.65a.5.5 0 0 0-.11.64l2 3.46c.14.24.43.34.69.22l2.49-1c.5.39 1.07.72 1.68.97l.38 2.65a.5.5 0 0 0 .5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.18-.58 1.68-.97l2.49 1c.26.12.55.02.69-.22l2-3.46a.5.5 0 0 0-.11-.64l-2.11-1.65z"/></svg>
+    Configuración
+  </button>
+</div>
+
+
+          <div class="hint">Tienda: clic en la miniatura para equipar/comprar. El central cambia según lo equipado.</div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Right column: tienda con 15 miniaturas -->
+    <aside class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:8px">
+          <!-- Carrito SVG -->
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
+            <path fill="#f59e0b" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.16 14h9.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.37-.67-.11-1.48-.88-1.48H6.21L5.27 2H2v2h2l3.6 7.59-1.35 2.45C5.52 14.37 6.23 15 7.07 15h11.93v-2H7.42l.74-1.35z"/>
+          </svg>
+          <div style="font-weight:800">Tienda — Fositos</div>
+        </div>
+        <div class="metaTiny">ΣC: <span id="shopSigma">0</span></div>
+      </div>
+
+      <div class="shopGrid" id="shopGrid">
+        <!-- 15 tarjetas inline: foso1 .. foso15 -->
+        <!-- Nombres actualizados con sabores y emojis -->
+        <!-- 1 -->
+        <div class="shopCard" data-index="0" title="Foso 1: Mango Ice 🥭❄️ (0 ΣC)">
+          <div class="metaTiny" style="font-weight:800">Foso 1: Mango Ice 🥭❄️</div>
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g1_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth1_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs>
+              <linearGradient id="g1_shop" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f1c40f"/><stop offset="50%" stop-color="#2ecc71"/><stop offset="100%" stop-color="#1e3799"/>
+              </linearGradient>
+              <linearGradient id="mouth1_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+            </defs>
+          </svg>
+          <div style="font-weight:700">Foso 1: Mango Ice 🥭❄️</div>
+          <div class="priceTag">0 ΣC</div>
+        </div>
+
+        <!-- 2 -->
+        <div class="shopCard" data-index="1" title="Foso 2: Strawberry Kiwi 🍓🥝 (2 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g2_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth2_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs>
+              <linearGradient id="g2_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff7675"/><stop offset="100%" stop-color="#fd7e14"/></linearGradient>
+              <linearGradient id="mouth2_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+            </defs>
+          </svg>
+          <div style="font-weight:700">Foso 2: Strawberry Kiwi 🍓🥝</div>
+          <div class="priceTag">2&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 3 -->
+        <div class="shopCard" data-index="2" title="Foso 3: Blue Razz 🫐💙 (4 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g3_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth3_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs>
+              <linearGradient id="g3_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00c6ff"/><stop offset="100%" stop-color="#0072ff"/></linearGradient>
+              <linearGradient id="mouth3_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+            </defs>
+          </svg>
+          <div style="font-weight:700">Foso 3: Blue Razz 🫐💙</div>
+          <div class="priceTag">4&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 4 -->
+        <div class="shopCard" data-index="3" title="Foso 4: Watermelon Ice 🍉❄️ (10 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g4_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth4_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs>
+              <linearGradient id="g4_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ecf0f1"/><stop offset="100%" stop-color="#95a5a6"/></linearGradient>
+              <linearGradient id="mouth4_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+            </defs>
+          </svg>
+          <div style="font-weight:700">Foso 4: Watermelon Ice 🍉❄️</div>
+          <div class="priceTag">10&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 5 -->
+        <div class="shopCard" data-index="4" title="Foso 5: Pineapple Coconut 🍍🥥 (50 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g5_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth5_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs>
+              <linearGradient id="g5_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffd700"/><stop offset="100%" stop-color="#ffb400"/></linearGradient>
+              <linearGradient id="mouth5_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+            </defs>
+          </svg>
+          <div style="font-weight:700">Foso 5: Pineapple Coconut 🍍🥥</div>
+          <div class="priceTag">50&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 6 -->
+        <div class="shopCard" data-index="5" title="Foso 6: Grape Ice 🍇❄️ (200 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g6_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth6_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs>
+              <linearGradient id="g6_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9b59b6"/><stop offset="100%" stop-color="#2c003e"/></linearGradient>
+              <linearGradient id="mouth6_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+            </defs>
+          </svg>
+          <div style="font-weight:700">Foso 6: Grape Ice 🍇❄️</div>
+          <div class="priceTag">200&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 7 -->
+        <div class="shopCard" data-index="6" title="Foso 7: Peach Mango 🍑🥭 (500 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g7_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth7_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs><linearGradient id="g7_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff0000"/><stop offset="100%" stop-color="#000"/></linearGradient>
+            <linearGradient id="mouth7_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+          </svg>
+          <div style="font-weight:700">Foso 7: Peach Mango 🍑🥭</div>
+          <div class="priceTag">500&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 8 -->
+        <div class="shopCard" data-index="7" title="Foso 8: Cola Ice 🥤❄️ (800 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g8_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth8_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs><linearGradient id="g8_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#00aaff"/></linearGradient>
+            <linearGradient id="mouth8_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+          </svg>
+          <div style="font-weight:700">Foso 8: Cola Ice 🥤❄️</div>
+          <div class="priceTag">800&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 9 -->
+        <div class="shopCard" data-index="8" title="Foso 9: Lychee Rose 🌸🍒 (1 200 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g9_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth9_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs><linearGradient id="g9_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2ecc71"/><stop offset="100%" stop-color="#145a32"/></linearGradient>
+            <linearGradient id="mouth9_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+          </svg>
+          <div style="font-weight:700">Foso 9: Lychee Rose 🌸🍒</div>
+          <div class="priceTag">1&nbsp;200&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 10 -->
+        <div class="shopCard" data-index="9" title="Foso 10: Apple Mint 🍏🌿 (2 500 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g10_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth10_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs><linearGradient id="g10_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff5733"/><stop offset="100%" stop-color="#900c3f"/></linearGradient>
+            <linearGradient id="mouth10_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+          </svg>
+          <div style="font-weight:700">Foso 10: Apple Mint 🍏🌿</div>
+          <div class="priceTag">2&nbsp;500&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 11 -->
+        <div class="shopCard" data-index="10" title="Foso 11: Banana Ice Cream 🍌🍦 (5 000 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g11_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth11_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs><linearGradient id="g11_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#39ff14"/><stop offset="100%" stop-color="#0ff"/></linearGradient>
+            <linearGradient id="mouth11_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+          </svg>
+          <div style="font-weight:700">Foso 11: Banana Ice Cream 🍌🍦</div>
+          <div class="priceTag">5&nbsp;000&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 12 -->
+        <div class="shopCard" data-index="11" title="Foso 12: Lemon Tart 🍋🥧 (10 000 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g12_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth12_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs><linearGradient id="g12_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00f5ff"/><stop offset="50%" stop-color="#7f00ff"/><stop offset="100%" stop-color="#00ff88"/></linearGradient>
+            <linearGradient id="mouth12_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+          </svg>
+          <div style="font-weight:700">Foso 12: Lemon Tart 🍋🥧</div>
+          <div class="priceTag">10&nbsp;000&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 13 -->
+        <div class="shopCard" data-index="12" title="Foso 13: Cherry Cola 🍒🥤 (25 000 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g13_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth13_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs><linearGradient id="g13_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#cd7f32"/><stop offset="100%" stop-color="#6e2c00"/></linearGradient>
+            <linearGradient id="mouth13_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+          </svg>
+          <div style="font-weight:700">Foso 13: Cherry Cola 🍒🥤</div>
+          <div class="priceTag">25&nbsp;000&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 14 -->
+        <div class="shopCard" data-index="13" title="Foso 14: Cotton Candy 🍭 (50 000 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g14_shop)"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth14_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs><linearGradient id="g14_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#85c1e9"/></linearGradient>
+            <linearGradient id="mouth14_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+          </svg>
+          <div style="font-weight:700">Foso 14: Cotton Candy 🍭</div>
+          <div class="priceTag">50&nbsp;000&nbsp;000 ΣC</div>
+        </div>
+
+        <!-- 15 (especial: cuerpo cambia rojo->azul->verde con animate) -->
+        <div class="shopCard" data-index="14" title="Foso 15: Black Diamond Reserve 💎🔥 (100 000 000 ΣC)">
+          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g15_shop)" stroke="#222" stroke-width="1"/>
+            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth15_shop)"/>
+            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+            <defs>
+              <linearGradient id="g15_shop" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="red">
+                  <animate attributeName="stop-color" values="red;blue;green;red" dur="3s" repeatCount="indefinite"/>
+                </stop>
+                <stop offset="100%" stop-color="red">
+                  <animate attributeName="stop-color" values="red;blue;green;red" dur="3s" repeatCount="indefinite"/>
+                </stop>
+              </linearGradient>
+              <linearGradient id="mouth15_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+            </defs>
+          </svg>
+          <div style="font-weight:700">Foso 15: Black Diamond Reserve 💎🔥</div>
+          <div class="priceTag">100&nbsp;000&nbsp;000 ΣC</div>
+        </div>
+
+      </div>
+    </aside>
+
+
+  
+    <footer>
+      <div style="display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap">
+        <span class="metaTiny">Síguenos:</span>
+        <a href="https://instagram.com/sigmacompanyoficial" target="_blank" rel="noopener" class="metaTiny">@sigmacompanyoficial</a>
+        <span>•</span>
+        <a href="https://tiktok.com/@sigmacompanyoficial" target="_blank" rel="noopener" class="metaTiny">@sigmacompanyoficial</a>
+        <span>•</span>
+        <a href="https://x.com/sigmacompanyoficial" target="_blank" rel="noopener" class="metaTiny">@sigmacompanyoficial</a>
+        <span>•</span>
+        <a href="https://facebook.com/sigmacompanyoficial" target="_blank" rel="noopener" class="metaTiny">@sigmacompanyoficial</a>
+        <span>•</span>
+        <a href="https://youtube.com/@sigmacompanyoficial" target="_blank" rel="noopener" class="metaTiny">@sigmacompanyoficial</a>
+      </div>
+      <div class="metaTiny" style="margin-top:6px">Maqueta funcional — HTML/CSS/JS puro. Guardado automático en localStorage.</div>
+    </footer>
+  </div>
+   <button id="btnSigmaHack">💰 Sigma Infinito</button>
+  <!-- Modal Poderes -->
+<div id="powersModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2>Poderes</h2>
+    <div id="powersGrid" class="powers-grid"></div>
+  </div>
+</div>
+
+<!-- Modal Configuración -->
+<div id="configModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2>⚙️ Configuración</h2>
+
+    <div class="config-grid">
+      <!-- Tema -->
+      <div class="config-item">
+        <label for="themeSelect">Tema 🎨</label>
+        <select id="themeSelect">
+          <option value="dark">Oscuro</option>
+          <option value="light">Claro</option>
+          <option value="neon">Neón</option>
+        </select>
+      </div>
+
+      <!-- Animaciones -->
+      <div class="config-item">
+        <label>
+          <input type="checkbox" id="chkAnimations" checked>
+          Activar Animaciones ✨
+        </label>
+      </div>
+
+      <!-- Reset -->
+      <div class="config-item">
+        <button id="btnReset" style="background:#ff4d4d;color:#fff;padding:8px 14px;border:none;border-radius:6px;cursor:pointer">
+          Borrar Progreso 💣
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .config-grid {
+    display: grid;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  .config-item {
+    background: #222;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #444;
+  }
+  .config-item label {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .config-item select {
+    background: #111;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 5px;
+    border-radius: 4px;
+  }
+</style>
+
+<script>
+/* Lógica JS mínima para la maqueta:
+   - 15 fosos con costes y sigmacoin-per-click
+   - central clickable (anywhere inside SVG)
+   - shop: click miniatura buys/equips foso (if enough ΣC)
+   - battery: each click consumes battery; buy battery restores
+   - overheating (>7 cps) burns the active foso (requires buying another)
+   - Mata Foso: +50 ΣC, cooldown 1800s (30 min)
+   - Save/load to localStorage
+*/
+
+// Configuración inicial (puedes ajustar)
+const FOSOS = [
+  {id:1, name:'Foso 1', cost:0, perClick:1},
+  {id:2, name:'Foso 2', cost:2000, perClick:2},
+  {id:3, name:'Foso 3', cost:4000, perClick:5},
+  {id:4, name:'Foso 4', cost:10000, perClick:10},
+  {id:5, name:'Foso 5', cost:50000, perClick:50},
+  {id:6, name:'Foso 6', cost:200000, perClick:200},
+  {id:7, name:'Foso 7', cost:500000, perClick:500},
+  {id:8, name:'Foso 8', cost:800000, perClick:1000},
+  {id:9, name:'Foso 9', cost:1200000, perClick:2500},
+  {id:10, name:'Foso 10', cost:2500000, perClick:5000},
+  {id:11, name:'Foso 11', cost:5000000, perClick:10000},
+  {id:12, name:'Foso 12', cost:10000000, perClick:25000},
+  {id:13, name:'Foso 13', cost:25000000, perClick:50000},
+  {id:14, name:'Foso 14', cost:50000000, perClick:100000},
+  {id:15, name:'Foso 15', cost:100000000, perClick:250000}
+];
+
+// Estado
+let state = {
+  sig: 0,
+  totalClicks: 0,
+  activeFosoIndex: 0, // index in FOSOS array, default 0
+  battery: 100, // percent
+  burned: false,
+  powerOn: true,
+  mataCooldownUntil: 0, // timestamp
+  autoClickerLevel: 0,
+  smokerOn: false,
+  autoClickExpiresAt: 0, // timestamp when autoclick boost ends
+  smokerExpiresAt: 0,
+ 
+// caladas acumuladas desde última recarga
+ // timestamp when smoker boost ends
+  // Nuevos campos
+  lang: 'es',
+  powersOwned: {}, // id -> true
+  overheatBonus: 0, // +cps al umbral
+  batteryEfficiencyLevel: 0, // each level reduces drain by 10%
+  rechargeSpeedLevel: 0, // each level increases recharge rate by 10%
+  perClickMult: 1,
+  passivePerSec: 0
+};
+
+// DOM refs
+const sigTotalEl = document.getElementById('sigTotal');
+const perClickEl = document.getElementById('perClick');
+const totalClicksEl = document.getElementById('totalClicks');
+const batteryFill = document.getElementById('batteryFill');
+const batteryLabel = document.getElementById('batteryLabel');
+const shopSigma = document.getElementById('shopSigma');
+const btnMata = document.getElementById('btnMata');
+const mataLabel = document.getElementById('mataLabel');
+const shopGrid = document.getElementById('shopGrid');
+const centralFoso = document.getElementById('centralFoso');
+const vaperWrap = document.getElementById('vaperWrap');
+
+const CONFIG = {
+  storageKey: 'foso_tycoon_state_v1',
+  autosaveMs: 10000,
+  uiTickMs: 1000,
+  // Battery drains slower with better fosos (multiplier applied)
+  baseBatteryDrainPerClick: 1,
+  // Base overheat threshold (poderes pueden aumentarlo)
+  overheatCps: 15,
+  mataReward: 50,
+  // 5 minutes cooldown
+  mataCooldownSec: 300,
+  // timed recharge (no cost): seconds to fully recharge baseline
+  rechargeBaseSec: 120,
+  // boost on click: extra recharge during continuous clicking
+  clickRechargeBoost: 0.9, // 90% of base per-click as extra timed recharge
+  onEquipRefill: 20 // +20% batería al equipar/comprar un foso
+};
+const STORAGE_KEY = CONFIG.storageKey;
+
+// load/save
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const s = JSON.parse(raw);
+    Object.assign(state, s);
+  }catch(e){ console.warn('load state err', e); }
+}
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+setInterval(saveState, CONFIG.autosaveMs);
+loadState();
+
+// helper
+function formatNum(n){
+  if(n>=1e9) return (n/1e9).toFixed(2)+'B';
+  if(n>=1e6) return (n/1e6).toFixed(2)+'M';
+  if(n>=1e3) return (n/1e3).toFixed(2)+'K';
+  return Math.floor(n).toString();
+}
+
+// UI update
+function syncCentralAppearance(activeIndex){
+  const activeCard = shopGrid.querySelector(`.shopCard[data-index="${activeIndex}"]`);
+  if(!activeCard) return;
+  const cardSvg = activeCard.querySelector('svg');
+  const cardDefs = cardSvg ? cardSvg.querySelector('defs') : null;
+  const centralDefs = centralFoso.querySelector('defs');
+  if(!cardDefs || !centralDefs) return;
+
+  // Find gradient nodes in card defs
+  const gradBody = cardDefs.querySelector('linearGradient[id^="g"]');
+  const gradMouth = cardDefs.querySelector('linearGradient[id^="mouth"]');
+
+  // Remove previous active gradients
+  centralDefs.querySelectorAll('#gActive, #mouthActive').forEach(n=>n.remove());
+
+  // Clone and rename gradients
+  if(gradBody){
+    const cloneBody = gradBody.cloneNode(true);
+    cloneBody.setAttribute('id','gActive');
+    centralDefs.appendChild(cloneBody);
+  }
+  if(gradMouth){
+    const cloneMouth = gradMouth.cloneNode(true);
+    cloneMouth.setAttribute('id','mouthActive');
+    centralDefs.appendChild(cloneMouth);
+  }
+
+  // Apply fills to central rects (body and mouth)
+  const rects = centralFoso.querySelectorAll('rect');
+  const bodyRect = rects[0];
+  const mouthRect = rects[1];
+  if(bodyRect) bodyRect.setAttribute('fill','url(#gActive)');
+  if(mouthRect) mouthRect.setAttribute('fill','url(#mouthActive)');
+}
+
+function render(){
+  sigTotalEl.textContent = formatNum(state.sig);
+  shopSigma.textContent = formatNum(state.sig);
+  totalClicksEl.textContent = state.totalClicks;
+  const basePer = FOSOS[state.activeFosoIndex].perClick;
+  const per = basePer * state.perClickMult;
+  perClickEl.textContent = formatNum(per);
+    const batteryText = document.getElementById("batteryText");
+  if(batteryText){
+    batteryText.textContent = Math.round(state.battery) + "%";
+    batteryText.setAttribute("fill", state.battery > 20 ? "#0f0" : "#f00");
+  }
+  // Mata cooldown
+  const now = Date.now();
+  if(state.mataCooldownUntil && state.mataCooldownUntil > now){
+    btnMata.disabled = true;
+    const sec = Math.ceil((state.mataCooldownUntil - now)/1000);
+    const mm = String(Math.floor(sec/60)).padStart(2,'0'), ss = String(sec%60).padStart(2,'0');
+    mataLabel.textContent = `Cooldown ${mm}:${ss}`;
+  } else {
+    btnMata.disabled = false;
+    mataLabel.textContent = 'Mata Foso';
+  }
+
+  // Sync central SVG appearance with active foso
+  syncCentralAppearance(state.activeFosoIndex);
+
+  // burned visual: tint the central screen red when burned
+  const centralScreen = document.getElementById('centralScreen');
+  if(state.burned){
+    centralScreen.setAttribute('fill','#6b0000');
+  } else {
+    centralScreen.setAttribute('fill','#000');
+  }
+}
+render();
+
+// clicks per second detection (overheat)
+let clickTimestamps = [];
+function registerClick(){
+  const now = Date.now();
+  clickTimestamps.push(now);
+  // keep last 1000ms
+  clickTimestamps = clickTimestamps.filter(t => now - t <= 1000);
+  return clickTimestamps.length;
+}
+
+// Carga manual: conmutador Cargar/Parar con límite de 3 minutos
+let isCharging = false;
+let chargeStartAt = 0;
+let burnCheckTimer = null;
+const btnChargeToggle = document.getElementById('btnChargeToggle');
+
+function setCharging(active){
+  isCharging = active;
+  if(active){
+    chargeStartAt = Date.now();
+    btnChargeToggle.textContent = 'Parar Carga';
+    // revisar cada 1s: si llega a 100% y se mantiene 60s más, se quema
+    if(burnCheckTimer) clearInterval(burnCheckTimer);
+    burnCheckTimer = setInterval(()=>{
+      if(!isCharging) return;
+      const elapsed = Date.now() - chargeStartAt;
+      const atFull = state.battery >= 100;
+      if(atFull){
+        const overTimeMs = elapsed - timeWhenReachedFull;
+        if(timeWhenReachedFull===0){ timeWhenReachedFull = Date.now(); }
+        if(overTimeMs >= 60*1000){
+          state.burned = true;
+          state.battery = 0;
+          setCharging(false);
+          showBurnSmoke();
+          alert('Se quemó por sobrecarga: 100% + 1 minuto.');
+          render(); saveState();
+        }
+      }
+    }, 1000);
+  } else {
+    btnChargeToggle.textContent = 'Cargar Foso';
+    timeWhenReachedFull = 0;
+    if(burnCheckTimer) { clearInterval(burnCheckTimer); burnCheckTimer=null; }
+  }
+}
+
+btnChargeToggle?.addEventListener('click', ()=>{
+  if(state.burned){ alert('El foso está quemado. Equipa/compra otro.'); return; }
+  setCharging(!isCharging);
+});
+
+function showBurnSmoke(){
+  // Inserta el SVG de humo/quemado dentro del wrapper, dispara animaciones
+  const wrap = document.getElementById('vaperWrap');
+  if(!wrap) return;
+  const existing = document.getElementById('burnSmokeSvg');
+  if(existing) existing.remove();
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('id','burnSmokeSvg');
+  svg.setAttribute('xmlns','http://www.w3.org/2000/svg');
+  svg.setAttribute('width','200');
+  svg.setAttribute('height','200');
+  svg.setAttribute('viewBox','0 0 200 200');
+  svg.innerHTML = `
+    <defs>
+      <filter id="blurSmoke" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="6"/>
+      </filter>
+    </defs>
+    <g filter="url(#blurSmoke)">
+      <ellipse cx="100" cy="150" rx="12" ry="8" fill="lightgray" opacity="0.6">
+        <animate attributeName="cy" from="150" to="50" dur="2.5s" begin="0s"/>
+        <animate attributeName="rx" from="12" to="40" dur="2.5s" begin="0s"/>
+        <animate attributeName="opacity" from="0.6" to="0" dur="2.5s" begin="0s"/>
+      </ellipse>
+      <ellipse cx="90" cy="150" rx="10" ry="7" fill="lightgray" opacity="0.5">
+        <animate attributeName="cy" from="150" to="60" dur="3s" begin="0s"/>
+        <animate attributeName="rx" from="10" to="35" dur="3s" begin="0s"/>
+        <animate attributeName="opacity" from="0.5" to="0" dur="3s" begin="0s"/>
+      </ellipse>
+      <ellipse cx="110" cy="150" rx="9" ry="6" fill="lightgray" opacity="0.4">
+        <animate attributeName="cy" from="150" to="70" dur="3.2s" begin="0s"/>
+        <animate attributeName="rx" from="9" to="30" dur="3.2s" begin="0s"/>
+        <animate attributeName="opacity" from="0.4" to="0" dur="3.2s" begin="0s"/>
+      </ellipse>
+    </g>`;
+  // posicionar en la parte superior del dispositivo
+  svg.style.position='absolute';
+  svg.style.left='50%';
+  svg.style.top='10%';
+  svg.style.transform='translate(-50%, -0%)';
+  svg.style.pointerEvents='none';
+  wrap.appendChild(svg);
+  setTimeout(()=> svg.remove(), 3500);
+}
+
+// central click handler
+function handleCentralClick(){
+  if(!state.powerOn) return; // apagado: no responde
+  if(state.burned){ alert('El foso está quemado. Compra/selecciona otro.'); return; }
+  if(state.battery <= 0){ alert('Batería agotada.'); return; }
+  // Solo quemar por CPS si el clic es manual; el autoclicker no cuenta para sobrecalentamiento
+  const cps = registerClick();
+  const overheatLimit = CONFIG.overheatCps + (state.overheatBonus||0);
+  if(!state._autoClickInProgress && cps > overheatLimit){
+    state.burned = true; state.battery = 0; alert('¡Has quemado el foso!'); render(); saveState(); return;
+  }
+  const basePer = FOSOS[state.activeFosoIndex].perClick;
+  const per = basePer * (state.perClickMult||1);
+  state.sig += per; state.totalClicks++;
+  const drainEff = Math.max(0.2, 1 - (state.activeFosoIndex*0.05) - (state.batteryEfficiencyLevel*0.1));
+  const drain = CONFIG.baseBatteryDrainPerClick * drainEff;
+  state.battery = Math.max(0, state.battery - drain);
+  try { centralFoso.style.transform = 'scale(0.98)'; setTimeout(()=> centralFoso.style.transform = '', 60);} catch(_){ }
+  render(); saveState();
+}
+// attach clicks to both wrapper and svg para fiabilidad (evitar dobles listeners si se reinserta script)
+// Power button ON/OFF
+document.getElementById('btnPower')?.addEventListener('click', ()=>{
+  state.powerOn = !state.powerOn;
+  const b = document.getElementById('btnPower');
+  b.textContent = state.powerOn ? 'Power ON' : 'Power OFF';
+  b.style.background = state.powerOn ? '#10b981' : '#9ca3af';
+  // Al apagar: pausa carga y previene clicks/auto
+  if(!state.powerOn){
+    if(isCharging) setCharging(false);
+  }
+  render(); saveState();
+});
+
+try{
+  document.getElementById('vaperWrap')?.addEventListener('click', handleCentralClick, { once:false });
+  document.getElementById('centralFoso')?.addEventListener('click', handleCentralClick, { once:false });
+  const cf = document.getElementById('centralFoso');
+  cf?.setAttribute('tabindex','0');
+  cf?.addEventListener('keydown', (e)=>{
+    if(e.code==='Enter' || e.code==='Space'){ e.preventDefault(); handleCentralClick(); }
+  });
+}catch(_){}
+
+// shop interactions: click shopCard to buy/equip
+
+
+    // Si no lo tienes comprado → comprar
+ // shop interactions: comprar/equipar foso
+shopGrid.querySelectorAll('.shopCard').forEach(card=>{
+  card.addEventListener('click', ()=>{
+    const idx = Number(card.getAttribute('data-index'));
+    const f = FOSOS[idx];
+
+    // Si ya lo tienes comprado → solo equipar
+    if(state.fososOwned && state.fososOwned[idx]){
+      state.activeFosoIndex = idx;
+      state.burned = false;
+      render(); saveState();
+      return;
+    }
+
+    // Si no lo tienes comprado → intentar comprar
+    if(state.sig >= f.cost){
+      state.sig -= f.cost;
+      state.activeFosoIndex = idx;
+      state.burned = false;
+      state.battery = Math.min(100, state.battery + CONFIG.onEquipRefill);
+
+      // marcar adquirido en localStorage
+      state.fososOwned = state.fososOwned || {};
+      state.fososOwned[idx] = true;
+
+      // mostrar visualmente "Adquirido" en la tarjeta
+      card.querySelector(".status")?.remove();
+      const status = document.createElement("div");
+      status.className = "status";
+      status.textContent = "Adquirido";
+      status.style.color = "lime";
+      card.appendChild(status);
+
+      renderShop(); // refrescar etiquetas de "Adquirido"
+      render(); 
+      saveState();
+    } else {
+      alert('No tienes suficientes ΣC para comprar este foso.');
+    }
+  });
+});
+
+
+
+// Eliminado boost de recarga: botón ya no existe
+
+// Mata Foso: +50 ΣC, cooldown 1800s (30min)
+btnMata.addEventListener('click', ()=>{
+  const now = Date.now();
+  if(state.mataCooldownUntil && state.mataCooldownUntil > now) return;
+  state.sig += CONFIG.mataReward;
+  state.mataCooldownUntil = now + CONFIG.mataCooldownSec*1000;
+  render(); saveState();
+});
+
+// Nuevo Foso: compra rápida por 25 ΣC, resetea quemado y rellena batería +20%
+document.getElementById('btnNuevoFoso')?.addEventListener('click', ()=>{
+  const COST = 25;
+  if(state.sig < COST){ alert('Necesitas 25 ΣC para comprar un nuevo foso.'); return; }
+  state.sig -= COST;
+  state.burned = false;
+  state.battery = Math.min(100, state.battery + 20);
+  // opcional: cambiar a un foso base (index 0), o mantener el actual
+  // state.activeFosoIndex = 0;
+  render(); saveState();
+});
+
+// Autoclicker + Smoker + puntero virtual
+let autoClickTimer = null;
+function spawnPointer(){
+  try{
+    const wrap = document.getElementById('vaperWrap');
+    const pointer = document.createElement('div');
+    pointer.style.position='absolute';
+    pointer.style.width='18px';
+    pointer.style.height='18px';
+    pointer.style.borderRadius='50%';
+    pointer.style.border='2px solid #fff';
+    pointer.style.boxShadow='0 0 8px rgba(255,255,255,0.6)';
+    pointer.style.left='50%';
+    pointer.style.top='28%';
+    pointer.style.transform='translate(-50%,-50%)';
+    pointer.style.pointerEvents='none';
+    wrap.appendChild(pointer);
+    pointer.animate([
+      { transform:'translate(-50%,-50%) scale(1)', opacity:1 },
+      { transform:'translate(-50%,-50%) scale(0.88)', opacity:0.85 },
+      { transform:'translate(-50%,-50%) scale(1)', opacity:0 }
+    ], { duration: 300, easing: 'ease-out' }).onfinish=()=> pointer.remove();
+  }catch(_){}
+}
+function updateAutoClickLoop(){
+  if(autoClickTimer){ clearInterval(autoClickTimer); autoClickTimer = null; }
+  const baseCps = state.autoClickerLevel; // cada nivel = 1 click/seg
+  const smokerCps = state.smokerOn ? 5 : 0; // fumador = +5 clicks/seg
+  const totalCps = baseCps + smokerCps;
+  if(totalCps <= 0) return;
+  const intervalMs = 1000/totalCps;
+  autoClickTimer = setInterval(()=>{
+    if(state.burned) return;
+    if(state.battery <= 0) return;
+    // marcar autoclick para no contar CPS del usuario
+    state._autoClickInProgress = true;
+    try{ handleCentralClick(); } finally { state._autoClickInProgress = false; }
+    spawnPointer();
+    render(); saveState();
+  }, Math.max(20, intervalMs));
+}
+
+// Botones menú inferior
+document.getElementById('btnAutoClick')?.addEventListener('click', ()=>{
+  // Compra mejora Autoclicker: coste 500 ΣC, duración 10 minutos (nivel +1)
+  const COST = 500;
+  const DURATION_MIN = 10;
+  if(state.sig < COST){ alert('Necesitas 500 ΣC para mejorar Autocliker.'); return; }
+  state.sig -= COST;
+  state.autoClickerLevel = Math.min(50, state.autoClickerLevel + 1);
+  // extiende/establece expiración
+  const now = Date.now();
+  const extra = DURATION_MIN*60*1000;
+  state.autoClickExpiresAt = Math.max(state.autoClickExpiresAt, now) + extra;
+  updateAutoClickLoop();
+  // Animación de puntero haciendo click
+  try {
+    const wrap = document.getElementById('vaperWrap');
+    const pointer = document.createElement('div');
+    pointer.style.position = 'absolute';
+    pointer.style.width = '22px';
+    pointer.style.height = '22px';
+    pointer.style.borderRadius = '50%';
+    pointer.style.border = '2px solid #fff';
+    pointer.style.boxShadow = '0 0 8px rgba(255,255,255,0.6)';
+    pointer.style.left = '50%';
+    pointer.style.top = '28%';
+    pointer.style.transform = 'translate(-50%,-50%)';
+    pointer.style.pointerEvents = 'none';
+    wrap.appendChild(pointer);
+    pointer.animate([
+      { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
+      { transform: 'translate(-50%,-50%) scale(0.88)', opacity: 0.85 },
+      { transform: 'translate(-50%,-50%) scale(1)', opacity: 0.0 }
+    ], { duration: 450, easing: 'ease-out' }).onfinish = ()=> pointer.remove();
+  } catch(_){}
+  render(); saveState();
+});
+document.getElementById('btnSmoker')?.addEventListener('click', ()=>{
+  // Fumador: compra por 500 ΣC, dura 10 minutos, añade +5 cps mientras dure
+  const COST = 500;
+  const DURATION_MIN = 10;
+  if(state.smokerOn && Date.now() < state.smokerExpiresAt){
+    alert('Fumador ya activo. Espera a que termine para volver a comprar.');
+    return;
+  }
+  if(state.sig < COST){ alert('Necesitas 500 ΣC para activar Fumador.'); return; }
+  state.sig -= COST;
+  state.smokerOn = true;
+  state.smokerExpiresAt = Date.now() + DURATION_MIN*60*1000;
+  updateAutoClickLoop();
+  render(); saveState();
+});
+
+// Panel de Poderes (50 diferentes)
+
+function applyPowerEffect(effect){
+  switch(effect.type){
+    case 'perClickMult':
+      state.perClickMult = Number((state.perClickMult * effect.value).toFixed(4));
+      break;
+    case 'overheatBonus':
+      state.overheatBonus += effect.value;
+      break;
+    case 'batteryEfficiency':
+      state.batteryEfficiencyLevel += effect.value;
+      break;
+    case 'rechargeSpeed':
+      state.rechargeSpeedLevel += effect.value;
+      break;
+    case 'passivePerSec':
+      state.passivePerSec += effect.value;
+      break;
+  }
+}
+
+document.getElementById('btnPowers').addEventListener('click', ()=>{
+  const modal = document.getElementById('powersModal');
+  modal.classList.remove('hidden');
+  renderPowers();
+});
+
+// Configuración: reiniciar, cambiar idioma y más
+document.getElementById('btnConfig')?.addEventListener('click', ()=>{
+  const action = prompt('Configuración:\n1) Reiniciar progreso\n2) Cambiar idioma (es/en)\n3) Ajustar estética (fondos animados ON/OFF)\n4) Cancelar');
+  if(action==='1'){
+    if(confirm('¿Seguro que deseas reiniciar?')){
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+  } else if(action==='2'){
+    const newLang = prompt('Idioma: es o en', state.lang||'es');
+    if(newLang==='es' || newLang==='en'){
+      state.lang = newLang; saveState(); alert('Cambiaremos algunos textos tras recargar.'); location.reload();
+    }
+  } else if(action==='3'){
+    const root = document.documentElement;
+    const current = root.style.getPropertyValue('--bg-anim');
+    if(!current){ root.style.setProperty('--bg-anim','on'); alert('Fondos animados ON'); }
+    else { root.style.removeProperty('--bg-anim'); alert('Fondos animados OFF'); }
+  }
+});
+
+// Autosave + UI tick timer + timed recharge + central battery bar fill
+setInterval(()=>{
+  // expirar boosts por tiempo
+  const now = Date.now();
+  if(state.autoClickExpiresAt && now >= state.autoClickExpiresAt){
+    state.autoClickExpiresAt = 0;
+    state.autoClickerLevel = 0;
+    updateAutoClickLoop();
+  }
+  if(state.smokerOn && state.smokerExpiresAt && now >= state.smokerExpiresAt){
+    state.smokerOn = false;
+    state.smokerExpiresAt = 0;
+    updateAutoClickLoop();
+  }
+
+  // Ingreso pasivo por poderes
+  if(state.passivePerSec>0 && !state.burned){
+    state.sig += state.passivePerSec * (CONFIG.uiTickMs/1000);
+  }
+
+  // Recarga pasiva por tiempo y carga manual activa acelera x2 (solo si Power ON)
+let rechargeRatePerSec = 0;
+
+if(isCharging && !state.burned && state.powerOn){
+  rechargeRatePerSec = (100/CONFIG.rechargeBaseSec) * (1 + (state.rechargeSpeedLevel||0)*0.1) * 2;
+}
+
+  state.battery = Math.min(100, state.battery + rechargeRatePerSec*(CONFIG.uiTickMs/1000));
+
+  // update central battery bar width relative to 28px area
+  //const bar = document.getElementById('centralBatteryBar');
+  //if(bar){
+    //const w = Math.max(0, Math.min(28, 28*(state.battery/100)));
+    //bar.setAttribute('width', w.toFixed(2));
+  //}
+
+  render();
+  saveState();
+}, CONFIG.uiTickMs);
+
+// iniciar loop de autoclick si aplica
+updateAutoClickLoop();
+
+// initial render done
+render();
+
+document.getElementById('btnSigmaHack')?.addEventListener('click', () => {
+  const confirmHack = confirm('¿Estás seguro que quieres recibir sigma infinito?');
+  if (!confirmHack) return;
+
+  state.sig += 9999999999999999999999999;
+  render();
+  saveState();
+  alert('¡SigmaCoins agregados con éxito!');
+});
+ // =========================
+// Definición de los 50 poderes
+// =========================
+const POWERS = [
+  {id:1, name:"AutoClicker 🤖", cost:2000, effect:{type:"autoClick", value:1, desc:"+1 clic automático/seg (permanente)"}},
+  {id:2, name:"TurboClick ⚡", cost:5000, effect:{type:"perClickMult", value:1.5, desc:"+50% ΣC por clic (permanente)"}},
+  {id:3, name:"Batería Eficiente 🔋", cost:8000, effect:{type:"batteryEfficiency", value:1, desc:"-25% consumo de batería (permanente)"}},
+  {id:4, name:"Recarga Rápida 🔌", cost:12000, effect:{type:"rechargeSpeed", value:1, desc:"Recarga ×2 más rápida (permanente)"}},
+  {id:5, name:"Sigma Boost 💰", cost:20000, effect:{type:"perClickMult", value:2, desc:"Duplica ΣC por clic (permanente)"}},
+  {id:6, name:"Humo Mágico ☁️", cost:30000, effect:{type:"passivePerSec", value:5, desc:"+5 ΣC/seg pasivo (permanente)"}},
+  {id:7, name:"Overheat Control ❄️", cost:50000, effect:{type:"overheatBonus", value:10, desc:"+10 cps antes de quemar (permanente)"}},
+  {id:8, name:"Sigma Multiplicador ✨", cost:80000, effect:{type:"multiplier", value:2, desc:"Multiplica ×2 todo (permanente)"}},
+  {id:10, name:"Ultra AutoClicker 🚀", cost:200000, effect:{type:"autoClick", value:10, desc:"+10 clics automáticos/seg (permanente)"}}
+];
+
+function applyPowerEffect(effect){
+  switch(effect.type){
+    case "autoClick":
+      state.autoClickerLevel += effect.value;
+      updateAutoClickLoop();
+      break;
+    case "perClickMult":
+      state.perClickMult *= effect.value;
+      break;
+    case "batteryEfficiency":
+      state.batteryEfficiencyLevel += effect.value;
+      break;
+    case "rechargeSpeed":
+      state.rechargeSpeedLevel += effect.value;
+      break;
+    case "passivePerSec":
+      state.passivePerSec += effect.value;
+      break;
+    case "overheatBonus":
+      state.overheatBonus += effect.value;
+      break;
+    case "multiplier":
+      state.perClickMult *= effect.value;
+      break;
+    case "repair":
+      state.burned = false;
+      state.battery = 50; // lo repara y da 50% batería
+      break;
+  }
+  render(); saveState();
+}
+
+
+function renderPowers(){
+  const grid = document.getElementById("powersGrid");
+  grid.innerHTML = "";
+
+  POWERS.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "power-card";
+
+    const title = document.createElement("div");
+    title.style.fontWeight = "bold";
+    title.textContent = p.name;
+    card.appendChild(title);
+
+    const desc = document.createElement("div");
+    desc.className = "metaTiny";
+    desc.textContent = p.effect.desc;
+    card.appendChild(desc);
+
+    const btn = document.createElement("button");
+    
+    if(p.id === 9){ 
+      // Reparar foso siempre se puede comprar
+      btn.textContent = `${p.cost} ΣC — Usar`;
+      btn.disabled = state.sigma < p.cost;
+      btn.onclick = () => {
+        if(state.sigma >= p.cost){
+          state.sigma -= p.cost;
+          applyPowerEffect(p.effect);
+        }
+      };
+    } else {
+      // Otros poderes solo una vez
+      if(state.powersUnlocked?.includes(p.id)){
+        btn.textContent = "Comprado ✅";
+        btn.disabled = true;
+      } else {
+        btn.textContent = `${p.cost} ΣC — Comprar`;
+        btn.disabled = state.sigma < p.cost;
+        btn.onclick = () => {
+          if(state.sigma >= p.cost){
+            state.sigma -= p.cost;
+            if(!state.powersUnlocked) state.powersUnlocked = [];
+            state.powersUnlocked.push(p.id);
+            applyPowerEffect(p.effect);
+          }
+        };
+      }
+    }
+
+    card.appendChild(btn);
+    grid.appendChild(card);
+  });
+}
+
+
+
+
+
+
+// =========================
+// Abrir / cerrar modal
+// =========================
+const powersModal = document.getElementById('powersModal');
+const powersGrid = document.getElementById('powersGrid');
+const closeBtn = powersModal.querySelector('.close-btn');
+
+document.getElementById('btnPowers').addEventListener('click', ()=>{
+  powersModal.classList.remove('hidden');
+  renderPowers();
+});
+
+closeBtn.addEventListener('click', ()=> powersModal.classList.add('hidden'));
+window.addEventListener('click', e=>{
+  if(e.target === powersModal) powersModal.classList.add('hidden');
+});
+
+// =========================
+// Renderizado de cartas
+// =========================
+function renderPowers(){
+  powersGrid.innerHTML = '';
+  POWERS.forEach(p=>{
+    const owned = !!state.powersOwned[p.id];
+    const card = document.createElement('div');
+    card.className = 'power-card';
+    card.innerHTML = `
+      <h3>${p.name}</h3>
+      <p>${p.effect.desc}</p>
+      <p>Coste: ${p.cost} ΣC</p>
+      <button ${owned?'disabled':''}>
+        ${owned?'Comprado':'Comprar'}
+      </button>
+    `;
+
+    const btn = card.querySelector('button');
+    btn.addEventListener('click', ()=>{
+      if(owned) return;
+      if(state.sig < p.cost){
+        alert('No tienes ΣC suficientes.');
+        return;
+      }
+      state.sig -= p.cost;
+      state.powersOwned[p.id] = true;
+      applyPowerEffect(p.effect);
+      renderPowers();
+      render();
+      saveState();
+    });
+
+    powersGrid.appendChild(card);
+  });
+}
+
+function renderShop(){
+  shopGrid.querySelectorAll('.shopCard').forEach(card=>{
+    const idx = Number(card.getAttribute('data-index'));
+    const owned = state.fososOwned && state.fososOwned[idx];
+    let badge = card.querySelector('.owned-tag');
+    if(owned){
+      if(!badge){
+        badge = document.createElement('div');
+        badge.className = 'owned-tag';
+        badge.textContent = '✅ Adquirido';
+        badge.style.marginTop = '4px';
+        badge.style.fontSize = '12px';
+        badge.style.color = '#0f0';
+        card.appendChild(badge);
+      }
+    } else {
+      if(badge) badge.remove();
+    }
+  });
+}
+
+
+
+
+  // Si quieres mostrar percent de bateria en la pantalla, podrías:
+  // const battTextEl = document.getElementById('dropPercent'); if(battTextEl) battTextEl.textContent = Math.round(state.battery) + '%';
+
+
+if(state.fososOwned && state.fososOwned[idx]){
+  const status = document.createElement("div");
+  status.className = "status";
+  status.textContent = "Adquirido";
+  status.style.color = "lime";
+  card.appendChild(status);
+}
+
+// Abrir modal Configuración
+document.getElementById("btnConfig")?.addEventListener("click", ()=>{
+  document.getElementById("configModal").classList.remove("hidden");
+});
+
+// Cerrar modal
+document.querySelector("#configModal .close-btn")?.addEventListener("click", ()=>{
+  document.getElementById("configModal").classList.add("hidden");
+});
+
+// Animaciones
+document.getElementById("chkAnimations")?.addEventListener("change", (e)=>{
+  state.animationsOn = e.target.checked;
+  saveState();
+});
+
+// Tema
+document.getElementById("themeSelect")?.addEventListener("change", (e)=>{
+  state.theme = e.target.value;
+  document.body.setAttribute("data-theme", state.theme);
+  saveState();
+});
+
+// Reset
+document.getElementById("btnReset")?.addEventListener("click", ()=>{
+  if(confirm("¿Seguro que quieres borrar tu progreso?")){
+    localStorage.clear();
+    location.reload();
+  }
+});
+
+function spawnSmoke(){
+  const layer = document.getElementById('smokeLayer');
+  if(!layer) return;
+  const puff = document.createElement('div');
+  puff.className = 'smoke';
+  layer.appendChild(puff);
+  setTimeout(()=> puff.remove(), 2500); // se borra al terminar animación
+}
+
+// Añadir humo cuando se hace clic en el foso
+const foso = document.getElementById('centralFoso');
+foso?.addEventListener('click', ()=> spawnSmoke());
+
+</script>
+</body>
+</html>
