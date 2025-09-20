@@ -155,6 +155,7 @@
       document.documentElement.style.overflow = '';
     }, 3000);
   </script>
+  
   <div class="wrap">
     <div>
       <header>
@@ -678,6 +679,31 @@ const CONFIG = {
 };
 const STORAGE_KEY = CONFIG.storageKey;
 
+// Botón de "Borrar Progreso 💣" dentro del modal Configuración
+// Botón de "Borrar Progreso 💣" dentro del modal Configuración
+// Abrir modal de configuración
+document.getElementById('btnConfig')?.addEventListener('click', ()=>{
+  document.getElementById('configModal').classList.remove('hidden');
+});
+
+// Cerrar modal de configuración
+document.querySelectorAll('#configModal .close-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> document.getElementById('configModal').classList.add('hidden'));
+});
+
+// Botón de "Borrar Progreso 💣"
+document.getElementById('btnReset')?.addEventListener('click', ()=>{
+  if(confirm('⚠️ Esto borrará absolutamente TODO el progreso guardado en este juego.')){
+    localStorage.clear();         // 🔥 borra todas las claves del localStorage
+    state = {};                   // resetea también la variable en memoria
+    location.reload(true);        // recarga la página desde cero
+  }
+});
+     // recarga la página limpia
+
+
+
+
 // load/save
 function loadState(){
   try{
@@ -1108,26 +1134,7 @@ document.getElementById('btnPowers').addEventListener('click', ()=>{
   renderPowers();
 });
 
-// Configuración: reiniciar, cambiar idioma y más
-document.getElementById('btnConfig')?.addEventListener('click', ()=>{
-  const action = prompt('Configuración:\n1) Reiniciar progreso\n2) Cambiar idioma (es/en)\n3) Ajustar estética (fondos animados ON/OFF)\n4) Cancelar');
-  if(action==='1'){
-    if(confirm('¿Seguro que deseas reiniciar?')){
-      localStorage.removeItem(STORAGE_KEY);
-      location.reload();
-    }
-  } else if(action==='2'){
-    const newLang = prompt('Idioma: es o en', state.lang||'es');
-    if(newLang==='es' || newLang==='en'){
-      state.lang = newLang; saveState(); alert('Cambiaremos algunos textos tras recargar.'); location.reload();
-    }
-  } else if(action==='3'){
-    const root = document.documentElement;
-    const current = root.style.getPropertyValue('--bg-anim');
-    if(!current){ root.style.setProperty('--bg-anim','on'); alert('Fondos animados ON'); }
-    else { root.style.removeProperty('--bg-anim'); alert('Fondos animados OFF'); }
-  }
-});
+
 
 // Autosave + UI tick timer + timed recharge + central battery bar fill
 setInterval(()=>{
@@ -1424,6 +1431,16 @@ function spawnSmoke(){
 // Añadir humo cuando se hace clic en el foso
 const foso = document.getElementById('centralFoso');
 foso?.addEventListener('click', ()=> spawnSmoke());
+
+
+// Botón hack de Sigma infinito
+document.getElementById('btnSigmaHack')?.addEventListener('click', ()=>{
+  state.sig = Number.MAX_SAFE_INTEGER; // o pon un número altísimo
+  render();
+  saveState();
+  alert("💰 Hack activado: Sigma infinito!");
+});
+
 
 </script>
 </body>
