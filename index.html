@@ -1025,6 +1025,30 @@ const FOSOS = [
 
 
 const shopGrid = document.getElementById('shopGrid');
+// --- Habilitar compra de fosos desde la tienda ---
+shopGrid.querySelectorAll(".shopCard[data-index]").forEach(card => {
+  card.addEventListener("click", () => {
+    const idx = parseInt(card.dataset.index);
+    const foso = FOSOS[idx];
+
+    if (!foso) return;
+
+    if (state.sig >= foso.cost) {
+      state.sig -= foso.cost;               // Resta monedas
+      state.activeFosoIndex = idx;          // Activa el foso comprado
+      state.battery = Math.min(
+        state.battery + CONFIG.onEquipRefill,
+        state.maxBattery
+      ); // recarga un poco al equipar
+      saveState();
+      render();
+      alert(`✅ Compraste y equipaste ${foso.name}`);
+    } else {
+      alert("❌ No tienes suficientes ΣC");
+    }
+  });
+});
+
 
 let autoClickTimer = null;
 
@@ -2444,6 +2468,8 @@ document.getElementById("btnDaily").addEventListener("click", openDailyModal);
     console.log("DEBUG daily-fix: listeners nuevos instalados");
   });
 })();
+
+
 </script>
 <!-- FIN bloque reparación -->
 
