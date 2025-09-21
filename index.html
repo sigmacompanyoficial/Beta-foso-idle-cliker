@@ -125,6 +125,95 @@
   }
 }
 
+.smoke circle {
+  fill: lightgray;
+  opacity: 0.8;
+  animation: rise 3s infinite ease-in-out;
+}
+
+.smoke circle:nth-child(2) {
+  animation-delay: 1s;
+}
+.smoke circle:nth-child(3) {
+  animation-delay: 2s;
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-60px) scale(1.6);
+    opacity: 0;
+  }
+}
+
+.smoke path {
+  fill: lightgray;
+  opacity: 0.7;
+  animation: puff 4s infinite ease-in-out;
+}
+
+@keyframes puff {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-80px) scale(1.8);
+    opacity: 0;
+  }
+}
+
+.smoke ellipse {
+  fill: lightgray;
+  opacity: 0.7;
+  animation: puff 5s infinite ease-in-out;
+}
+
+.smoke ellipse:nth-child(2) {
+  animation-delay: 1.5s;
+}
+.smoke ellipse:nth-child(3) {
+  animation-delay: 3s;
+}
+
+@keyframes puff {
+  0%   { transform: translateY(0) scale(0.6); opacity: 0; }
+  20%  { opacity: 0.8; }
+  100% { transform: translateY(-80px) scale(1.8); opacity: 0; }
+}
+
+#autoClickPointer {
+  position: absolute;
+  width: 24px;         /* más pequeño */
+  height: 24px;
+  background: url('https://cdn-icons-png.flaticon.com/512/32/32339.png') no-repeat center;
+  background-size: contain;
+  pointer-events: none;  /* no bloquea nada */
+  opacity: 0;
+  transform: scale(1);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  z-index: 1;           /* por debajo de UI pero encima del foso */
+}
+#autoClickPointer.active {
+  opacity: 0.8;         /* aparece más sutil */
+  transform: scale(0.7);
+}
+
+.hidden {
+  display: none !important;
+}
+
+
+
 </style>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f59e0b'/%3E%3Ctext x='16' y='21' font-size='14' text-anchor='middle' fill='%23081018' font-family='Arial'%3EΣ%3C/text%3E%3C/svg%3E">
 </head>
@@ -167,6 +256,9 @@
           <div class="hint">Haz click en el foso grande; compra fosos desde la tienda (clic en miniaturas).</div>
         </div>
       </header>
+
+      <button id="btnDaily" class="mata-btn">🎁 Regalo Diario</button>
+
 
       <main style="margin-top:14px">
         <section class="stage">
@@ -217,9 +309,11 @@
                 </linearGradient>
               </defs>
             </svg>
+              <div id="autoClickPointer"></div> 
           </div>
 
          <div class="controlsRow" id="controlsRow">
+        
   <!-- Power -->
   <button id="btnPower" class="mata-btn" style="background:#10b981">
     <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 2v10h10v2H12v10h-2V14H0v-2h10V2h2z"/></svg>
@@ -244,11 +338,23 @@
     <span id="mataLabel">Mata Foso</span>
   </button>
 
-  <!-- Poderes -->
-  <button id="btnPowers" class="mata-btn" style="background:#60a5fa">
-    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 2L15.09 8.26L22 9.27l-5 4.87L18.18 22L12 18.56L5.82 22L7 14.14l-5-4.87l6.91-1.01L12 2z"/></svg>
-    Poderes
-  </button>
+
+  <!-- Tienda -->
+ <!-- Tienda -->
+<button id="btnShop" class="mata-btn" style="background:#facc15">
+  <svg class="icon-sm" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path fill="black" d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 
+      2-.9 2-2-.9-2-2-2zm10 
+      0c-1.1 0-2 .9-2 2s.9 2 2 2 
+      2-.9 2-2-.9-2-2-2zm-9.84-4h9.45c.75 
+      0 1.41-.41 1.75-1.03l3.58-6.49c.37-.67-.11-1.48-.88-1.48H6.21L5.27 
+      2H2v2h2l3.6 7.59-1.35 
+      2.45C5.52 14.37 6.23 15 7.07 
+      15h11.93v-2H7.42l.74-1.35z"/>
+  </svg>
+  Tienda
+</button>
+
 
   <!-- Configuración -->
   <button id="btnConfig" class="mata-btn" style="background:#c084fc">
@@ -264,12 +370,27 @@
     </div>
 
     <!-- Right column: tienda con 15 miniaturas -->
+    
+    <!-- Modal Tienda -->
+<div id="shopModal" class="modal hidden">
+  <div class="modal-content" style="width:90%;max-width:1000px">
+    <span class="close-btn">&times;</span>
+
+    <!-- Aquí metemos la tienda -->
     <aside class="panel">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div style="display:flex;align-items:center;gap:8px">
           <!-- Carrito SVG -->
           <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
-            <path fill="#f59e0b" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.16 14h9.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.37-.67-.11-1.48-.88-1.48H6.21L5.27 2H2v2h2l3.6 7.59-1.35 2.45C5.52 14.37 6.23 15 7.07 15h11.93v-2H7.42l.74-1.35z"/>
+            <path fill="#f59e0b" d="M7 18c-1.1 0-1.99.9-1.99 
+            2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 
+            0c-1.1 0-1.99.9-1.99 2S15.9 22 17 
+            22s2-.9 2-2-.9-2-2-2zM7.16 
+            14h9.45c.75 0 1.41-.41 
+            1.75-1.03l3.58-6.49c.37-.67-.11-1.48-.88-1.48H6.21L5.27 
+            2H2v2h2l3.6 7.59-1.35 
+            2.45C5.52 14.37 6.23 15 7.07 
+            15h11.93v-2H7.42l.74-1.35z"/>
           </svg>
           <div style="font-weight:800">Tienda — Fositos</div>
         </div>
@@ -277,229 +398,280 @@
       </div>
 
       <div class="shopGrid" id="shopGrid">
-        <!-- 15 tarjetas inline: foso1 .. foso15 -->
-        <!-- Nombres actualizados con sabores y emojis -->
-        <!-- 1 -->
+
+      
+
+ 
         <div class="shopCard" data-index="0" title="Foso 1: Mango Ice 🥭❄️ (0 ΣC)">
-          <div class="metaTiny" style="font-weight:800">Foso 1: Mango Ice 🥭❄️</div>
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g1_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth1_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs>
-              <linearGradient id="g1_shop" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#f1c40f"/><stop offset="50%" stop-color="#2ecc71"/><stop offset="100%" stop-color="#1e3799"/>
-              </linearGradient>
-              <linearGradient id="mouth1_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
-            </defs>
-          </svg>
-          <div style="font-weight:700">Foso 1: Mango Ice 🥭❄️</div>
-          <div class="priceTag">0 ΣC</div>
-        </div>
+  <div class="metaTiny" style="font-weight:800">Foso 1: Mango Ice 🥭❄️</div>
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g1_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth1_shop)"/>
+<!-- Humo del foso central -->
+<!-- Humo del foso central (nube más realista) -->
+<!-- Humo del foso central (3 óvalos juntos → nube) -->
+<g class="smoke">
+  <ellipse cx="50" cy="40" rx="18" ry="12" />
+  <ellipse cx="65" cy="35" rx="14" ry="10" />
+  <ellipse cx="40" cy="35" rx="14" ry="10" />
+</g>
 
-        <!-- 2 -->
-        <div class="shopCard" data-index="1" title="Foso 2: Strawberry Kiwi 🍓🥝 (2 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g2_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth2_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs>
-              <linearGradient id="g2_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff7675"/><stop offset="100%" stop-color="#fd7e14"/></linearGradient>
-              <linearGradient id="mouth2_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
-            </defs>
-          </svg>
-          <div style="font-weight:700">Foso 2: Strawberry Kiwi 🍓🥝</div>
-          <div class="priceTag">2&nbsp;000 ΣC</div>
-        </div>
 
-        <!-- 3 -->
-        <div class="shopCard" data-index="2" title="Foso 3: Blue Razz 🫐💙 (4 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g3_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth3_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs>
-              <linearGradient id="g3_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00c6ff"/><stop offset="100%" stop-color="#0072ff"/></linearGradient>
-              <linearGradient id="mouth3_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
-            </defs>
-          </svg>
-          <div style="font-weight:700">Foso 3: Blue Razz 🫐💙</div>
-          <div class="priceTag">4&nbsp;000 ΣC</div>
-        </div>
+    <defs>
+      <linearGradient id="g1_shop" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f1c40f"/><stop offset="50%" stop-color="#2ecc71"/><stop offset="100%" stop-color="#1e3799"/>
+      </linearGradient>
+      <linearGradient id="mouth1_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700">Foso 1: Mango Ice 🥭❄️</div>
+  <div class="priceTag">0 ΣC</div>
+</div>
 
-        <!-- 4 -->
-        <div class="shopCard" data-index="3" title="Foso 4: Watermelon Ice 🍉❄️ (10 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g4_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth4_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs>
-              <linearGradient id="g4_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ecf0f1"/><stop offset="100%" stop-color="#95a5a6"/></linearGradient>
-              <linearGradient id="mouth4_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
-            </defs>
-          </svg>
-          <div style="font-weight:700">Foso 4: Watermelon Ice 🍉❄️</div>
-          <div class="priceTag">10&nbsp;000 ΣC</div>
-        </div>
+<!-- 2 -->
+<div class="shopCard" data-index="1" title="Foso 2: Strawberry Kiwi 🍓🥝 (200 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g2_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth2_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs>
+      <linearGradient id="g2_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff7675"/><stop offset="100%" stop-color="#fd7e14"/></linearGradient>
+      <linearGradient id="mouth2_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700">Foso 2: Strawberry Kiwi 🍓🥝</div>
+  <div class="priceTag">100 ΣC</div>
+</div>
 
-        <!-- 5 -->
-        <div class="shopCard" data-index="4" title="Foso 5: Pineapple Coconut 🍍🥥 (50 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g5_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth5_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs>
-              <linearGradient id="g5_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffd700"/><stop offset="100%" stop-color="#ffb400"/></linearGradient>
-              <linearGradient id="mouth5_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
-            </defs>
-          </svg>
-          <div style="font-weight:700">Foso 5: Pineapple Coconut 🍍🥥</div>
-          <div class="priceTag">50&nbsp;000 ΣC</div>
-        </div>
+<!-- 3 -->
+<div class="shopCard" data-index="2" title="Foso 3: Blue Razz 🫐💙 (400 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g3_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth3_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs>
+      <linearGradient id="g3_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00c6ff"/><stop offset="100%" stop-color="#0072ff"/></linearGradient>
+      <linearGradient id="mouth3_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700">Foso 3: Blue Razz 🫐💙</div>
+  <div class="priceTag">10&nbsp;000</div>
+</div>
 
-        <!-- 6 -->
-        <div class="shopCard" data-index="5" title="Foso 6: Grape Ice 🍇❄️ (200 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g6_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth6_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs>
-              <linearGradient id="g6_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9b59b6"/><stop offset="100%" stop-color="#2c003e"/></linearGradient>
-              <linearGradient id="mouth6_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
-            </defs>
-          </svg>
-          <div style="font-weight:700">Foso 6: Grape Ice 🍇❄️</div>
-          <div class="priceTag">200&nbsp;000 ΣC</div>
-        </div>
+<!-- 4 -->
+<div class="shopCard" data-index="3" title="Foso 4: Watermelon Ice 🍉❄️ (1 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g4_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth4_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs>
+      <linearGradient id="g4_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ecf0f1"/><stop offset="100%" stop-color="#95a5a6"/></linearGradient>
+      <linearGradient id="mouth4_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700">Foso 4: Watermelon Ice 🍉❄️</div>
+  <div class="priceTag">100&nbsp;000</div>
+</div>
 
-        <!-- 7 -->
-        <div class="shopCard" data-index="6" title="Foso 7: Peach Mango 🍑🥭 (500 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g7_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth7_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs><linearGradient id="g7_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff0000"/><stop offset="100%" stop-color="#000"/></linearGradient>
-            <linearGradient id="mouth7_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
-          </svg>
-          <div style="font-weight:700">Foso 7: Peach Mango 🍑🥭</div>
-          <div class="priceTag">500&nbsp;000 ΣC</div>
-        </div>
+<!-- 5 -->
+<div class="shopCard" data-index="4" title="Foso 5: Pineapple Coconut 🍍🥥 (5 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g5_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth5_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs>
+      <linearGradient id="g5_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffd700"/><stop offset="100%" stop-color="#ffb400"/></linearGradient>
+      <linearGradient id="mouth5_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700">Foso 5: Pineapple Coconut 🍍🥥</div>
+  <div class="priceTag">1&nbsp;000&nbsp;000 ΣC</div>
+</div>
 
-        <!-- 8 -->
-        <div class="shopCard" data-index="7" title="Foso 8: Cola Ice 🥤❄️ (800 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g8_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth8_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs><linearGradient id="g8_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#00aaff"/></linearGradient>
-            <linearGradient id="mouth8_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
-          </svg>
-          <div style="font-weight:700">Foso 8: Cola Ice 🥤❄️</div>
-          <div class="priceTag">800&nbsp;000 ΣC</div>
-        </div>
+<!-- 6 -->
+<div class="shopCard" data-index="5" title="Foso 6: Grape Ice 🍇❄️ (20 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g6_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth6_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs>
+      <linearGradient id="g6_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9b59b6"/><stop offset="100%" stop-color="#2c003e"/></linearGradient>
+      <linearGradient id="mouth6_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700">10&nbsp;000&nbsp;000 </div>
+  <div class="priceTag">20&nbsp;000 ΣC</div>
+</div>
 
-        <!-- 9 -->
-        <div class="shopCard" data-index="8" title="Foso 9: Lychee Rose 🌸🍒 (1 200 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g9_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth9_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs><linearGradient id="g9_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2ecc71"/><stop offset="100%" stop-color="#145a32"/></linearGradient>
-            <linearGradient id="mouth9_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
-          </svg>
-          <div style="font-weight:700">Foso 9: Lychee Rose 🌸🍒</div>
-          <div class="priceTag">1&nbsp;200&nbsp;000 ΣC</div>
-        </div>
+<!-- 7 -->
+<div class="shopCard" data-index="6" title="Foso 7: Peach Mango 🍑🥭 (50 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g7_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth7_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs><linearGradient id="g7_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff0000"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    <linearGradient id="mouth7_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+  </svg>
+  <div style="font-weight:700">Foso 7: Peach Mango 🍑🥭</div>
+  <div class="priceTag">100&nbsp;000&nbsp;000 ΣC</div>
+</div>
 
-        <!-- 10 -->
-        <div class="shopCard" data-index="9" title="Foso 10: Apple Mint 🍏🌿 (2 500 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g10_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth10_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs><linearGradient id="g10_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff5733"/><stop offset="100%" stop-color="#900c3f"/></linearGradient>
-            <linearGradient id="mouth10_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
-          </svg>
-          <div style="font-weight:700">Foso 10: Apple Mint 🍏🌿</div>
-          <div class="priceTag">2&nbsp;500&nbsp;000 ΣC</div>
-        </div>
+<!-- 8 -->
+<div class="shopCard" data-index="7" title="Foso 8: Cola Ice 🥤❄️ (80 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g8_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth8_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs><linearGradient id="g8_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#00aaff"/></linearGradient>
+    <linearGradient id="mouth8_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+  </svg>
+  <div style="font-weight:700">Foso 8: Cola Ice 🥤❄️</div>
+  <div class="priceTag">1&nbsp;000&nbsp;000&nbsp;000 ΣC</div>
+</div>
 
-        <!-- 11 -->
-        <div class="shopCard" data-index="10" title="Foso 11: Banana Ice Cream 🍌🍦 (5 000 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g11_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth11_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs><linearGradient id="g11_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#39ff14"/><stop offset="100%" stop-color="#0ff"/></linearGradient>
-            <linearGradient id="mouth11_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
-          </svg>
-          <div style="font-weight:700">Foso 11: Banana Ice Cream 🍌🍦</div>
-          <div class="priceTag">5&nbsp;000&nbsp;000 ΣC</div>
-        </div>
+<!-- 9 -->
+<div class="shopCard" data-index="8" title="Foso 9: Lychee Rose 🌸🍒 (120 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g9_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth9_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs><linearGradient id="g9_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2ecc71"/><stop offset="100%" stop-color="#145a32"/></linearGradient>
+    <linearGradient id="mouth9_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+  </svg>
+  <div style="font-weight:700">Foso 9: Lychee Rose 🌸🍒</div>
+  <div class="priceTag">10&nbsp;000&nbsp;000&nbsp;000 ΣC</div>
+</div>
 
-        <!-- 12 -->
-        <div class="shopCard" data-index="11" title="Foso 12: Lemon Tart 🍋🥧 (10 000 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g12_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth12_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs><linearGradient id="g12_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00f5ff"/><stop offset="50%" stop-color="#7f00ff"/><stop offset="100%" stop-color="#00ff88"/></linearGradient>
-            <linearGradient id="mouth12_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
-          </svg>
-          <div style="font-weight:700">Foso 12: Lemon Tart 🍋🥧</div>
-          <div class="priceTag">10&nbsp;000&nbsp;000 ΣC</div>
-        </div>
+<!-- 10 -->
+<div class="shopCard" data-index="9" title="Foso 10: Apple Mint 🍏🌿 (250 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g10_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth10_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs><linearGradient id="g10_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff5733"/><stop offset="100%" stop-color="#900c3f"/></linearGradient>
+    <linearGradient id="mouth10_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+  </svg>
+  <div style="font-weight:700">Foso 10: Apple Mint 🍏🌿</div>
+  <div class="priceTag">100&nbsp;000&nbsp;000&nbsp;000 ΣC</div>
+</div>
 
-        <!-- 13 -->
-        <div class="shopCard" data-index="12" title="Foso 13: Cherry Cola 🍒🥤 (25 000 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g13_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth13_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs><linearGradient id="g13_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#cd7f32"/><stop offset="100%" stop-color="#6e2c00"/></linearGradient>
-            <linearGradient id="mouth13_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
-          </svg>
-          <div style="font-weight:700">Foso 13: Cherry Cola 🍒🥤</div>
-          <div class="priceTag">25&nbsp;000&nbsp;000 ΣC</div>
-        </div>
+<!-- 11 -->
+<div class="shopCard" data-index="10" title="Foso 11: Banana Ice Cream 🍌🍦 (500 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g11_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth11_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs><linearGradient id="g11_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#39ff14"/><stop offset="100%" stop-color="#0ff"/></linearGradient>
+    <linearGradient id="mouth11_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+  </svg>
+  <div style="font-weight:700">Foso 11: Banana Ice Cream 🍌🍦</div>
+  <div class="priceTag">1&nbsp;000&nbsp;000&nbsp;000&nbsp;000 ΣC</div>
+</div>
 
-        <!-- 14 -->
-        <div class="shopCard" data-index="13" title="Foso 14: Cotton Candy 🍭 (50 000 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g14_shop)"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth14_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs><linearGradient id="g14_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#85c1e9"/></linearGradient>
-            <linearGradient id="mouth14_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
-          </svg>
-          <div style="font-weight:700">Foso 14: Cotton Candy 🍭</div>
-          <div class="priceTag">50&nbsp;000&nbsp;000 ΣC</div>
-        </div>
+<!-- 12 -->
+<div class="shopCard" data-index="11" title="Foso 12: Lemon Tart 🍋🥧 (1 000 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g12_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth12_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs><linearGradient id="g12_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00f5ff"/><stop offset="50%" stop-color="#7f00ff"/><stop offset="100%" stop-color="#00ff88"/></linearGradient>
+    <linearGradient id="mouth12_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient></defs>
+  </svg>
+  <div style="font-weight:700">Foso 12: Lemon Tart 🍋🥧</div>
+  <div class="priceTag">10&nbsp;000&nbsp;000&nbsp;000&nbsp;000 ΣC</div>
+</div>
 
-        <!-- 15 (especial: cuerpo cambia rojo->azul->verde con animate) -->
-        <div class="shopCard" data-index="14" title="Foso 15: Black Diamond Reserve 💎🔥 (100 000 000 ΣC)">
-          <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g15_shop)" stroke="#222" stroke-width="1"/>
-            <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth15_shop)"/>
-            <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
-            <defs>
-              <linearGradient id="g15_shop" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="red">
-                  <animate attributeName="stop-color" values="red;blue;green;red" dur="3s" repeatCount="indefinite"/>
-                </stop>
-                <stop offset="100%" stop-color="red">
-                  <animate attributeName="stop-color" values="red;blue;green;red" dur="3s" repeatCount="indefinite"/>
-                </stop>
-              </linearGradient>
-              <linearGradient id="mouth15_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
-            </defs>
-          </svg>
-          <div style="font-weight:700">Foso 15: Black Diamond Reserve 💎🔥</div>
-          <div class="priceTag">100&nbsp;000&nbsp;000 ΣC</div>
-        </div>
+<!-- 13 -->
+<div class="shopCard" data-index="12" title="Foso 13: Cherry Cola 🍒🥤 (2 500 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g13_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth13_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs>
+      <linearGradient id="g13_shop" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#cd7f32"/><stop offset="100%" stop-color="#6e2c00"/>
+      </linearGradient>
+      <linearGradient id="mouth13_shop" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700">Foso 13: Cherry Cola 🍒🥤</div>
+  <div class="priceTag">100&nbsp;000&nbsp;000&nbsp;000&nbsp;000 ΣC</div>
+</div>
+
+<!-- 14 -->
+<div class="shopCard" data-index="13" title="Foso 14: Cotton Candy 🍭 (5 000 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g14_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth14_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs>
+      <linearGradient id="g14_shop" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#85c1e9"/>
+      </linearGradient>
+      <linearGradient id="mouth14_shop" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700">Foso 14: Cotton Candy 🍭</div>
+  <div class="priceTag">1&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000 ΣC</div>
+</div>
+
+<!-- 15 (especial: cuerpo cambia rojo->azul->verde con animate) -->
+<div class="shopCard" data-index="14" title="Foso 15: Black Diamond Reserve 💎🔥 (10 000 000 ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g15_shop)" stroke="#222" stroke-width="1"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth15_shop)"/>
+    <rect x="35" y="110" width="30" height="20" rx="4" fill="#000"/>
+    <defs>
+      <linearGradient id="g15_shop" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="red">
+          <animate attributeName="stop-color" values="red;blue;green;red" dur="3s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="100%" stop-color="red">
+          <animate attributeName="stop-color" values="red;blue;green;red" dur="3s" repeatCount="indefinite"/>
+        </stop>
+      </linearGradient>
+      <linearGradient id="mouth15_shop" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700">Foso 15: Black Diamond Reserve 💎🔥</div>
+  <div class="priceTag">10&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000 ΣC</div>
+</div>
+
+<!-- --- SECCION: Mejoras permanentes --- -->
+<div style="grid-column:1/-1; font-weight:800; margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.03)">
+  🔧 Mejoras permanentes
+</div>
+
+<!-- Upgrade: Batería -->
+<div class="shopCard" data-upgrade="battery_plus50" title="Aumenta la batería en +50">
+  <div class="metaTiny" style="font-weight:700">Batería +50</div>
+  <div class="priceTag"></div>
+</div>
+
+<!-- Upgrade: Auto-clicker -->
+<div class="shopCard" data-upgrade="autoclick_1" title="Añade 1 clic automático por segundo">
+  <div class="metaTiny" style="font-weight:700">Auto-clicker +1 CPS</div>
+  <div class="priceTag"></div>
+</div>
+
+<!-- Upgrade: Extra clic -->
+<div class="shopCard" data-upgrade="extra_click" title="Permite 1 clic extra antes de gastar batería">
+  <div class="metaTiny" style="font-weight:700">+1 clic extra</div>
+  <div class="priceTag"></div>
+</div>
+
 
       </div>
     </aside>
+  </div>
+</div>
+
 
 
   
@@ -564,6 +736,225 @@
   </div>
 </div>
 
+<!-- Modal Recompensas Diarias -->
+<div id="dailyModal" class="hidden" style="
+  position: fixed; top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.8); display:flex;
+  align-items:center; justify-content:center;
+  z-index:1000;">
+
+  <div style="background:#111; padding:20px; border-radius:12px;
+              max-width:600px; width:90%; text-align:center; color:#fff; position:relative;">
+
+    <span id="closeDaily" style="position:absolute; top:10px; right:15px; cursor:pointer; font-size:28px;">&times;</span>
+    <h2>🎁 Recompensas Diarias</h2>
+
+    <div id="carousel" style="display:flex; overflow-x:auto; gap:15px; padding:10px;">
+      <!-- Tarjetas generadas por JS -->
+    </div>
+
+    <button id="btnClaimDaily" style="margin-top:15px; padding:8px 16px; font-weight:bold;">
+      Reclamar de hoy
+    </button>
+  </div>
+</div>
+
+
+<script>
+// --- Configuración de recompensas diarias ---
+const DAILY_REWARDS = [
+  { type: "coins", amount: 100, label: "100 ΣC", icon: "💰" },
+  { type: "coins", amount: 500, label: "500 ΣC", icon: "💰" },
+  { type: "power", effect: "x2", duration: 60, label: "Poder x2 por 1 min", icon: "⚡" },
+  { type: "coins", amount: 2000, label: "2000 ΣC", icon: "💰" },
+  { type: "power", effect: "x2", duration: 300, label: "Poder x2 por 5 min", icon: "⚡" },
+  { 
+    type: "foso",
+    foso: {
+      name: "Foso Especial 💎",
+      perClick: 100,
+      svg: `
+        <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gSpecial)"/>
+          <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouthSpecial)"/>
+          <defs>
+            <linearGradient id="gSpecial" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00eaff"/>
+              <stop offset="100%" stop-color="#0077ff"/>
+            </linearGradient>
+            <linearGradient id="mouthSpecial" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2c2c54"/>
+              <stop offset="100%" stop-color="#000"/>
+            </linearGradient>
+          </defs>
+        </svg>`
+    },
+    label: "Foso Especial (100 ΣC/click)", icon: "💎"
+  }
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+  const dailyModal = document.getElementById("dailyModal");
+  const btnDaily = document.getElementById("btnDaily");
+  const btnClaimDaily = document.getElementById("btnClaimDaily");
+  const closeDaily = document.getElementById("closeDaily");
+  const carousel = document.getElementById("carousel");
+
+  let countdownInterval;
+
+  // --- Formatear tiempo en hh:mm:ss ---
+  function formatTime(ms) {
+    const totalSec = Math.max(0, Math.floor(ms / 1000));
+    const h = String(Math.floor(totalSec / 3600)).padStart(2, "0");
+    const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
+    const s = String(totalSec % 60).padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  }
+
+  // --- Abrir modal y rellenar carrusel ---
+  function openDailyModal() {
+    if (!carousel) return;
+    carousel.innerHTML = "";
+
+    DAILY_REWARDS.forEach((reward, idx) => {
+      const card = document.createElement("div");
+      card.style.minWidth = "120px";
+      card.style.padding = "10px";
+      card.style.borderRadius = "8px";
+      card.style.background = (idx === (state.dailyDay || 0)) ? "#facc15" : "#333";
+      card.style.color = "#fff";
+      card.style.textAlign = "center";
+
+      let extra = "";
+      if (idx === (state.dailyDay || 0) && state.nextDailyTime) {
+        const msLeft = state.nextDailyTime - Date.now();
+        if (msLeft > 0) {
+          extra = `<div id="dailyCountdownCard" style="margin-top:6px; font-size:12px; color:#000">⏳ ${formatTime(msLeft)}</div>`;
+        }
+      }
+
+      card.innerHTML = `
+        <div style="font-size:32px">${reward.icon}</div>
+        <div><strong>Día ${idx + 1}</strong></div>
+        <div style="font-size:14px">${reward.label}</div>
+        ${extra}
+      `;
+      carousel.appendChild(card);
+    });
+
+    updateCountdown();
+    countdownInterval = setInterval(updateCountdown, 1000);
+
+    dailyModal.classList.remove("hidden");
+  }
+
+  // --- Actualizar cuenta atrás ---
+  function updateCountdown() {
+    const btn = btnClaimDaily;
+    const countdownCard = document.getElementById("dailyCountdownCard");
+
+    if (!state.nextDailyTime) {
+      btn.disabled = false;
+      if (countdownCard) countdownCard.textContent = "";
+      return;
+    }
+
+    const msLeft = state.nextDailyTime - Date.now();
+
+    if (msLeft > 0) {
+      btn.disabled = true;
+      btn.textContent = `🎁 Reclamar recompensa diaria (⏳ ${formatTime(msLeft)})`;
+      if (countdownCard) countdownCard.textContent = `⏳ ${formatTime(msLeft)}`;
+    } else {
+      btn.disabled = false;
+      btn.textContent = "🎁 Reclamar recompensa diaria";
+      if (countdownCard) countdownCard.textContent = "✅ Disponible!";
+      clearInterval(countdownInterval);
+    }
+  }
+
+  // --- Reclamar recompensa ---
+  function claimDailyReward() {
+    const now = Date.now();
+    if (state.nextDailyTime && now < state.nextDailyTime) {
+      alert("Ya reclamaste tu recompensa diaria, vuelve más tarde!");
+      return;
+    }
+
+    const reward = DAILY_REWARDS[state.dailyDay] || DAILY_REWARDS[DAILY_REWARDS.length - 1];
+
+    switch (reward.type) {
+      case "coins":
+        state.sig = (state.sig || 0) + reward.amount;
+        break;
+
+      case "power":
+        const mult = reward.effect === "x2" ? 2 : 1;
+        state.perClickMult = (state.perClickMult || 1) * mult;
+        if (reward.duration) {
+          setTimeout(() => { state.perClickMult /= mult; }, reward.duration * 1000);
+        }
+        break;
+
+      case "foso":
+        if (reward.foso) {
+          FOSOS.push(reward.foso);
+        }
+        break;
+    }
+
+    state.lastDailyClaim = new Date().toDateString();
+    state.dailyDay = (state.dailyDay || 0) + 1;
+    state.nextDailyTime = now + 24 * 60 * 60 * 1000; // 24 horas
+
+    if (typeof saveState === "function") saveState();
+    if (typeof render === "function") render();
+    if (typeof renderShop === "function") renderShop();
+
+    alert(`Has ganado: ${reward.label}`);
+    dailyModal.classList.add("hidden");
+    clearInterval(countdownInterval);
+  }
+
+  // --- Listeners ---
+  if (btnDaily) btnDaily.addEventListener("click", openDailyModal);
+
+  if (btnClaimDaily) {
+    btnClaimDaily.type = "button";
+    btnClaimDaily.addEventListener("click", (e) => {
+      e.stopPropagation();
+      claimDailyReward();
+    });
+  }
+
+  if (closeDaily) {
+    closeDaily.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dailyModal.classList.add("hidden");
+      clearInterval(countdownInterval);
+    });
+  }
+
+  if (dailyModal) {
+    dailyModal.addEventListener("click", (e) => {
+      if (e.target === dailyModal) {
+        dailyModal.classList.add("hidden");
+        clearInterval(countdownInterval);
+      }
+    });
+  }
+});
+</script>
+
+
+
+
+<!-- REEMPLAZA/PEGAR: Bloque limpio para Recompensas Diarias (solo 1 copia) -->
+
+<!-- FIN bloque limpio -->
+
+
+
 <style>
   .config-grid {
     display: grid;
@@ -590,7 +981,18 @@
     border-radius: 4px;
   }
 </style>
+<script>
+window.onload = () => {
+  const btnShop = document.getElementById("btnShop");
+  console.log("¿Encontró el botón?", btnShop);
 
+  if (btnShop) {
+    btnShop.addEventListener("click", () => {
+      console.log("🟡 Hiciste clic en el botón Tienda!");
+    });
+  }
+};
+</script>
 <script>
 /* Lógica JS mínima para la maqueta:
    - 15 fosos con costes y sigmacoin-per-click
@@ -604,22 +1006,29 @@
 
 // Configuración inicial (puedes ajustar)
 const FOSOS = [
-  {id:1, name:'Foso 1', cost:0, perClick:1},
-  {id:2, name:'Foso 2', cost:2000, perClick:2},
-  {id:3, name:'Foso 3', cost:4000, perClick:5},
-  {id:4, name:'Foso 4', cost:10000, perClick:10},
-  {id:5, name:'Foso 5', cost:50000, perClick:50},
-  {id:6, name:'Foso 6', cost:200000, perClick:200},
-  {id:7, name:'Foso 7', cost:500000, perClick:500},
-  {id:8, name:'Foso 8', cost:800000, perClick:1000},
-  {id:9, name:'Foso 9', cost:1200000, perClick:2500},
-  {id:10, name:'Foso 10', cost:2500000, perClick:5000},
-  {id:11, name:'Foso 11', cost:5000000, perClick:10000},
-  {id:12, name:'Foso 12', cost:10000000, perClick:25000},
-  {id:13, name:'Foso 13', cost:25000000, perClick:50000},
-  {id:14, name:'Foso 14', cost:50000000, perClick:100000},
-  {id:15, name:'Foso 15', cost:100000000, perClick:250000}
+ {id:1,  name:'Foso 1',  cost:0,                    perClick:1},
+ {id:2,  name:'Foso 2',  cost:100,                  perClick:2},
+ {id:3,  name:'Foso 3',  cost:10_000,               perClick:10},
+ {id:4,  name:'Foso 4',  cost:100_000,              perClick:100},
+ {id:5,  name:'Foso 5',  cost:1_000_000,            perClick:1_000},
+ {id:6,  name:'Foso 6',  cost:10_000_000,           perClick:10_000},
+ {id:7,  name:'Foso 7',  cost:100_000_000,          perClick:100_000},
+ {id:8,  name:'Foso 8',  cost:1_000_000_000,        perClick:1_000_000},
+ {id:9,  name:'Foso 9',  cost:10_000_000_000,       perClick:10_000_000},
+ {id:10, name:'Foso 10', cost:100_000_000_000,      perClick:100_000_000},
+ {id:11, name:'Foso 11', cost:1_000_000_000_000,    perClick:1_000_000_000},
+ {id:12, name:'Foso 12', cost:10_000_000_000_000,   perClick:10_000_000_000},
+ {id:13, name:'Foso 13', cost:100_000_000_000_000,  perClick:100_000_000_000},
+ {id:14, name:'Foso 14', cost:1_000_000_000_000_000, perClick:1_000_000_000_000},
+ {id:15, name:'Foso 15', cost:10_000_000_000_000_000, perClick:10_000_000_000_000}
 ];
+
+
+const shopGrid = document.getElementById('shopGrid');
+
+let autoClickTimer = null;
+
+
 
 // Estado
 let state = {
@@ -627,6 +1036,7 @@ let state = {
   totalClicks: 0,
   activeFosoIndex: 0, // index in FOSOS array, default 0
   battery: 100, // percent
+  maxBattery: 100, // can be increased with upgrades
   burned: false,
   powerOn: true,
   mataCooldownUntil: 0, // timestamp
@@ -634,9 +1044,11 @@ let state = {
   smokerOn: false,
   autoClickExpiresAt: 0, // timestamp when autoclick boost ends
   smokerExpiresAt: 0,
- 
-// caladas acumuladas desde última recarga
- // timestamp when smoker boost ends
+  dailyDay: 0,        // progreso en la lista de recompensas
+lastDailyClaim: null,  // fecha del último reclamo (timestamp)
+
+
+  // caladas acumuladas desde última recarga
   // Nuevos campos
   lang: 'es',
   powersOwned: {}, // id -> true
@@ -644,8 +1056,17 @@ let state = {
   batteryEfficiencyLevel: 0, // each level reduces drain by 10%
   rechargeSpeedLevel: 0, // each level increases recharge rate by 10%
   perClickMult: 1,
-  passivePerSec: 0
+  passivePerSec: 0,
+
+  // 🔧 añadidos para que no salga undefined:
+  upgradeLevels: {
+    battery_plus50: 0,
+    autoclick_1: 0,
+    extra_click: 0
+  },
+  extraClicks: 0
 };
+
 
 // DOM refs
 const sigTotalEl = document.getElementById('sigTotal');
@@ -656,7 +1077,7 @@ const batteryLabel = document.getElementById('batteryLabel');
 const shopSigma = document.getElementById('shopSigma');
 const btnMata = document.getElementById('btnMata');
 const mataLabel = document.getElementById('mataLabel');
-const shopGrid = document.getElementById('shopGrid');
+
 const centralFoso = document.getElementById('centralFoso');
 const vaperWrap = document.getElementById('vaperWrap');
 
@@ -700,6 +1121,22 @@ document.getElementById('btnReset')?.addEventListener('click', ()=>{
   }
 });
      // recarga la página limpia
+     // Botón de Tienda
+const btnShop = document.getElementById('btnShop');
+const shopModal = document.getElementById('shopModal');
+
+// Abrir tienda
+btnShop?.addEventListener('click', () => {
+  shopModal.classList.remove('hidden');
+});
+
+// Cerrar tienda (los botones con la clase .close-btn dentro del modal)
+shopModal.querySelectorAll('.close-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    shopModal.classList.add('hidden');
+  });
+});
+
 
 
 
@@ -714,6 +1151,9 @@ function loadState(){
   }catch(e){ console.warn('load state err', e); }
 }
 function saveState(){
+  state.lastPlayed = Date.now();   // 👈 guarda hora de salida
+  localStorage.setItem("gameState", JSON.stringify(state));
+
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
 }
 setInterval(saveState, CONFIG.autosaveMs);
@@ -761,6 +1201,16 @@ function syncCentralAppearance(activeIndex){
   const mouthRect = rects[1];
   if(bodyRect) bodyRect.setAttribute('fill','url(#gActive)');
   if(mouthRect) mouthRect.setAttribute('fill','url(#mouthActive)');
+    // Recompensa AFK
+  if (state.lastPlayed) {
+    const diffSec = Math.floor((Date.now() - state.lastPlayed) / 1000);
+    if (diffSec > 5) { // mínimo 5s de inactividad
+      const reward = Math.min(diffSec * (state.passivePerSec || 1), 10000); // límite 10K
+      state.sig += reward;
+      alert(`💤 Bienvenido de nuevo! Has ganado ${formatNum(reward)} ΣC mientras estabas AFK.`);
+    }
+  }
+
 }
 
 function render(){
@@ -770,11 +1220,16 @@ function render(){
   const basePer = FOSOS[state.activeFosoIndex].perClick;
   const per = basePer * state.perClickMult;
   perClickEl.textContent = formatNum(per);
-    const batteryText = document.getElementById("batteryText");
-  if(batteryText){
-    batteryText.textContent = Math.round(state.battery) + "%";
-    batteryText.setAttribute("fill", state.battery > 20 ? "#0f0" : "#f00");
-  }
+const batteryText = document.getElementById("batteryText");
+if (batteryText) {
+  const maxB = state.maxBattery || 100;
+  const percent = Math.floor((state.battery / maxB) * 100);
+
+  batteryText.textContent = percent + "%";
+  batteryText.setAttribute("fill", percent > 20 ? "#0f0" : "#f00");
+}
+
+
   // Mata cooldown
   const now = Date.now();
   if(state.mataCooldownUntil && state.mataCooldownUntil > now){
@@ -814,38 +1269,74 @@ function registerClick(){
 let isCharging = false;
 let chargeStartAt = 0;
 let burnCheckTimer = null;
+let timeWhenReachedFull = 0; 
 const btnChargeToggle = document.getElementById('btnChargeToggle');
 
+
+
+
 function setCharging(active){
-  isCharging = active;
-  if(active){
+  isCharging = !!active;
+  const tickMs = 1000; // cada 1s actualizamos carga
+  const maxB = () => (state.maxBattery || 100);
+
+  if(isCharging){
     chargeStartAt = Date.now();
     btnChargeToggle.textContent = 'Parar Carga';
-    // revisar cada 1s: si llega a 100% y se mantiene 60s más, se quema
+    // limpiar timer previo
     if(burnCheckTimer) clearInterval(burnCheckTimer);
+
+    // arrancar timer que incrementa batería y comprueba sobrecarga
     burnCheckTimer = setInterval(()=>{
       if(!isCharging) return;
-      const elapsed = Date.now() - chargeStartAt;
-      const atFull = state.battery >= 100;
-      if(atFull){
-        const overTimeMs = elapsed - timeWhenReachedFull;
-        if(timeWhenReachedFull===0){ timeWhenReachedFull = Date.now(); }
-        if(overTimeMs >= 60*1000){
+
+      // 1) incrementar batería de forma proporcional al tiempo de recarga configurado
+      const basePerSec = maxB() / (CONFIG.rechargeBaseSec || 120); // ej. si rechargeBaseSec=120 -> llena en 120s
+      const speedMultiplier = 1 + ((state.rechargeSpeedLevel || 0) * 0.1); // bonus por mejoras
+      const inc = basePerSec * speedMultiplier * (tickMs / 1000);
+
+      state.battery = Math.min(maxB(), state.battery + inc);
+
+      // 2) gestionar momento en que llega a full y empezar el contador de sobrecarga
+      if(state.battery >= maxB()){
+        if(timeWhenReachedFull === 0){
+          timeWhenReachedFull = Date.now();
+        }
+      } else {
+        // si baja de full mientras sigue cargando, resetear el contador
+        timeWhenReachedFull = 0;
+      }
+
+      // 3) si se mantiene FULL por 60s -> quemar
+      if(timeWhenReachedFull !== 0){
+        const overTimeMs = Date.now() - timeWhenReachedFull;
+        if(overTimeMs >= 60 * 1000){
           state.burned = true;
           state.battery = 0;
           setCharging(false);
           showBurnSmoke();
           alert('Se quemó por sobrecarga: 100% + 1 minuto.');
-          render(); saveState();
+          render();
+          saveState();
+          return;
         }
       }
-    }, 1000);
+
+      // 4) actualizar UI y guardar cada tick
+      render();
+      saveState();
+    }, tickMs);
+
   } else {
+    // parar carga
     btnChargeToggle.textContent = 'Cargar Foso';
     timeWhenReachedFull = 0;
-    if(burnCheckTimer) { clearInterval(burnCheckTimer); burnCheckTimer=null; }
+    if(burnCheckTimer){ clearInterval(burnCheckTimer); burnCheckTimer = null; }
+    saveState();
   }
 }
+
+
 
 btnChargeToggle?.addEventListener('click', ()=>{
   if(state.burned){ alert('El foso está quemado. Equipa/compra otro.'); return; }
@@ -899,6 +1390,10 @@ function showBurnSmoke(){
 
 // central click handler
 function handleCentralClick(){
+  if(isCharging){ 
+    alert('No puedes vapear mientras se está cargando.'); 
+    return; 
+  }
   if(!state.powerOn) return; // apagado: no responde
   if(state.burned){ alert('El foso está quemado. Compra/selecciona otro.'); return; }
   if(state.battery <= 0){ alert('Batería agotada.'); return; }
@@ -918,21 +1413,17 @@ function handleCentralClick(){
   render(); saveState();
 }
 // attach clicks to both wrapper and svg para fiabilidad (evitar dobles listeners si se reinserta script)
-// Power button ON/OFF
 document.getElementById('btnPower')?.addEventListener('click', ()=>{
   state.powerOn = !state.powerOn;
   const b = document.getElementById('btnPower');
   b.textContent = state.powerOn ? 'Power ON' : 'Power OFF';
   b.style.background = state.powerOn ? '#10b981' : '#9ca3af';
-  // Al apagar: pausa carga y previene clicks/auto
-  if(!state.powerOn){
-    if(isCharging) setCharging(false);
-  }
+  // ⚡ Nota: ahora al apagar NO se interrumpe la carga
   render(); saveState();
 });
 
 try{
-  document.getElementById('vaperWrap')?.addEventListener('click', handleCentralClick, { once:false });
+ 
   document.getElementById('centralFoso')?.addEventListener('click', handleCentralClick, { once:false });
   const cf = document.getElementById('centralFoso');
   cf?.setAttribute('tabindex','0');
@@ -946,46 +1437,109 @@ try{
 
     // Si no lo tienes comprado → comprar
  // shop interactions: comprar/equipar foso
-shopGrid.querySelectorAll('.shopCard').forEach(card=>{
-  card.addEventListener('click', ()=>{
-    const idx = Number(card.getAttribute('data-index'));
-    const f = FOSOS[idx];
-
-    // Si ya lo tienes comprado → solo equipar
-    if(state.fososOwned && state.fososOwned[idx]){
-      state.activeFosoIndex = idx;
-      state.burned = false;
-      render(); saveState();
-      return;
+// ======================= UPGRADES DEFINIDOS =======================
+const UPGRADES = {
+  battery_plus50: {
+    baseCost: 100,
+    name: "Batería +50 (perm)",
+    maxLevel: 3,
+    getCost: (level) => 100 * Math.pow(2, level),  // 👈 añadido
+    apply: () => {
+      const oldMax = state.maxBattery || 100;
+      const oldPercent = state.battery / oldMax;
+      state.maxBattery = oldMax + 50;
+      state.battery = Math.round(state.maxBattery * oldPercent);
     }
+  },
 
-    // Si no lo tienes comprado → intentar comprar
-    if(state.sig >= f.cost){
-      state.sig -= f.cost;
-      state.activeFosoIndex = idx;
-      state.burned = false;
-      state.battery = Math.min(100, state.battery + CONFIG.onEquipRefill);
-
-      // marcar adquirido en localStorage
-      state.fososOwned = state.fososOwned || {};
-      state.fososOwned[idx] = true;
-
-      // mostrar visualmente "Adquirido" en la tarjeta
-      card.querySelector(".status")?.remove();
-      const status = document.createElement("div");
-      status.className = "status";
-      status.textContent = "Adquirido";
-      status.style.color = "lime";
-      card.appendChild(status);
-
-      renderShop(); // refrescar etiquetas de "Adquirido"
-      render(); 
-      saveState();
-    } else {
-      alert('No tienes suficientes ΣC para comprar este foso.');
+  autoclick_1: {
+    baseCost: 500,
+    name: "Auto-clicker +1 CPS",
+    maxLevel: 3,
+    getCost: (level) => 500 * Math.pow(2, level),  // 👈 añadido
+    apply: () => {
+      state.autoClickerLevel++;
     }
+  },
+
+  extra_click: {
+    baseCost: 200,
+    name: "+1 clic extra",
+    maxLevel: 3,
+    getCost: (level) => 200 * Math.pow(2, level),  // 👈 añadido
+    apply: () => {
+      state.extraClicks = (state.extraClicks || 0) + 1;
+    }
+  }
+};
+Cost: 100,
+    
+
+
+
+
+// ======================= COMPRAR O EQUIPAR FOSO =======================
+function buyFoso(idx, card){
+  const f = FOSOS[Number(idx)];
+  if(!f) return;
+  state.fososOwned = state.fososOwned || {};
+
+  if(state.fososOwned[idx]){
+    state.activeFosoIndex = Number(idx);
+    state.burned = false;
+    render(); saveState();
+    return;
+  }
+
+  if(state.sig < f.cost){
+    alert('No tienes suficientes ΣC para comprar este foso.');
+    return;
+  }
+
+  state.sig -= f.cost;
+  state.activeFosoIndex = Number(idx);
+  state.burned = false;
+const maxB = state.maxBattery || 100;
+state.battery = Math.min(maxB, state.battery + CONFIG.onEquipRefill);
+
+
+  state.fososOwned[idx] = true;
+
+  if(card){
+    card.querySelector(".status")?.remove();
+    const status = document.createElement("div");
+    status.className = "status";
+    status.textContent = "Adquirido";
+    status.style.color = "lime";
+    card.appendChild(status);
+  }
+
+  renderShop(); render(); saveState();
+}
+
+const maxB = state.maxBattery || 100;
+state.battery = Math.min(maxB, state.battery + CONFIG.onEquipRefill);
+
+// ======================= CLICK EN SHOPGRID =======================
+
+if (shopGrid) {
+  shopGrid.addEventListener('click', (e)=>{
+    const card = e.target.closest('.shopCard');
+    if(!card) return;
+    const upg = card.getAttribute('data-upgrade');
+    const idx = card.getAttribute('data-index');
+    if(upg){ buyUpgrade(upg, card); return; }
+    if(idx !== null){ buyFoso(idx, card); return; }
   });
-});
+}
+
+// pintar al inicio
+renderShop();
+
+
+// referencia única al grid de la tienda
+
+
 
 
 
@@ -1006,14 +1560,57 @@ document.getElementById('btnNuevoFoso')?.addEventListener('click', ()=>{
   if(state.sig < COST){ alert('Necesitas 25 ΣC para comprar un nuevo foso.'); return; }
   state.sig -= COST;
   state.burned = false;
-  state.battery = Math.min(100, state.battery + 20);
+  state.battery = Math.min(state.maxBattery || 100, state.battery + 20);
+
   // opcional: cambiar a un foso base (index 0), o mantener el actual
   // state.activeFosoIndex = 0;
   render(); saveState();
 });
 
 // Autoclicker + Smoker + puntero virtual
-let autoClickTimer = null;
+
+
+function updateAutoClickLoop() {
+  if (autoClickTimer) clearInterval(autoClickTimer);
+
+  const lvl = state.autoClickerLevel || 0;
+  if (lvl > 0) {
+    autoClickTimer = setInterval(() => {
+      if (isCharging) return; // ⛔ no autoclick mientras carga
+      for (let i = 0; i < lvl; i++) {
+        doClick(); // 🔥 dispara un click por cada nivel
+      }
+    }, 1000);
+  }
+}
+
+function applyOwnedUpgrades() {
+  if (!state.upgradesOwned) return;
+  for (const key in state.upgradesOwned) {
+    const u = UPGRADES[key];
+    if (u) {
+      const level = state.upgradesOwned[key];
+
+      // 👉 caso especial: autoclick
+      if (key === "autoclick_1") {
+        state.autoClickerLevel = level;
+      } else {
+        // para upgrades normales, aplicar N veces
+        for (let i = 0; i < level; i++) {
+          u.apply();
+        }
+      }
+    }
+  }
+  // después de todo, si había autoclickers, arrancar el loop
+  updateAutoClickLoop();
+}
+
+applyOwnedUpgrades();
+updateAutoClickLoop();
+
+
+
 function spawnPointer(){
   try{
     const wrap = document.getElementById('vaperWrap');
@@ -1036,23 +1633,16 @@ function spawnPointer(){
     ], { duration: 300, easing: 'ease-out' }).onfinish=()=> pointer.remove();
   }catch(_){}
 }
-function updateAutoClickLoop(){
-  if(autoClickTimer){ clearInterval(autoClickTimer); autoClickTimer = null; }
-  const baseCps = state.autoClickerLevel; // cada nivel = 1 click/seg
-  const smokerCps = state.smokerOn ? 5 : 0; // fumador = +5 clicks/seg
-  const totalCps = baseCps + smokerCps;
-  if(totalCps <= 0) return;
-  const intervalMs = 1000/totalCps;
-  autoClickTimer = setInterval(()=>{
-    if(state.burned) return;
-    if(state.battery <= 0) return;
-    // marcar autoclick para no contar CPS del usuario
-    state._autoClickInProgress = true;
-    try{ handleCentralClick(); } finally { state._autoClickInProgress = false; }
-    spawnPointer();
-    render(); saveState();
-  }, Math.max(20, intervalMs));
+function updateAutoClickLoop() {
+  if (autoClickTimer) clearInterval(autoClickTimer);
+  if ((state.autoClickerLevel || 0) > 0) {
+    autoClickTimer = setInterval(() => {
+      if (isCharging) return;  // ⛔ bloquear autoclick si está cargando
+      doClick();
+    }, 1000 / (state.autoClickerLevel));
+  }
 }
+
 
 // Botones menú inferior
 document.getElementById('btnAutoClick')?.addEventListener('click', ()=>{
@@ -1128,11 +1718,17 @@ function applyPowerEffect(effect){
   }
 }
 
-document.getElementById('btnPowers').addEventListener('click', ()=>{
-  const modal = document.getElementById('powersModal');
-  modal.classList.remove('hidden');
-  renderPowers();
-});
+
+const btnPowers = document.getElementById('btnPowers');
+if (btnPowers) {
+  btnPowers.addEventListener('click', () => {
+    const modal = document.getElementById('powersModal');
+    if (modal) {
+      modal.classList.remove('hidden');
+    }
+  });
+}
+
 
 
 
@@ -1159,21 +1755,15 @@ setInterval(()=>{
   // Recarga pasiva por tiempo y carga manual activa acelera x2 (solo si Power ON)
 let rechargeRatePerSec = 0;
 
-if(isCharging && !state.burned && state.powerOn){
+// ahora ya no depende de powerOn, solo de que no esté quemado
+if(isCharging && !state.burned){
   rechargeRatePerSec = (100/CONFIG.rechargeBaseSec) * (1 + (state.rechargeSpeedLevel||0)*0.1) * 2;
 }
 
-  state.battery = Math.min(100, state.battery + rechargeRatePerSec*(CONFIG.uiTickMs/1000));
+state.battery = Math.min(100, state.battery + rechargeRatePerSec*(CONFIG.uiTickMs/1000));
 
-  // update central battery bar width relative to 28px area
-  //const bar = document.getElementById('centralBatteryBar');
-  //if(bar){
-    //const w = Math.max(0, Math.min(28, 28*(state.battery/100)));
-    //bar.setAttribute('width', w.toFixed(2));
-  //}
-
-  render();
-  saveState();
+render();
+saveState();
 }, CONFIG.uiTickMs);
 
 // iniciar loop de autoclick si aplica
@@ -1380,13 +1970,15 @@ function renderShop(){
   // const battTextEl = document.getElementById('dropPercent'); if(battTextEl) battTextEl.textContent = Math.round(state.battery) + '%';
 
 
-if(state.fososOwned && state.fososOwned[idx]){
-  const status = document.createElement("div");
-  status.className = "status";
-  status.textContent = "Adquirido";
-  status.style.color = "lime";
-  card.appendChild(status);
-}
+document.querySelectorAll(".shopCard").forEach((card, idx) => {
+  if (state.fososOwned && state.fososOwned[idx]) {
+    const status = document.createElement("div");
+    status.className = "status";
+    status.textContent = "Adquirido";
+    status.style.color = "lime";
+    card.appendChild(status);
+  }
+});
 
 // Abrir modal Configuración
 document.getElementById("btnConfig")?.addEventListener("click", ()=>{
@@ -1440,6 +2032,421 @@ document.getElementById('btnSigmaHack')?.addEventListener('click', ()=>{
   saveState();
   alert("💰 Hack activado: Sigma infinito!");
 });
+
+// --- TIENDA MODAL ---
+
+// Abrir Tienda
+
+
+if (btnShop) {
+  btnShop.addEventListener("click", ()=>{
+    document.getElementById("shopModal").classList.remove("hidden");
+  });
+}
+
+btnChargeToggle?.addEventListener('click', ()=>{
+  if(state.burned){ alert('El foso está quemado. Equipa/compra otro.'); return; }
+  setCharging(!isCharging);
+});
+
+
+function buyUpgrade(upgradeKey) {
+  const upgrade = UPGRADES[upgradeKey];
+  if (!upgrade) {
+    console.error("❌ Upgrade no encontrado:", upgradeKey);
+    return;
+  }
+
+  const level = state.upgradeLevels?.[upgradeKey] || 0;
+  console.log(`Intentando comprar ${upgradeKey}, nivel actual: ${level}`);
+
+  if (level >= upgrade.maxLevel) {
+    console.log("Ya está en nivel máximo");
+    return;
+  }
+
+  const cost = upgrade.getCost(level);
+  console.log(`Costo calculado: ${cost}, SIG actual: ${state.sig}`);
+
+  if (state.sig < cost) {
+    console.log("No hay suficiente SIG");
+    return;
+  }
+
+  // compra
+  state.sig -= cost;
+  upgrade.apply();
+  state.upgradeLevels[upgradeKey] = level + 1;
+
+  console.log(`✔️ Compra hecha, nuevo nivel: ${state.upgradeLevels[upgradeKey]}`);
+  renderUpgradeShop();
+  render();
+  saveState();
+}
+
+
+
+function applyOwnedUpgrades() {
+  if (!state.upgradesOwned) return;
+  for (const key in state.upgradesOwned) {
+    const u = UPGRADES[key];
+    if (u) {
+      const level = state.upgradesOwned[key];
+
+      if (key === "autoclick_1") {
+        // 🚀 Asignar directamente el nivel sin sumar
+        state.autoClickerLevel = level;
+      } else {
+        // aplicar upgrades normales tantas veces como nivel
+        for (let i = 0; i < level; i++) {
+          u.apply();
+        }
+      }
+    }
+  }
+  // arrancar autoclick después de restaurar el nivel
+  updateAutoClickLoop();
+}
+
+
+loadState();
+applyOwnedUpgrades();
+
+// ------------------ Recompensa AFK (límite 10.000 ΣC) ------------------
+(function grantAFK() {
+  try {
+    const last = state.lastPlayed || 0;
+    if (!last) return; // nada que hacer si no hay marca previa
+
+    const now = Date.now();
+    let diffSeconds = Math.floor((now - last) / 1000);
+
+    // mínimo 5s para considerar AFK (evita falsos positivos)
+    if (diffSeconds <= 5) {
+      state.lastPlayed = now; // reajusta la marca
+      return;
+    }
+
+    // limitar segundos considerados (evita números gigantes)
+    const MAX_SECONDS = 86400; // 24h
+    diffSeconds = Math.min(diffSeconds, MAX_SECONDS);
+
+    // calculamos ingreso por segundo:
+    // - state.passivePerSec (poderes pasivos)
+    // - + clicks automáticos: autoClickerLevel * perClick * perClickMult
+    const perClickBase = (FOSOS[state.activeFosoIndex] && FOSOS[state.activeFosoIndex].perClick) || 1;
+    const autoClicksPerSec = (state.autoClickerLevel || 0) * perClickBase * (state.perClickMult || 1);
+    const passive = state.passivePerSec || 0;
+    const incomePerSec = passive + autoClicksPerSec;
+
+    let gained = Math.floor(incomePerSec * diffSeconds);
+
+    // límite máximo total a entregar
+    const MAX_GAIN = 10000;
+    if (gained > MAX_GAIN) gained = MAX_GAIN;
+
+    if (gained > 0) {
+      state.sig = (state.sig || 0) + gained;
+      // mensaje al usuario (puedes quitar alert y poner un modal si prefieres)
+      alert(`💤 Has ganado ${formatNum(gained)} ΣC por ${diffSeconds} segundos AFK (límite ${formatNum(MAX_GAIN)}).`);
+    }
+
+    // actualizar la marca para que no vuelva a contarse lo mismo
+    state.lastPlayed = now;
+
+    // refrescar UI y guardar nuevo estado
+    try { renderShop(); } catch(e){/* renderShop puede estar definido después pero es hoisted en funciones normales */ }
+    try { render(); } catch(e){}
+    try { saveState(); } catch(e){}
+  } catch (err) {
+    console.warn('AFK grant error', err);
+  }
+})();
+
+// Guardar marca de salida al cerrar/recargar (no la pongas en autosave)
+window.addEventListener('beforeunload', () => {
+  try {
+    state.lastPlayed = Date.now();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { /* ignore */ }
+});
+
+
+function renderShop() {
+  const shopGrid = document.getElementById("shopGrid");
+  shopGrid.querySelectorAll(".shopCard").forEach(card => {
+    const upgradeKey = card.getAttribute("data-upgrade");
+    if (!upgradeKey) return;
+
+    const u = UPGRADES[upgradeKey];
+    if (!u) return;
+
+    const currentLevel = state.upgradeLevels?.[upgradeKey] || 0;
+    const priceEl = card.querySelector(".priceTag");
+
+    if (!priceEl) return;
+
+    if (currentLevel >= (u.maxLevel || 1)) {
+      priceEl.textContent = `✔️ Máx (${u.maxLevel})`;
+      card.style.opacity = "0.7";
+    } else {
+      const cost = u.getCost(currentLevel); // ✅ usar getCost(level)
+      priceEl.textContent = `${cost} ΣC (Lv ${currentLevel}/${u.maxLevel})`;
+      card.style.opacity = "1";
+    }
+  });
+}
+
+
+const speedMultiplier = 1 + ((state.rechargeSpeedLevel || 0) * 0.1);
+
+function doClick() {
+  if (isCharging) return;   // no clikear si está cargando
+  if (state.burned) return; // no clikear si el foso está quemado
+
+  state.sig += (1 * (state.perClickMult || 1));
+  state.totalClicks++;
+  render();
+  saveState();
+}
+
+
+
+// ---------------------- AutoClicker ----------------------
+
+function updateAutoClickLoop() {
+  if (autoClickTimer) clearInterval(autoClickTimer);
+
+  const lvl = state.autoClickerLevel || 0;
+  if (lvl > 0) {
+    autoClickTimer = setInterval(() => {
+      if (isCharging || state.burned) return; // no autoclick mientras carga o quemado
+      for (let i = 0; i < lvl; i++) {
+        doClick(); // dispara clicks automáticos
+      }
+    }, 1000); // cada segundo
+  }
+}
+
+applyOwnedUpgrades();
+updateAutoClickLoop(); // activa autoclick si ya estaba comprado
+
+// 🟢 DEBUG AUTCLICKER
+setInterval(() => {
+  console.log("DEBUG >>",
+    "nivel:", state.autoClickerLevel,
+    "sig:", state.sig,
+    "battery:", Math.round(state.battery) + "/" + state.maxBattery,
+    "isCharging:", isCharging,
+    "burned:", state.burned,
+    "autoClickTimer activo:", !!autoClickTimer
+  );
+}, 3000);
+
+console.log("🟢 Script cargado correctamente");
+
+function pointerClickEffect() {
+  const pointer = document.getElementById("autoClickPointer");
+  const foso = document.getElementById("centralFoso");
+  if (!pointer || !foso) return;
+
+  const rect = foso.getBoundingClientRect();
+  pointer.style.left = rect.left + rect.width / 2 - 12 + "px"; // centrado
+  pointer.style.top = rect.top + rect.height / 2 - 12 + "px";
+
+  pointer.classList.add("active");
+  setTimeout(() => pointer.classList.remove("active"), 150);
+}
+
+function renderUpgradeShop() {
+  Object.keys(UPGRADES).forEach(key => {
+    const upgrade = UPGRADES[key];
+    const level = state.upgradeLevels?.[key] || 0;
+    const priceEl = document.querySelector(`.shopCard[data-upgrade="${key}"] .priceTag`);
+    if (!priceEl) return;
+
+    if (level >= upgrade.maxLevel) {
+      priceEl.textContent = "MAX";
+    } else {
+      // 👇 AQUÍ EL CAMBIO IMPORTANTE
+      const cost = upgrade.getCost(level);  
+      console.log("Render:", key, "nivel", level, "coste:", cost); // para verificar
+      priceEl.textContent = `${cost} ΣC (Lv ${level}/${upgrade.maxLevel})`;
+    }
+  });
+}
+
+
+// --- DEBUG DAILY REWARDS ---
+
+
+
+
+
+// --- EVENTOS ---
+
+
+
+
+
+
+
+renderUpgradeShop();
+
+
+// Botón que abre el modal
+document.getElementById("btnDaily").addEventListener("click", openDailyModal);
+
+// Botón dentro del modal para reclamar
+
+
+
+
+
+
+// Cerrar modal
+
+
+ 
+<!-- PEGAR: Bloque de reparación/depuración de Recompensas Diarias -->
+
+(function(){
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log("DEBUG daily-fix: iniciando (pegar este script al final del HTML)");
+
+    const dailyModal = document.getElementById('dailyModal');
+    let btnDaily = document.getElementById('btnDaily');
+    let btnClaimDaily = document.getElementById('btnClaimDaily');
+    let closeDaily = document.getElementById('closeDaily');
+
+    console.log("DEBUG elementos encontrados:", { btnDaily, btnClaimDaily, closeDaily, dailyModal });
+
+    // Reemplaza nodos por clones para eliminar listeners previos
+    function replaceNode(node){
+      if(!node || !node.parentNode) return node;
+      const clone = node.cloneNode(true);
+      node.parentNode.replaceChild(clone, node);
+      return clone;
+    }
+    if(btnDaily) btnDaily = replaceNode(btnDaily);
+    if(btnClaimDaily) btnClaimDaily = replaceNode(btnClaimDaily);
+    if(closeDaily) closeDaily = replaceNode(closeDaily);
+
+    // DEFINIR openDailyModal (estable y con debug)
+    window.openDailyModal = function(){
+      console.log("DEBUG openDailyModal (nuevo) ejecutado");
+      if(!dailyModal){
+        console.warn("dailyModal no encontrado");
+        return;
+      }
+      // rellenar carousel si existe
+      const carousel = document.getElementById('carousel');
+      if(carousel && Array.isArray(window.DAILY_REWARDS)){
+        carousel.innerHTML = '';
+        window.DAILY_REWARDS.forEach((r, idx) => {
+          const card = document.createElement('div');
+          card.style.minWidth = "120px";
+          card.style.padding = "10px";
+          card.style.borderRadius = "8px";
+          card.style.background = (idx === (state.dailyDay || 0)) ? "#0f0" : "#333";
+          card.style.color = "#fff";
+          card.innerHTML = `
+            <div style="font-size:32px">${r.icon || ''}</div>
+            <div>Día ${idx + 1}</div>
+            <div style="font-size:14px">${r.label || ''}</div>
+          `;
+          carousel.appendChild(card);
+        });
+      }
+      dailyModal.classList.remove('hidden');
+    };
+
+    // DEFINIR claimDailyReward (estable y con debug)
+    window.claimDailyReward = function(){
+      console.log("DEBUG claimDailyReward (nuevo) ejecutado");
+      try {
+        const today = new Date().toDateString();
+        if(state.lastDailyClaim === today){
+          console.log("DEBUG: ya reclamado hoy");
+          alert("Ya reclamaste la recompensa de hoy.");
+          return;
+        }
+
+        if(!Array.isArray(window.DAILY_REWARDS) || window.DAILY_REWARDS.length === 0){
+          console.error("DEBUG: DAILY_REWARDS no definido o vacío");
+          alert("No hay recompensas definidas. Mira la consola.");
+          return;
+        }
+
+        const reward = window.DAILY_REWARDS[state.dailyDay] || window.DAILY_REWARDS[window.DAILY_REWARDS.length - 1];
+        console.log("DEBUG: recompensa seleccionada:", reward);
+
+        switch(reward.type){
+          case "coins":
+            state.sig = (state.sig || 0) + (reward.amount || 0);
+            console.log(`DEBUG: +${reward.amount} ΣC`);
+            break;
+          case "power":
+            // compatibilidad con estructuras previas
+            const mult = (reward.effect && reward.effect === "x2") ? 2 : 1;
+            state.perClickMult = (state.perClickMult || 1) * mult;
+            if(reward.duration) setTimeout(()=> { state.perClickMult = (state.perClickMult || 1) / mult; }, (reward.duration || 60) * 1000);
+            console.log("DEBUG: power aplicado", reward);
+            break;
+          case "foso":
+            if(reward.foso) {
+              FOSOS.push(reward.foso);
+              console.log("DEBUG: foso añadido:", reward.foso);
+            }
+            break;
+          default:
+            console.warn("DEBUG: tipo de recompensa desconocido", reward);
+        }
+
+        state.lastDailyClaim = today;
+        state.dailyDay = (state.dailyDay || 0) + 1;
+
+        if(typeof saveState === 'function') try { saveState(); } catch(e){ console.warn('saveState err', e); }
+        if(typeof render === 'function') try { render(); } catch(e){ console.warn('render err', e); }
+        if(typeof renderShop === 'function') try { renderShop(); } catch(e){ console.warn('renderShop err', e); }
+
+        if(dailyModal) dailyModal.classList.add('hidden');
+        console.log("DEBUG: claim complete — sig:", state.sig, "dailyDay:", state.dailyDay);
+        alert(`Has ganado: ${reward.label || 'recompensa'}`);
+      } catch(err){
+        console.error("DEBUG claimDailyReward error:", err);
+        alert("Error al reclamar. Mira la consola para detalles.");
+      }
+    };
+
+    // Adjuntar listeners nuevos (solo uno)
+    if(btnDaily){
+      btnDaily.addEventListener('click', () => {
+        console.log("EVENT: click en btnDaily");
+        window.openDailyModal();
+      });
+    } else console.warn("btnDaily no existe en DOM (no se añadió listener)");
+
+    if(btnClaimDaily){
+      btnClaimDaily.addEventListener('click', () => {
+        console.log("EVENT: click en btnClaimDaily");
+        window.claimDailyReward();
+      });
+    } else console.warn("btnClaimDaily no existe en DOM (no se añadió listener)");
+
+    if(closeDaily){
+      closeDaily.addEventListener('click', () => {
+        console.log("EVENT: click en closeDaily");
+        if(dailyModal) dailyModal.classList.add('hidden');
+      });
+    } else console.warn("closeDaily no existe en DOM (no se añadió listener)");
+
+    console.log("DEBUG daily-fix: listeners nuevos instalados");
+  });
+})();
+</script>
+<!-- FIN bloque reparación -->
+
 
 
 </script>
