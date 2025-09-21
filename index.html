@@ -10,12 +10,22 @@
     --glass: rgba(255,255,255,0.03);
   }
   html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;color:#eef6ff;
-    /* Estética tipo Cookie Clicker: franjas azules y viñeta */
+    /* Fondo mejorado estilo cielo con nubes suaves y degradé vertical */
     background:
-      radial-gradient(ellipse at center, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0) 60%),
-      repeating-linear-gradient( to bottom, #1b4b7a 0 10px, #1a456f 10px 20px),
-      #0a1f3b;
+      linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 25%),
+      radial-gradient(ellipse at top, rgba(255,255,255,0.20) 0%, rgba(0,0,0,0) 60%),
+      linear-gradient(180deg, #1291ff 0%, #0a63c4 40%, #092048 100%);
+    background-attachment: fixed;
   }
+  /* Capa de nubes parallax sutil */
+  .bg-clouds::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
+    background:
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200"><g fill="%23ffffff" opacity="0.15"><ellipse cx="120" cy="120" rx="120" ry="60"/><ellipse cx="260" cy="100" rx="160" ry="70"/><ellipse cx="480" cy="120" rx="140" ry="60"/><ellipse cx="680" cy="110" rx="180" ry="75"/></g></svg>') repeat-x top/1200px auto;
+    animation: cloudsMove 35s linear infinite;
+    filter: blur(1px);
+  }
+  @keyframes cloudsMove{ from{ background-position-x:0; } to{ background-position-x:-1200px; } }
   .wrap{max-width:1200px;margin:18px auto;padding:18px;display:grid;grid-template-columns:1fr 360px;gap:18px}
   header{display:flex;align-items:center;gap:12px}
   header h1{margin:0;font-size:20px}
@@ -31,9 +41,19 @@
   @keyframes smokeUp{0%{transform:translateY(0) scale(0.8);opacity:.85}100%{transform:translateY(-120px) scale(1.6);opacity:0}}
   /* Shop title fit for long names */
   .shopGrid .shopCard > div[style*="font-weight:700"]{font-size:13px;text-align:center;line-height:1.15}
-  .controlsRow{display:flex;gap:10px;width:100%;justify-content:center}
-  .mata-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:none;background:#ff4d4d;color:#081018;font-weight:900;cursor:pointer}
+  .controlsRow{display:flex;gap:10px;width:100%;justify-content:center;flex-wrap:wrap}
+  .mata-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.08));color:#eef6ff;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.35);transition:transform .15s ease, box-shadow .15s ease, background .2s ease}
+  .mata-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,0.45)}
+  .mata-btn:active{transform:translateY(0)}
+  .mata-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .mata-btn[disabled]{opacity:.45;cursor:not-allowed}
+  .mata-btn .icon{width:18px;height:18px;stroke:#081018;stroke-width:2;fill:none}
+  .icon-16{width:16px;height:16px}
+  .icon-20{width:20px;height:20px}
+  .social-bar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:12px;padding:8px 12px;background:rgba(8,16,24,0.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.08);border-radius:14px;z-index:9998}
+  .social-bar a{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;color:#cbd5e1;background:rgba(255,255,255,0.04);transition:background .2s ease, transform .15s ease, color .2s ease}
+  .social-bar a:hover{background:rgba(255,255,255,0.1);color:#fff;transform:translateY(-2px)}
+  .social-bar svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;vector-effect:non-scaling-stroke}
   .panel{background:var(--glass);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
   .shopGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;max-height:520px;overflow:auto;padding-right:6px}
   .shopCard{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:8px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
@@ -42,28 +62,36 @@
   .icon-sm{width:18px;height:18px;vertical-align:middle}
   .hint{color:var(--muted);font-size:13px}
   footer{grid-column:1/-1;margin-top:10px;text-align:center;color:var(--muted);font-size:13px}
-  @media (max-width:980px){.wrap{grid-template-columns:1fr;padding:12px}.vaperWrap{width:320px;height:420px}}
-  .modal {
-  position: fixed; top:0; left:0; width:100%; height:100%;
-  background: rgba(0,0,0,0.8);
-  display: flex; justify-content:center; align-items:center;
-  z-index: 9999;
-}
-.modal.hidden { display: none; }
-.modal-content {
-  background: #111;
-  border: 2px solid #0ff;
-  box-shadow: 0 0 20px #0ff;
-  border-radius: 12px;
-  padding: 20px;
-  width: 80%; max-height: 80%; overflow-y: auto;
-  color: #eee;
-  font-family: monospace;
-}
-.close-btn {
-  float: right; font-size: 24px; cursor: pointer;
-  color: #0ff;
-}
+  @media (max-width:980px){
+    .wrap{grid-template-columns:1fr;padding:12px}
+    .vaperWrap{width:320px;height:420px}
+  }
+  @media (max-width:600px){
+    .wrap{padding:12px}
+    header h1{font-size:18px}
+    .bigCounter{font-size:18px}
+    .vaperWrap{width:280px;height:360px}
+    .shopGrid{grid-template-columns:repeat(2,1fr)}
+    .social-bar{gap:8px;padding:6px 8px}
+    .social-bar a{width:32px;height:32px}
+  }
+  /* Modal mejorado: glass + bordes suaves + encabezado */
+  .modal { position: fixed; inset:0; display:flex; justify-content:center; align-items:center; z-index:9999; background: rgba(3,10,20,0.65); backdrop-filter: blur(6px); }
+  .modal.hidden { display:none; }
+  .modal-content {
+    position: relative;
+    background: linear-gradient(180deg, rgba(12,18,30,0.85), rgba(6,10,18,0.85));
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+    border-radius: 16px;
+    padding: 18px 18px 14px;
+    width: min(94%, 980px); max-height: 84vh; overflow: hidden; color: #e7edf6; font-family: Inter, system-ui, Arial;
+  }
+  .modal-header { display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06); }
+  .modal-title { font-weight:800; letter-spacing:.2px; }
+  .close-btn { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; cursor:pointer; color:#9fb2c8; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); }
+  .close-btn:hover { background:rgba(255,255,255,0.08); color:#fff; }
+  .modal-body { overflow:auto; max-height: calc(84vh - 56px); padding-top:12px; }
 .powers-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
@@ -195,7 +223,7 @@
   position: absolute;
   width: 24px;         /* más pequeño */
   height: 24px;
-  background: url('https://cdn-icons-png.flaticon.com/512/32/32339.png') no-repeat center;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23ffffff' d='M3 2l7 18 2-7 7-2z'/><path fill='%23000000' opacity='0.2' d='M10 20l2-7 7-2-9 9z'/></svg>") no-repeat center;
   background-size: contain;
   pointer-events: none;  /* no bloquea nada */
   opacity: 0;
@@ -213,9 +241,24 @@
 }
 
 
+.notify-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 50%;
+}
+.button-wrapper {
+  position: relative;
+  display: inline-block;
+}
 
 </style>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f59e0b'/%3E%3Ctext x='16' y='21' font-size='14' text-anchor='middle' fill='%23081018' font-family='Arial'%3EΣ%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" href="logo%20oficial.png">
+  <link rel="apple-touch-icon" href="logo%20oficial.png">
+  <meta property="og:image" content="logo%20oficial.png">
 </head>
 <body>
   <!-- Pantalla de advertencia mejorada -->
@@ -257,7 +300,7 @@
         </div>
       </header>
 
-      <button id="btnDaily" class="mata-btn">🎁 Regalo Diario</button>
+
 
 
       <main style="margin-top:14px">
@@ -267,7 +310,13 @@
               <div class="bigCounter">Sigmacoin: <span id="sigTotal">0</span> ΣC</div>
               <div class="metaTiny">Por clic: <span id="perClick">1</span> ΣC • Clicks totales: <span id="totalClicks">0</span></div>
             </div>
-
+            <div class="panel" style="display:flex;align-items:center;gap:8px">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <div style="font-weight:800">Racha: <span id="dailyStreak">0</span> días</div>
+                <div class="metaTiny" id="streakHint">Vuelve cada día para aumentar tu racha</div>
+              </div>
+            </div>
           </div>
 
           <!-- Vaper grande (click anywhere on SVG) -->
@@ -280,7 +329,6 @@
 <!-- Pantalla central -->
 <!--rect x="35" y="110" width="30" height="40" rx="4" ry="4" fill="#000" id="centralScreen"/-->
 <!-- PANTALLA CENTRAL (dentro del svg centralFoso) -->
-<rect x="35" y="100" width="30" height="50" rx="4" ry="4" fill="#000" id="centralScreen"/>
 <rect x="35" y="100" width="30" height="50" rx="4" ry="4" fill="#000" id="centralScreen"/>
 <text id="batteryText" x="50" y="125" font-size="10" fill="#0f0" text-anchor="middle">100%</text>
 
@@ -315,26 +363,37 @@
          <div class="controlsRow" id="controlsRow">
         
   <!-- Power -->
-  <button id="btnPower" class="mata-btn" style="background:#10b981">
-    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 2v10h10v2H12v10h-2V14H0v-2h10V2h2z"/></svg>
+  <button id="btnPower" class="mata-btn" style="background:#0ea5b7">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+      <path d="M12 2v8"/>
+      <path d="M5.2 5.2a9 9 0 1 0 12.7 0"/>
+    </svg>
     Power
   </button>
 
   <!-- Cargar -->
   <button id="btnChargeToggle" class="mata-btn" style="background:#00cfff">
-    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 2L4 20h16L12 2z"/></svg>
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+      <path d="M13 2 L4 14h6l-1 8 10-12h-7z" fill="currentColor" stroke="none"/>
+    </svg>
     Cargar
   </button>
 
   <!-- Nuevo/Reparar Foso -->
   <button id="btnNuevoFoso" class="mata-btn" style="background:#ffa726">
-    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6h2c0-4.42-3.58-8-8-8z"/></svg>
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+      <rect x="4" y="4" width="16" height="16" rx="3"/>
+      <path d="M12 8v8M8 12h8"/>
+    </svg>
     Nuevo Foso
   </button>
 
   <!-- Mata Foso -->
-  <button id="btnMata" class="mata-btn" style="background:#ff4d4d">
-    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+  <button id="btnMata" class="mata-btn" style="background:#ef4444">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+      <path d="M7 7l10 10M17 7L7 17"/>
+      <circle cx="12" cy="12" r="9"/>
+    </svg>
     <span id="mataLabel">Mata Foso</span>
   </button>
 
@@ -342,26 +401,97 @@
   <!-- Tienda -->
  <!-- Tienda -->
 <button id="btnShop" class="mata-btn" style="background:#facc15">
-  <svg class="icon-sm" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path fill="black" d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 
-      2-.9 2-2-.9-2-2-2zm10 
-      0c-1.1 0-2 .9-2 2s.9 2 2 2 
-      2-.9 2-2-.9-2-2-2zm-9.84-4h9.45c.75 
-      0 1.41-.41 1.75-1.03l3.58-6.49c.37-.67-.11-1.48-.88-1.48H6.21L5.27 
-      2H2v2h2l3.6 7.59-1.35 
-      2.45C5.52 14.37 6.23 15 7.07 
-      15h11.93v-2H7.42l.74-1.35z"/>
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+    <circle cx="9" cy="20" r="1.5"/>
+    <circle cx="18" cy="20" r="1.5"/>
+    <path d="M3 4h2l2 10h11l2-7H6"/>
   </svg>
   Tienda
+
+      <!-- Rebirth -->
+<button id="btnRebirth" class="mata-btn" style="background:#a78bfa">
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+    <path d="M3 10v4h4"/>
+    <path d="M21 14v-4h-4"/>
+    <path d="M21 10a8 8 0 0 0-13.66-5.66L7 6"/>
+    <path d="M3 14a8 8 0 0 0 13.66 5.66L17 18"/>
+  </svg>
+  Rebirth
 </button>
+
+<div class="button-wrapper">
+  <button id="btnDaily" class="mata-btn">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+      <rect x="3" y="5" width="18" height="16" rx="2"/>
+      <path d="M16 3v4M8 3v4M3 11h18"/>
+    </svg>
+    Regalo Diario
+  </button>
+  <span id="dotDaily" class="notify-dot hidden"></span>
+</div>
+
+<!-- Promo Codes -->
+<div class="panel" style="margin-top:10px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+      <rect x="3" y="5" width="18" height="14" rx="3"/>
+      <path d="M7 9h10M7 13h6"/>
+    </svg>
+    <strong>Códigos promocionales</strong>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <input id="promoInput" placeholder="Escribe tu código aquí" style="flex:1;min-width:180px;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);color:#eef6ff"/>
+    <button id="promoBtn" class="mata-btn" style="background:#34d399">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden><path d="M5 12l4 4L19 6"/></svg>
+      Canjear
+    </button>
+  </div>
+  <div class="metaTiny" id="promoMsg" style="margin-top:6px"></div>
+</div>
+
+<div class="button-wrapper">
+  <button id="btnAFK" class="mata-btn" style="background:#8e44ad">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v5l3 3"/>
+    </svg>
+    Mejoras AFK
+  </button>
+  <span id="dotAFK" class="notify-dot hidden"></span>
+</div>
+
+
 
 
   <!-- Configuración -->
   <button id="btnConfig" class="mata-btn" style="background:#c084fc">
-    <svg class="icon-sm" viewBox="0 0 24 24"><path fill="black" d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7zM19.43 12.97a7.962 7.962 0 0 0 0-1.94l2.11-1.65a.5.5 0 0 0 .11-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.902 7.902 0 0 0-1.68-.97l-.38-2.65a.5.5 0 0 0-.5-.42h-4a.5.5 0 0 0-.5.42l-.38 2.65c-.61.25-1.18.58-1.68.97l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .11.64l2.11 1.65c-.05.32-.07.65-.07.97s.02.65.07.97l-2.11 1.65a.5.5 0 0 0-.11.64l2 3.46c.14.24.43.34.69.22l2.49-1c.5.39 1.07.72 1.68.97l.38 2.65a.5.5 0 0 0 .5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.18-.58 1.68-.97l2.49 1c.26.12.55.02.69-.22l2-3.46a.5.5 0 0 0-.11-.64l-2.11-1.65z"/></svg>
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V22a2 2 0 1 1-4 0v-.11a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H2a2 2 0 1 1 0-4h.11a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 6.06 3.3l.06.06a1.65 1.65 0 0 0 1.82.33H8a1.65 1.65 0 0 0 1-1.51V2a2 2 0 1 1 4 0v.11a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06A2 2 0 1 1 20.7 6.06l-.06.06a1.65 1.65 0 0 0-.33 1.82V8c0 .64.39 1.22 1 1.51.35.17.73.49.73.49"/>
+    </svg>
     Configuración
   </button>
 </div>
+
+
+<div id="dailyStreakBox" style="
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0,0,0,0.7);
+  border: 2px solid orange;
+  border-radius: 12px;
+  padding: 10px 15px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  min-width: 120px;
+  box-shadow: 0 0 10px rgba(255,140,0,0.6);
+">
+  🔥 Racha: <span id="dailyStreak">0</span> días
+</div>
+
 
 
           <div class="hint">Tienda: clic en la miniatura para equipar/comprar. El central cambia según lo equipado.</div>
@@ -373,8 +503,15 @@
     
     <!-- Modal Tienda -->
 <div id="shopModal" class="modal hidden">
-  <div class="modal-content" style="width:90%;max-width:1000px">
-    <span class="close-btn">&times;</span>
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title" style="display:flex;align-items:center;gap:8px">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden><path fill="#f59e0b" d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5 4h2l2 10h11l2-7H6.2L5.3 4Z"/></svg>
+        Tienda — Fositos
+      </div>
+      <button class="close-btn" data-close>&times;</button>
+    </div>
+    <div class="modal-body">
 
     <!-- Aquí metemos la tienda -->
     <aside class="panel">
@@ -669,6 +806,10 @@
 
       </div>
     </aside>
+
+    </div>
+  </div>
+</div>
   </div>
 </div>
 
@@ -736,6 +877,7 @@
   </div>
 </div>
 
+
 <!-- Modal Recompensas Diarias -->
 <div id="dailyModal" class="hidden" style="
   position: fixed; top:0; left:0; right:0; bottom:0;
@@ -758,6 +900,32 @@
     </button>
   </div>
 </div>
+
+<!-- Toast Container -->
+<div id="toastContainer" style="
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+"></div>
+
+<!-- Modal AFK -->
+<div id="afkModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2>⏰ Mejoras AFK</h2>
+    <p id="afkInfo"></p>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+      <button id="btnUpgradeAFK" class="mata-btn">⬆️ Mejorar</button>
+      <button id="btnClaimAFK" class="mata-btn">💰 Reclamar</button>
+    </div>
+  </div>
+</div>
+
+
 
 
 <script>
@@ -792,6 +960,166 @@ const DAILY_REWARDS = [
     label: "Foso Especial (100 ΣC/click)", icon: "💎"
   }
 ];
+
+
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    const btnAFK = document.getElementById('btnAFK');
+    const afkModal = document.getElementById('afkModal');
+    const afkInfo = document.getElementById('afkInfo');
+    const btnUpgrade = document.getElementById('btnUpgradeAFK');
+    const btnClaim = document.getElementById('btnClaimAFK');
+
+    if (!btnAFK || !afkModal || !afkInfo || !btnUpgrade || !btnClaim) {
+      console.warn('AFK: faltan elementos (btnAFK / afkModal / btnUpgradeAFK / btnClaimAFK).');
+      return;
+    }
+
+    // Forzar que el botón esté activo
+    try {
+      btnAFK.removeAttribute('disabled');
+      btnAFK.style.pointerEvents = 'auto';
+      btnAFK.style.opacity = '';
+      btnAFK.style.cursor = 'pointer';
+    } catch(e){/* noop */ }
+
+    function afkMaxPerHour(level) {
+      const min = 1000;
+      const max = 100000;
+      const l = (typeof level === 'number' && !isNaN(level)) ? level : 0;
+      const capped = Math.max(0, Math.min(10, Math.floor(l)));
+      return Math.round(min + ((max - min) / 10) * capped);
+    }
+
+function updateAFKInfo() {
+  const lvl = Number(state.afkLevel) || 0;
+  const maxHour = afkMaxPerHour(lvl);
+  const nextCost = 5000 * (lvl + 1);
+
+  // Tiempo y recompensa acumulada
+  const now = Date.now();
+  const last = state.afkLastClaim || now;
+  const minutesElapsed = Math.floor((now - last) / (1000 * 60));
+  const blocks = Math.floor(minutesElapsed / 15);
+  const reward = Math.max(0, blocks * (maxHour / 4)); // acumulado por bloques de 15 min
+  const minutesToNext = 15 - (minutesElapsed % 15);
+
+  // Texto base
+  let info = `Nivel actual: ${lvl} • Máx/hora: ${maxHour.toLocaleString()} ΣC\n`;
+
+  if (lvl >= 10) {
+    info += `⚡ Nivel máximo alcanzado\n`;
+    btnUpgrade.textContent = "⬆️ Mejorar (MAX)";
+    btnUpgrade.setAttribute("disabled", "true");
+  } else {
+    info += `Costo próxima mejora: ${nextCost.toLocaleString()} ΣC\n`;
+    btnUpgrade.textContent = `⬆️ Mejorar (${nextCost.toLocaleString()} ΣC)`;
+    btnUpgrade.removeAttribute("disabled");
+  }
+
+  info += `\n💰 Acumulado: ${Math.floor(reward).toLocaleString()} ΣC`;
+  info += `\n⏳ Próximo reclamo en: ${minutesToNext} min`;
+
+  afkInfo.textContent = info;
+}
+
+// Actualizar cada segundo el contador
+setInterval(() => {
+  if (!afkModal.classList.contains("hidden")) {
+    updateAFKInfo();
+  }
+}, 1000);
+
+
+    // Abrir modal AFK
+    btnAFK.addEventListener('click', () => {
+      updateAFKInfo();
+      afkModal.classList.remove('hidden');
+    });
+
+    // Cerrar modal
+    const closeBtn = afkModal.querySelector('.close-btn');
+    if (closeBtn) closeBtn.addEventListener('click', () => afkModal.classList.add('hidden'));
+
+    // Mejorar AFK
+    btnUpgrade.addEventListener("click", () => {
+      if (!state) state = {};
+
+      const lvl = Number(state.afkLevel) || 0;
+      const cost = 5000 * (lvl + 1);
+      const sigmas = Number(state.sig) || 0; // ✅ usamos state.sig real
+
+      console.log("DEBUG AFK >>> lvl:", lvl, "cost:", cost, "sigmas:", sigmas);
+
+      if (sigmas < cost) {
+        if (typeof showToast === "function") {
+          showToast("❌ No tienes suficientes ΣC", "error");
+        } else {
+          alert("No tienes suficientes ΣC");
+        }
+        return;
+      }
+
+      // aplicar mejora
+      state.sig = sigmas - cost;
+      state.afkLevel = Math.min(10, lvl + 1);
+
+      if (typeof saveState === "function") saveState();
+      if (typeof render === "function") render();
+      updateAFKInfo();
+
+      if (typeof showToast === "function") {
+        showToast(`⬆️ AFK mejorado a nivel ${state.afkLevel}`, "success");
+      }
+    });
+
+    // Reclamar AFK (cada 15 minutos)
+    btnClaim.addEventListener('click', () => {
+      if (!state) state = {};
+      const now = Date.now();
+      const last = state.afkLastClaim || now;
+
+      // Diferencia en minutos
+      const minutesElapsed = Math.floor((now - last) / (1000 * 60));
+
+      // Requiere al menos 15 minutos
+      if (minutesElapsed < 15) {
+        if (typeof showToast === 'function') {
+          showToast('⏳ Debes esperar al menos 15 minutos para reclamar', 'info');
+        } else {
+          alert('Debes esperar al menos 15 minutos para reclamar');
+        }
+        return;
+      }
+
+      // Recompensa proporcional en bloques de 15 minutos
+      const blocks = Math.floor(minutesElapsed / 15); // cuántos bloques de 15m
+      const perHour = afkMaxPerHour(Number(state.afkLevel) || 0);
+      const reward = Math.max(0, blocks * (perHour / 4)); // dividir hora en 4 bloques de 15m
+
+      if (reward <= 0) {
+        if (typeof showToast === 'function') showToast('⚠️ Nada para reclamar aún', 'warning');
+        else alert('Nada para reclamar');
+        return;
+      }
+
+      state.sig = (Number(state.sig) || 0) + Math.floor(reward);
+      state.afkLastClaim = now;
+
+      if (typeof saveState === 'function') saveState();
+      if (typeof render === 'function') render();
+      if (typeof showToast === 'function') {
+        showToast(`💰 Reclamas ${Math.floor(reward).toLocaleString()} ΣC de AFK`, 'success');
+      }
+      updateAFKInfo();
+    });
+
+    // Estado inicial
+    updateAFKInfo();
+  });
+})();
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const dailyModal = document.getElementById("dailyModal");
@@ -877,7 +1205,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function claimDailyReward() {
     const now = Date.now();
     if (state.nextDailyTime && now < state.nextDailyTime) {
-      alert("Ya reclamaste tu recompensa diaria, vuelve más tarde!");
+      showToast("Ya reclamaste tu recompensa diaria, vuelve más tarde!", "info");
       return;
     }
 
@@ -911,7 +1239,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof render === "function") render();
     if (typeof renderShop === "function") renderShop();
 
-    alert(`Has ganado: ${reward.label}`);
+    showToast(`Has ganado: ${reward.label}`, "info");
     dailyModal.classList.add("hidden");
     clearInterval(countdownInterval);
   }
@@ -1024,6 +1352,13 @@ const FOSOS = [
 ];
 
 
+function updateBatteryText(value) {
+  const batteryText = document.getElementById("batteryText");
+  const clamped = Math.max(0, Math.min(100, value));
+  batteryText.textContent = clamped + "%";
+}
+
+
 const shopGrid = document.getElementById('shopGrid');
 // --- Habilitar compra de fosos desde la tienda ---
 shopGrid.querySelectorAll(".shopCard[data-index]").forEach(card => {
@@ -1042,9 +1377,9 @@ shopGrid.querySelectorAll(".shopCard[data-index]").forEach(card => {
       ); // recarga un poco al equipar
       saveState();
       render();
-      alert(`✅ Compraste y equipaste ${foso.name}`);
+      showToast(`✅ Compraste y equipaste ${foso.name}`, "info");
     } else {
-      alert("❌ No tienes suficientes ΣC");
+      showToast("❌ No tienes suficientes ΣC", "info");
     }
   });
 });
@@ -1068,8 +1403,14 @@ let state = {
   smokerOn: false,
   autoClickExpiresAt: 0, // timestamp when autoclick boost ends
   smokerExpiresAt: 0,
-  dailyDay: 0,        // progreso en la lista de recompensas
-lastDailyClaim: null,  // fecha del último reclamo (timestamp)
+  dailyDay: 0,   
+    rebirths: 0,       // cuántos rebirths ha hecho
+  rebirthBonus: 1,      // progreso en la lista de recompensas
+lastDailyClaim: null,  
+
+afkLevel: 0,
+afkLastClaim: Date.now(),
+// fecha del último reclamo (timestamp)
 
 
   // caladas acumuladas desde última recarga
@@ -1149,10 +1490,42 @@ document.getElementById('btnReset')?.addEventListener('click', ()=>{
 const btnShop = document.getElementById('btnShop');
 const shopModal = document.getElementById('shopModal');
 
+
 // Abrir tienda
 btnShop?.addEventListener('click', () => {
   shopModal.classList.remove('hidden');
 });
+
+// --- Rebirth ---
+const btnRebirth = document.getElementById("btnRebirth");
+
+btnRebirth?.addEventListener("click", () => {
+  if (state.sig < 1_000) { // coste mínimo para renacer
+    showToast("❌ Necesitas al menos 1,000 ΣC para hacer Rebirth.", "info");
+    return;
+  }
+
+  if (!confirm("⚠️ El Rebirth reiniciará tu progreso, pero ganarás un bonus permanente. ¿Seguro?")) {
+    return;
+  }
+
+  // Aumentar contador y bonus
+  state.rebirths = (state.rebirths || 0) + 1;
+  state.rebirthBonus = (state.rebirthBonus || 1) + 0.5;
+
+  // Reiniciar progreso principal
+  state.sig = 0;
+  state.totalClicks = 0;
+  state.activeFosoIndex = 0;
+  state.battery = 100;
+  state.maxBattery = 100;
+
+  saveState();
+  render();
+
+  showToast(`✅ Hiciste Rebirth #${state.rebirths}! Nuevo bonus permanente: x${state.rebirthBonus}`, "info");
+});
+
 
 // Cerrar tienda (los botones con la clase .close-btn dentro del modal)
 shopModal.querySelectorAll('.close-btn').forEach(btn => {
@@ -1224,16 +1597,8 @@ function syncCentralAppearance(activeIndex){
   const bodyRect = rects[0];
   const mouthRect = rects[1];
   if(bodyRect) bodyRect.setAttribute('fill','url(#gActive)');
-  if(mouthRect) mouthRect.setAttribute('fill','url(#mouthActive)');
-    // Recompensa AFK
-  if (state.lastPlayed) {
-    const diffSec = Math.floor((Date.now() - state.lastPlayed) / 1000);
-    if (diffSec > 5) { // mínimo 5s de inactividad
-      const reward = Math.min(diffSec * (state.passivePerSec || 1), 10000); // límite 10K
-      state.sig += reward;
-      alert(`💤 Bienvenido de nuevo! Has ganado ${formatNum(reward)} ΣC mientras estabas AFK.`);
-    }
-  }
+ 
+
 
 }
 
@@ -1242,7 +1607,8 @@ function render(){
   shopSigma.textContent = formatNum(state.sig);
   totalClicksEl.textContent = state.totalClicks;
   const basePer = FOSOS[state.activeFosoIndex].perClick;
-  const per = basePer * state.perClickMult;
+  const per = basePer * state.perClickMult * (state.rebirthBonus || 1);
+
   perClickEl.textContent = formatNum(per);
 const batteryText = document.getElementById("batteryText");
 if (batteryText) {
@@ -1276,6 +1642,7 @@ if (batteryText) {
   } else {
     centralScreen.setAttribute('fill','#000');
   }
+
 }
 render();
 
@@ -1289,12 +1656,6 @@ function registerClick(){
   return clickTimestamps.length;
 }
 
-// Carga manual: conmutador Cargar/Parar con límite de 3 minutos
-let isCharging = false;
-let chargeStartAt = 0;
-let burnCheckTimer = null;
-let timeWhenReachedFull = 0; 
-const btnChargeToggle = document.getElementById('btnChargeToggle');
 
 
 
@@ -1339,7 +1700,7 @@ function setCharging(active){
           state.battery = 0;
           setCharging(false);
           showBurnSmoke();
-          alert('Se quemó por sobrecarga: 100% + 1 minuto.');
+          showToast('Se quemó por sobrecarga: 100% + 1 minuto.', "info");
           render();
           saveState();
           return;
@@ -1363,7 +1724,7 @@ function setCharging(active){
 
 
 btnChargeToggle?.addEventListener('click', ()=>{
-  if(state.burned){ alert('El foso está quemado. Equipa/compra otro.'); return; }
+  if(state.burned){ showToast('El foso está quemado. Equipa/compra otro.', "info"); return; }
   setCharging(!isCharging);
 });
 
@@ -1415,17 +1776,17 @@ function showBurnSmoke(){
 // central click handler
 function handleCentralClick(){
   if(isCharging){ 
-    alert('No puedes vapear mientras se está cargando.'); 
+    showToast('No puedes vapear mientras se está cargando.', "info"); 
     return; 
   }
   if(!state.powerOn) return; // apagado: no responde
-  if(state.burned){ alert('El foso está quemado. Compra/selecciona otro.'); return; }
-  if(state.battery <= 0){ alert('Batería agotada.'); return; }
+  if(state.burned){ showToast('El foso está quemado. Compra/selecciona otro.', "info"); return; }
+  if(state.battery <= 0){ showToast('Batería agotada.', "info"); return; }
   // Solo quemar por CPS si el clic es manual; el autoclicker no cuenta para sobrecalentamiento
   const cps = registerClick();
   const overheatLimit = CONFIG.overheatCps + (state.overheatBonus||0);
   if(!state._autoClickInProgress && cps > overheatLimit){
-    state.burned = true; state.battery = 0; alert('¡Has quemado el foso!'); render(); saveState(); return;
+    state.burned = true; state.battery = 0; showToast('¡Has quemado el foso!', "info"); render(); saveState(); return;
   }
   const basePer = FOSOS[state.activeFosoIndex].perClick;
   const per = basePer * (state.perClickMult||1);
@@ -1516,7 +1877,7 @@ function buyFoso(idx, card){
   }
 
   if(state.sig < f.cost){
-    alert('No tienes suficientes ΣC para comprar este foso.');
+    showToast('No tienes suficientes ΣC para comprar este foso.', "info");
     return;
   }
 
@@ -1581,7 +1942,7 @@ btnMata.addEventListener('click', ()=>{
 // Nuevo Foso: compra rápida por 25 ΣC, resetea quemado y rellena batería +20%
 document.getElementById('btnNuevoFoso')?.addEventListener('click', ()=>{
   const COST = 25;
-  if(state.sig < COST){ alert('Necesitas 25 ΣC para comprar un nuevo foso.'); return; }
+  if(state.sig < COST){ showToast('Necesitas 25 ΣC para comprar un nuevo foso.', "info"); return; }
   state.sig -= COST;
   state.burned = false;
   state.battery = Math.min(state.maxBattery || 100, state.battery + 20);
@@ -1673,7 +2034,7 @@ document.getElementById('btnAutoClick')?.addEventListener('click', ()=>{
   // Compra mejora Autoclicker: coste 500 ΣC, duración 10 minutos (nivel +1)
   const COST = 500;
   const DURATION_MIN = 10;
-  if(state.sig < COST){ alert('Necesitas 500 ΣC para mejorar Autocliker.'); return; }
+  if(state.sig < COST){ showToast('Necesitas 500 ΣC para mejorar Autocliker.', "info"); return; }
   state.sig -= COST;
   state.autoClickerLevel = Math.min(50, state.autoClickerLevel + 1);
   // extiende/establece expiración
@@ -1709,10 +2070,10 @@ document.getElementById('btnSmoker')?.addEventListener('click', ()=>{
   const COST = 500;
   const DURATION_MIN = 10;
   if(state.smokerOn && Date.now() < state.smokerExpiresAt){
-    alert('Fumador ya activo. Espera a que termine para volver a comprar.');
+    showToast('Fumador ya activo. Espera a que termine para volver a comprar.', "info");
     return;
   }
-  if(state.sig < COST){ alert('Necesitas 500 ΣC para activar Fumador.'); return; }
+  if(state.sig < COST){ showToast('Necesitas 500 ΣC para activar Fumador.', "info"); return; }
   state.sig -= COST;
   state.smokerOn = true;
   state.smokerExpiresAt = Date.now() + DURATION_MIN*60*1000;
@@ -1803,7 +2164,7 @@ document.getElementById('btnSigmaHack')?.addEventListener('click', () => {
   state.sig += 9999999999999999999999999;
   render();
   saveState();
-  alert('¡SigmaCoins agregados con éxito!');
+  showToast('¡SigmaCoins agregados con éxito!', "info");
 });
  // =========================
 // Definición de los 50 poderes
@@ -1951,7 +2312,7 @@ function renderPowers(){
     btn.addEventListener('click', ()=>{
       if(owned) return;
       if(state.sig < p.cost){
-        alert('No tienes ΣC suficientes.');
+        showToast('No tienes ΣC suficientes.', "info");
         return;
       }
       state.sig -= p.cost;
@@ -2054,7 +2415,7 @@ document.getElementById('btnSigmaHack')?.addEventListener('click', ()=>{
   state.sig = Number.MAX_SAFE_INTEGER; // o pon un número altísimo
   render();
   saveState();
-  alert("💰 Hack activado: Sigma infinito!");
+  showToast("💰 Hack activado: Sigma infinito!", "info");
 });
 
 // --- TIENDA MODAL ---
@@ -2069,7 +2430,7 @@ if (btnShop) {
 }
 
 btnChargeToggle?.addEventListener('click', ()=>{
-  if(state.burned){ alert('El foso está quemado. Equipa/compra otro.'); return; }
+  if(state.burned){ showToast('El foso está quemado. Equipa/compra otro.', "info"); return; }
   setCharging(!isCharging);
 });
 
@@ -2137,63 +2498,10 @@ loadState();
 applyOwnedUpgrades();
 
 // ------------------ Recompensa AFK (límite 10.000 ΣC) ------------------
-(function grantAFK() {
-  try {
-    const last = state.lastPlayed || 0;
-    if (!last) return; // nada que hacer si no hay marca previa
 
-    const now = Date.now();
-    let diffSeconds = Math.floor((now - last) / 1000);
 
-    // mínimo 5s para considerar AFK (evita falsos positivos)
-    if (diffSeconds <= 5) {
-      state.lastPlayed = now; // reajusta la marca
-      return;
-    }
 
-    // limitar segundos considerados (evita números gigantes)
-    const MAX_SECONDS = 86400; // 24h
-    diffSeconds = Math.min(diffSeconds, MAX_SECONDS);
 
-    // calculamos ingreso por segundo:
-    // - state.passivePerSec (poderes pasivos)
-    // - + clicks automáticos: autoClickerLevel * perClick * perClickMult
-    const perClickBase = (FOSOS[state.activeFosoIndex] && FOSOS[state.activeFosoIndex].perClick) || 1;
-    const autoClicksPerSec = (state.autoClickerLevel || 0) * perClickBase * (state.perClickMult || 1);
-    const passive = state.passivePerSec || 0;
-    const incomePerSec = passive + autoClicksPerSec;
-
-    let gained = Math.floor(incomePerSec * diffSeconds);
-
-    // límite máximo total a entregar
-    const MAX_GAIN = 10000;
-    if (gained > MAX_GAIN) gained = MAX_GAIN;
-
-    if (gained > 0) {
-      state.sig = (state.sig || 0) + gained;
-      // mensaje al usuario (puedes quitar alert y poner un modal si prefieres)
-      alert(`💤 Has ganado ${formatNum(gained)} ΣC por ${diffSeconds} segundos AFK (límite ${formatNum(MAX_GAIN)}).`);
-    }
-
-    // actualizar la marca para que no vuelva a contarse lo mismo
-    state.lastPlayed = now;
-
-    // refrescar UI y guardar nuevo estado
-    try { renderShop(); } catch(e){/* renderShop puede estar definido después pero es hoisted en funciones normales */ }
-    try { render(); } catch(e){}
-    try { saveState(); } catch(e){}
-  } catch (err) {
-    console.warn('AFK grant error', err);
-  }
-})();
-
-// Guardar marca de salida al cerrar/recargar (no la pongas en autosave)
-window.addEventListener('beforeunload', () => {
-  try {
-    state.lastPlayed = Date.now();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch (e) { /* ignore */ }
-});
 
 
 function renderShop() {
@@ -2392,13 +2700,13 @@ document.getElementById("btnDaily").addEventListener("click", openDailyModal);
         const today = new Date().toDateString();
         if(state.lastDailyClaim === today){
           console.log("DEBUG: ya reclamado hoy");
-          alert("Ya reclamaste la recompensa de hoy.");
+          showToast("Ya reclamaste la recompensa de hoy.", "info");
           return;
         }
 
         if(!Array.isArray(window.DAILY_REWARDS) || window.DAILY_REWARDS.length === 0){
           console.error("DEBUG: DAILY_REWARDS no definido o vacío");
-          alert("No hay recompensas definidas. Mira la consola.");
+          showToast("No hay recompensas definidas. Mira la consola.", "info");
           return;
         }
 
@@ -2436,10 +2744,10 @@ document.getElementById("btnDaily").addEventListener("click", openDailyModal);
 
         if(dailyModal) dailyModal.classList.add('hidden');
         console.log("DEBUG: claim complete — sig:", state.sig, "dailyDay:", state.dailyDay);
-        alert(`Has ganado: ${reward.label || 'recompensa'}`);
+        showToast(`Has ganado: ${reward.label || 'recompensa'}`, "info");
       } catch(err){
         console.error("DEBUG claimDailyReward error:", err);
-        alert("Error al reclamar. Mira la consola para detalles.");
+        showToast("Error al reclamar. Mira la consola para detalles.", "info");
       }
     };
 
@@ -2469,6 +2777,339 @@ document.getElementById("btnDaily").addEventListener("click", openDailyModal);
   });
 })();
 
+// --- Rebirth ---
+document.getElementById("btnRebirth")?.addEventListener("click", () => {
+  if (state.sig < 1_000_000) { // coste mínimo
+    showToast("❌ Necesitas al menos 1,000,000 ΣC para hacer Rebirth.", "info");
+    return;
+  }
+
+  if (!confirm("⚠️ El Rebirth reiniciará tu progreso, pero ganarás un bonus permanente. ¿Seguro?")) {
+    return;
+  }
+
+  // Aumentar contador de rebirths y bonus permanente
+  state.rebirths += 1;
+  state.rebirthBonus += 0.5; // +50% ΣC permanente por rebirth
+
+  // Reiniciar progreso principal
+  state.sig = 0;
+  state.totalClicks = 0;
+  state.activeFosoIndex = 0;
+  state.battery = 100;
+  state.maxBattery = 100;
+
+  // Guardar y refrescar
+  saveState();
+  render();
+
+  showToast(`✅ Hiciste Rebirth #${state.rebirths}! Ahora ganas x${state.rebirthBonus} ΣC permanentemente.`, "info");
+});
+
+function showToast(message, type = "info", duration = 3000) {
+  const container = document.getElementById("toastContainer");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.textContent = message;
+
+  // Estilos base
+  toast.style.padding = "10px 16px";
+  toast.style.borderRadius = "12px";
+  toast.style.fontWeight = "bold";
+  toast.style.color = "#fff";
+  toast.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
+  toast.style.opacity = "0";
+  toast.style.transition = "opacity 0.3s, transform 0.3s";
+  toast.style.transform = "translateY(-10px)";
+
+  // Colores según tipo
+  if (type === "success") toast.style.background = "#27ae60"; // verde
+  else if (type === "error") toast.style.background = "#e74c3c"; // rojo
+  else if (type === "warning") toast.style.background = "#f39c12"; // amarillo
+  else toast.style.background = "#3498db"; // azul info
+
+  container.appendChild(toast);
+
+  // Mostrar con animación
+  requestAnimationFrame(() => {
+    toast.style.opacity = "1";
+    toast.style.transform = "translateY(0)";
+  });
+
+  // Ocultar y borrar
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(-10px)";
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+
+
+// Configuración de AFK
+const AFK_CONFIG = {
+  baseReward: 1000,          // Nivel 0 → 1000 ΣC
+  maxLevel: 10,
+  maxReward: 100000          // Nivel 10 → 100000 ΣC
+};
+
+// Función para calcular recompensa según nivel
+function getAfkReward(level) {
+  if (level <= 0) return AFK_CONFIG.baseReward;
+  const step = (AFK_CONFIG.maxReward - AFK_CONFIG.baseReward) / AFK_CONFIG.maxLevel;
+  return Math.floor(AFK_CONFIG.baseReward + step * level);
+}
+
+// Renderizar info del modal
+function renderAFK() {
+  afkInfo.textContent = `Nivel AFK: ${state.afkLevel || 0} 
+  • Recompensa/hora: ${getAfkReward(state.afkLevel || 0)} ΣC`;
+}
+renderAFK();
+
+// Abrir modal
+btnAFK?.addEventListener("click", () => {
+  renderAFK();
+  afkModal.classList.remove("hidden");
+});
+
+// Cerrar modal
+afkModal.querySelector(".close-btn").addEventListener("click", () => {
+  afkModal.classList.add("hidden");
+});
+
+// Mejorar AFK
+// Mejorar AFK
+btnUpgrade.addEventListener('click', () => {
+  if (!window.state) window.state = {};
+  const lvl = Number(window.state.afkLevel) || 0;
+  const cost = 5000 * (lvl + 1);
+  const sigmas = Number(window.state.sig) || 0; // 👈 forzamos a número
+
+  if (sigmas < cost) {
+    if (typeof showToast === 'function') {
+      showToast('❌ No tienes suficientes ΣC', 'error');
+    } else {
+      alert('No tienes ΣC');
+    }
+    return;
+  }
+
+  // aplicar mejora
+  window.state.sig = sigmas - cost;
+  window.state.afkLevel = Math.min(10, lvl + 1);
+
+  if (typeof saveState === 'function') saveState();
+  if (typeof render === 'function') render();
+  updateAFKInfo();
+
+  if (typeof showToast === 'function') {
+    showToast(`⬆️ AFK mejorado a nivel ${window.state.afkLevel}`, 'success');
+  }
+});
+
+
+// Reclamar AFK
+btnClaimAFK?.addEventListener("click", () => {
+  const now = Date.now();
+  const elapsedHours = (now - (state.afkLastClaim || now)) / (1000 * 60 * 60);
+  if (elapsedHours < 1) {
+    showToast("⏳ Espera al menos 1 hora para reclamar", "info");
+    return;
+  }
+  const reward = getAfkReward(state.afkLevel || 0) * Math.floor(elapsedHours);
+  state.sig += reward;
+  state.afkLastClaim = now;
+  saveState();
+  render();
+  showToast(`💰 Reclamas ${reward} ΣC por ${elapsedHours.toFixed(1)} horas AFK`, "info");
+});
+
+
+document.getElementById("btnAFK").removeAttribute("disabled");
+
+console.log("---- DEBUG MEJORAR AFK ----");
+console.log("Nivel actual:", lvl);
+console.log("Costo de mejora:", cost);
+console.log("Sigmas en state (raw):", window.state.sig);
+console.log("Sigmas convertidos a número:", sigmas);
+console.log("-----------------------------");
+document.addEventListener("DOMContentLoaded", () => {
+  const btnTest = document.getElementById("btnUpgradeAFK");
+  console.log("Botón encontrado:", btnTest);
+
+  if (btnTest) {
+    btnTest.addEventListener("click", () => {
+      console.log("✅ CLICK DETECTADO en Mejorar AFK");
+    });
+  }
+});
+
+function checkNotifications() {
+  const now = Date.now();
+
+  // --- Diario ---
+  const nextDaily = state.nextDailyTime || 0;
+  const dotDaily = document.getElementById("dotDaily");
+  if (dotDaily) {
+    if (now >= nextDaily) {
+      dotDaily.classList.remove("hidden");
+      showToast("🎁 ¡Tu regalo diario está listo!", "info");
+    } else {
+      dotDaily.classList.add("hidden");
+    }
+  }
+
+  // --- AFK ---
+  const last = state.afkLastClaim || now;
+  const minutesElapsed = Math.floor((now - last) / (1000 * 60));
+  const lvl = Number(state.afkLevel) || 0;
+  const perHour = afkMaxPerHour(lvl);
+  const blocks = Math.floor(minutesElapsed / 15);
+  const reward = Math.max(0, blocks * (perHour / 4));
+  const dotAFK = document.getElementById("dotAFK");
+
+  if (dotAFK) {
+    if (reward > 0) {
+      dotAFK.classList.remove("hidden");
+      showToast(`💰 Tienes ${reward.toLocaleString()} ΣC acumulados AFK`, "info");
+    } else {
+      dotAFK.classList.add("hidden");
+    }
+  }
+}
+
+// Ejecutar al inicio
+document.addEventListener("DOMContentLoaded", checkNotifications);
+// Repetir cada minuto
+setInterval(checkNotifications, 60 * 1000);
+document.getElementById("dotAFK")?.classList.add("hidden");
+document.getElementById("dotDaily")?.classList.add("hidden");
+
+  // --- A
+
+function updateDailyStreak() {
+  const streakEl = document.getElementById("dailyStreak");
+  if (!streakEl) return;
+
+  const streak = state.dailyStreak || 0;
+  streakEl.textContent = streak;
+}
+
+// Cuando reclamas el diario
+btnClaimDaily?.addEventListener("click", () => {
+  state.dailyStreak = state.dailyStreak || 0;
+
+  const today = new Date().toDateString();
+  const last = state.lastDailyClaim || "";
+
+  // si el último reclamo fue ayer → sumamos
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (last === yesterday) {
+    state.dailyStreak++;
+  } else if (last !== today) {
+    // si no fue ayer ni hoy → reiniciar
+    state.dailyStreak = 1;
+  }
+
+  state.lastDailyClaim = today;
+
+  if (typeof saveState === "function") saveState();
+  updateDailyStreak();
+});
+
+function updateDailyStreakBox() {
+  const streakEl = document.getElementById("dailyStreak");
+  if (!streakEl) return;
+
+  const streak = state.dailyStreak || 0;
+  streakEl.textContent = streak;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+  // Si no existe el contador → iniciar en 1
+  if (!state.dailyStreak) {
+    state.dailyStreak = 1;
+    state.lastDailyLogin = today;
+    console.log("🎉 Primera entrada → racha = 1");
+  } else {
+    // Si ya entraste hoy → no sumar
+    if (state.lastDailyLogin === today) {
+      console.log("⚠️ Ya entraste hoy, racha sin cambios:", state.dailyStreak);
+    } else if (state.lastDailyLogin === yesterday) {
+      // Si entraste ayer → sumamos 1
+      state.dailyStreak++;
+      state.lastDailyLogin = today;
+      console.log("✅ Nueva entrada consecutiva, racha =", state.dailyStreak);
+    } else {
+      // Si no entraste ayer → reiniciamos a 1
+      state.dailyStreak = 1;
+      state.lastDailyLogin = today;
+      console.log("🔄 Racha reiniciada = 1");
+    }
+  }
+
+  if (typeof saveState === "function") saveState();
+  updateDailyStreakBox();
+
+  if (typeof showToast === "function") {
+    showToast(`🔥 Racha actual: ${state.dailyStreak} días`, "success");
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const today = new Date().toDateString();
+
+  if (!state.dailyStreak) state.dailyStreak = 0;
+  if (!state.lastDailyLogin) state.lastDailyLogin = null;
+
+  if (state.lastDailyLogin !== today) {
+    // Es un nuevo día
+    if (state.lastDailyLogin) {
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      if (state.lastDailyLogin === yesterday) {
+        // Sumamos racha continua
+        state.dailyStreak += 1;
+      } else {
+        // Reinicia si se saltó un día
+        state.dailyStreak = 1;
+      }
+    } else {
+      // Primera vez que juega → inicia en 1
+      state.dailyStreak = 1;
+    }
+
+    state.lastDailyLogin = today;
+
+    if (typeof saveState === "function") saveState();
+  }
+
+  // Crear el cuadro de racha si no existe
+  let streakBox = document.getElementById("streakBox");
+  if (!streakBox) {
+    streakBox = document.createElement("div");
+    streakBox.id = "streakBox";
+    streakBox.style.position = "absolute";
+    streakBox.style.top = "10px";
+    streakBox.style.right = "10px";
+    streakBox.style.background = "#222";
+    streakBox.style.color = "#fff";
+    streakBox.style.padding = "6px 10px";
+    streakBox.style.borderRadius = "8px";
+    streakBox.style.fontSize = "14px";
+    streakBox.style.zIndex = "9999";
+    document.body.appendChild(streakBox);
+  }
+
+  streakBox.textContent = `🔥 Racha: ${state.dailyStreak} días`;
+});
+
+
+
 
 </script>
 <!-- FIN bloque reparación -->
@@ -2476,5 +3117,349 @@ document.getElementById("btnDaily").addEventListener("click", openDailyModal);
 
 
 </script>
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  if (!window.state) window.state = {};
+
+  const today = new Date().toDateString();
+  const lastDay = state.lastStreakDay || null;
+
+  if (!lastDay) {
+    // Primera vez: empieza la racha en 1
+    state.dailyStreak = 1;
+    state.lastStreakDay = today;
+  } else {
+    if (lastDay !== today) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      if (lastDay === yesterday.toDateString()) {
+        // Se conecta en días consecutivos → sumar racha
+        state.dailyStreak = (state.dailyStreak || 0) + 1;
+      } else {
+        // Se rompió la racha → reiniciar
+        state.dailyStreak = 1;
+      }
+      state.lastStreakDay = today;
+    }
+  }
+
+  // Mostrar en el cuadro
+  const el = document.getElementById("dailyStreak");
+  if (el) el.textContent = state.dailyStreak;
+
+  if (typeof saveState === "function") saveState();
+});
+</script>
+
+<script>
+// Cierre del modal mejorado
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('[data-close]');
+  if(btn){ document.getElementById('shopModal')?.classList.add('hidden'); }
+});
+
+// Códigos promocionales: x2 permanente si coincide la palabra clave (déjalo en blanco para que la pongas tú)
+const PROMO_SECRET = ""; // <-- pon aquí la palabra clave de tu código
+const promoInput = document.getElementById('promoInput');
+const promoBtn = document.getElementById('promoBtn');
+const promoMsg = document.getElementById('promoMsg');
+
+function ensureState(){ if(!window.state) window.state = {}; }
+
+promoBtn?.addEventListener('click', ()=>{
+  ensureState();
+  const code = (promoInput?.value || '').trim();
+  if(!code){ promoMsg.textContent = 'Ingresa un código válido'; return; }
+  if(!PROMO_SECRET){ promoMsg.textContent = 'Código no configurado aún.'; return; }
+  if(code.toLowerCase() === PROMO_SECRET.toLowerCase()){
+    state.permanentX2 = true;
+    if(typeof saveState === 'function') saveState();
+    promoMsg.textContent = '✅ Código aplicado: multiplicador x2 permanente activado.';
+  } else {
+    promoMsg.textContent = '❌ Código inválido';
+  }
+});
+
+// Helper: aplicar multiplicador a contadores visibles si existe estado x2
+function applyX2UI(){
+  const perClickEl = document.getElementById('perClick');
+  if(perClickEl){
+    const base = Number(perClickEl.dataset.base || perClickEl.textContent || 1);
+    perClickEl.dataset.base = String(base);
+    perClickEl.textContent = state?.permanentX2 ? String(base * 2) : String(base);
+  }
+}
+document.addEventListener('DOMContentLoaded', ()=> setTimeout(applyX2UI, 0));
+
+// Estado inicial
+state.fosos = state.fosos || [0]; // siempre tienes el primero gratis
+state.equippedFoso = state.equippedFoso || 0;
+
+// Comprar foso
+function buyFoso(index, cost) {
+  if (state.fosos.includes(index)) {
+    // Ya comprado → solo equipar
+    state.equippedFoso = index;
+    saveState(); render();
+    showToast("✅ Foso equipado", "success");
+    return;
+  }
+
+  if (state.sig >= cost) {
+    state.sig -= cost;
+    state.fosos.push(index);
+    state.equippedFoso = index;
+    saveState(); render();
+    showToast("🔥 Nuevo foso comprado y equipado", "success");
+  } else {
+    showToast("❌ No tienes suficientes ΣC", "error");
+  }
+}
+
+let chargeInterval;
+
+function toggleCharge() {
+  if (charging) {
+    clearInterval(chargeInterval);
+    charging = false;
+    showToast("🔋 Carga detenida", "info");
+  } else {
+    charging = true;
+    chargeInterval = setInterval(() => {
+      // 👉 Aquí estaba el bug: usabas un número fijo (100)
+      if (state.battery < state.maxBattery) {
+        state.battery++;
+        saveState();
+        render();
+      } else {
+        clearInterval(chargeInterval);
+        charging = false;
+        showToast("🔋 Batería completa", "success");
+      }
+    }, 500); // sube 1% cada medio segundo
+  }
+}
+// --- Variables de batería ---
+
+
+function renderBattery() {
+  const batteryText = document.getElementById("batteryText");
+  if (!batteryText) return;
+
+  // Clamp estricto al máximo
+  if (state.battery > state.maxBattery) state.battery = state.maxBattery;
+  if (state.battery < 0) state.battery = 0;
+
+  batteryText.textContent = Math.floor(state.battery) + "%";
+  batteryText.setAttribute("fill", state.battery > 20 ? "#0f0" : "#f00");
+}
+
+
+// Botón Cargar
+document.getElementById("btnChargeToggle").addEventListener("click", () => {
+  if (battery < maxBattery) {
+    isCharging = true;
+    const interval = setInterval(() => {
+      if (battery >= maxBattery || !isCharging) {
+        clearInterval(interval);
+        isCharging = false;
+      } else {
+        battery++;
+        renderBattery();
+      }
+    }, 100); // cada 100ms sube 1%
+  }
+});
+
+// Botón Nuevo/Reparar Foso → reinicia batería
+document.getElementById("btnNuevoFoso").addEventListener("click", () => {
+  battery = maxBattery;
+  renderBattery();
+});
+
+// Si compras mejora de batería (+50)
+function upgradeBattery() {
+  maxBattery += 50;
+  battery = maxBattery;
+  renderBattery();
+}
+
+// inicializar
+renderBattery();
+
+// ================= BATERÍA ==================
+if (!state.battery) state.battery = 100;
+if (!state.maxBattery) state.maxBattery = 100;
+
+let chargingInterval = null;
+let isCharging = false;
+
+function renderBattery() {
+  const batteryText = document.getElementById("batteryText");
+  if (!batteryText) return;
+
+  // clamp duro: nunca pasar del máximo ni ir por debajo de 0
+  if (state.battery > state.maxBattery) state.battery = state.maxBattery;
+  if (state.battery < 0) state.battery = 0;
+
+  // sin decimales
+  batteryText.textContent = Math.floor(state.battery) + "%";
+  batteryText.setAttribute("fill", state.battery > 20 ? "#0f0" : "#f00");
+}
+
+
+
+// --- Botón Parar Carga (si lo tienes en tu HTML) ---
+const btnParar = document.getElementById("btnParar");
+if (btnParar) {
+  btnParar.addEventListener("click", () => {
+    if (chargingInterval) {
+      clearInterval(chargingInterval);
+      chargingInterval = null;
+      isCharging = false;
+    }
+  });
+}
+
+// --- Botón Nuevo/Reparar Foso ---
+document.getElementById("btnNuevoFoso").addEventListener("click", () => {
+  state.battery = state.maxBattery;
+  renderBattery();
+  saveState();
+});
+
+// --- Upgrade batería ---
+function upgradeBattery() {
+  state.maxBattery += 50;
+  state.battery = state.maxBattery;
+  renderBattery();
+  saveState();
+}
+
+// Hook batería al render global
+const oldRender = render;
+render = function() {
+  oldRender();
+  renderBattery();
+};
+
+// Inicializar
+renderBattery();
+
+
+function updateBatteryText(value) {
+  const batteryText = document.getElementById("batteryText");
+  const clamped = Math.max(0, Math.min(100, value));
+  batteryText.textContent = clamped + "%";
+}
+
+
+let charging = false;
+
+
+document.getElementById("btnChargeToggle").addEventListener("click", () => {
+  if (!charging) {
+    charging = true;
+    chargeInterval = setInterval(() => {
+      battery = Math.min(100, battery + 1);
+      state.battery = battery;        // 🔹 Guardar en el estado
+      updateBatteryText(battery);
+      if (typeof saveState === "function") saveState(); // 🔹 persistir en localStorage
+      if (battery >= 100) {
+        clearInterval(chargeInterval);
+        charging = false;
+      }
+    }, 200);
+  } else {
+    clearInterval(chargeInterval);
+    charging = false;
+  }
+});
+
+
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // --- Inicializar batería desde el estado ---
+  if (typeof state.battery === "number") {
+    window.battery = state.battery; 
+  } else {
+    window.battery = 100; 
+    state.battery = 100;
+  }
+
+  function updateBatteryText(value) {
+    const batteryText = document.getElementById("batteryText");
+    if (batteryText) {
+      const clamped = Math.max(0, Math.min(100, value));
+      batteryText.textContent = clamped + "%";
+    }
+  }
+
+  updateBatteryText(window.battery);
+
+  // --- Lógica del botón Cargar ---
+  let charging = false;
+  let chargeInterval;
+
+  const btnCharge = document.getElementById("btnChargeToggle");
+  if (btnCharge) {
+    btnCharge.addEventListener("click", () => {
+      if (!charging) {
+        charging = true;
+        chargeInterval = setInterval(() => {
+          window.battery = Math.min(100, window.battery + 1);
+          state.battery = window.battery;   // guardar en estado
+          updateBatteryText(window.battery);
+          if (typeof saveState === "function") saveState();
+
+          if (window.battery >= 100) {
+            clearInterval(chargeInterval);
+            charging = false;
+          }
+        }, 200);
+      } else {
+        clearInterval(chargeInterval);
+        charging = false;
+      }
+    });
+  }
+});
+</script>
+
+
+<!-- Social bar -->
+<nav class="social-bar" aria-label="Redes Sociales">
+  <a href="https://x.com/sigmacompanyoficial" target="_blank" rel="noopener" aria-label="X (Twitter)">
+    <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+      <path d="M3 3l18 18M21 3L3 21"/>
+    </svg>
+  </a>
+  <a href="https://instagram.com/sigmacompanyoficial" target="_blank" rel="noopener" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17" cy="7" r="1"/>
+    </svg>
+  </a>
+  <a href="https://www.tiktok.com/@sigmacompanyoficial" target="_blank" rel="noopener" aria-label="TikTok">
+    <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+      <path d="M9 3v10.5a3.5 3.5 0 1 1-3.5-3.5"/>
+      <path d="M9 6.5c1.2 1.6 3.2 2.6 5.3 2.6v3.2c-2.6 0-4.6-1.1-5.3-2"/>
+    </svg>
+  </a>
+  <a href="https://youtube.com/@sigmacompanyoficial" target="_blank" rel="noopener" aria-label="YouTube">
+    <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+      <rect x="3" y="6" width="18" height="12" rx="3"/>
+      <path d="M11 10l4 2-4 2z" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+</nav>
+
 </body>
 </html>
