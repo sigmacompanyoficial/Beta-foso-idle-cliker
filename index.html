@@ -330,7 +330,8 @@
 <!--rect x="35" y="110" width="30" height="40" rx="4" ry="4" fill="#000" id="centralScreen"/-->
 <!-- PANTALLA CENTRAL (dentro del svg centralFoso) -->
 <rect x="35" y="100" width="30" height="50" rx="4" ry="4" fill="#000" id="centralScreen"/>
-<text id="batteryText" x="50" y="125" font-size="10" fill="#0f0" text-anchor="middle">100%</text>
+<text id="batteryText" x="50" y="125" font-size="10" fill="#0f0" text-anchor="middle">0%</text>
+
 
   <!-- niveles: vamos a usar máscaras para "llenar" o simplemente cambiar color/opacity -->
   <!-- para simplicidad controlamos solo el color/opacity del path según drops -->
@@ -361,136 +362,87 @@
           </div>
 
          <div class="controlsRow" id="controlsRow">
-        
-  <!-- Power -->
-  <button id="btnPower" class="mata-btn" style="background:#0ea5b7">
-    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-      <path d="M12 2v8"/>
-      <path d="M5.2 5.2a9 9 0 1 0 12.7 0"/>
-    </svg>
-    Power
-  </button>
 
-  <!-- Cargar -->
-  <button id="btnChargeToggle" class="mata-btn" style="background:#00cfff">
-    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-      <path d="M13 2 L4 14h6l-1 8 10-12h-7z" fill="currentColor" stroke="none"/>
-    </svg>
-    Cargar
-  </button>
+  <!-- Fila 1 -->
+  <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:100%">
+    <button id="btnPower" class="mata-btn" style="background:#0ea5b7">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v8"/><path d="M5.2 5.2a9 9 0 1 0 12.7 0"/></svg>
+      Power
+    </button>
 
-  <!-- Nuevo/Reparar Foso -->
-  <button id="btnNuevoFoso" class="mata-btn" style="background:#ffa726">
-    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-      <rect x="4" y="4" width="16" height="16" rx="3"/>
-      <path d="M12 8v8M8 12h8"/>
-    </svg>
-    Nuevo Foso
-  </button>
+    <button id="btnChargeToggle" class="mata-btn" style="background:#00cfff">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M13 2 L4 14h6l-1 8 10-12h-7z" fill="currentColor"/></svg>
+      <span id="chargeLabel">Cargar</span>
+    </button>
+    <button id="btnAutoClickToggle" class="mata-btn" style="background:#36d399">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M4 12h16M12 4v16" stroke="currentColor" fill="none"/></svg>
+      Autoclicker: Off
+    </button>
+    <button id="btnAutoClickUpgrade" class="mata-btn" style="background:#60a5fa">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3 6 6 1-4 4 1 6-6-3-6 3 1-6-4-4 6-1z" fill="currentColor"/></svg>
+      Subir Autoclicker (Lv <span id="autoClickLevelLabel">0</span>/10)
+    </button>
 
-  <!-- Mata Foso -->
-  <button id="btnMata" class="mata-btn" style="background:#ef4444">
-    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-      <path d="M7 7l10 10M17 7L7 17"/>
-      <circle cx="12" cy="12" r="9"/>
-    </svg>
-    <span id="mataLabel">Mata Foso</span>
-  </button>
+    <button id="btnNuevoFoso" class="mata-btn" style="background:#ffa726">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg>
+      Nuevo Foso
+    </button>
 
-
-  <!-- Tienda -->
- <!-- Tienda -->
-<button id="btnShop" class="mata-btn" style="background:#facc15">
-  <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-    <circle cx="9" cy="20" r="1.5"/>
-    <circle cx="18" cy="20" r="1.5"/>
-    <path d="M3 4h2l2 10h11l2-7H6"/>
-  </svg>
-  Tienda
-
-      <!-- Rebirth -->
-<button id="btnRebirth" class="mata-btn" style="background:#a78bfa">
-  <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-    <path d="M3 10v4h4"/>
-    <path d="M21 14v-4h-4"/>
-    <path d="M21 10a8 8 0 0 0-13.66-5.66L7 6"/>
-    <path d="M3 14a8 8 0 0 0 13.66 5.66L17 18"/>
-  </svg>
-  Rebirth
-</button>
-
-<div class="button-wrapper">
-  <button id="btnDaily" class="mata-btn">
-    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-      <rect x="3" y="5" width="18" height="16" rx="2"/>
-      <path d="M16 3v4M8 3v4M3 11h18"/>
-    </svg>
-    Regalo Diario
-  </button>
-  <span id="dotDaily" class="notify-dot hidden"></span>
-</div>
-
-<!-- Promo Codes -->
-<div class="panel" style="margin-top:10px">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-      <rect x="3" y="5" width="18" height="14" rx="3"/>
-      <path d="M7 9h10M7 13h6"/>
-    </svg>
-    <strong>Códigos promocionales</strong>
-  </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <input id="promoInput" placeholder="Escribe tu código aquí" style="flex:1;min-width:180px;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);color:#eef6ff"/>
-    <button id="promoBtn" class="mata-btn" style="background:#34d399">
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden><path d="M5 12l4 4L19 6"/></svg>
-      Canjear
+    <button id="btnMata" class="mata-btn" style="background:#ef4444">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17"/><circle cx="12" cy="12" r="9"/></svg>
+      <span id="mataLabel">Mata Foso</span>
     </button>
   </div>
-  <div class="metaTiny" id="promoMsg" style="margin-top:6px"></div>
+
+  <!-- Fila 2 -->
+  <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:100%">
+    <button id="btnShop" class="mata-btn" style="background:#facc15">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l2 10h11l2-7H6"/></svg>
+      Tienda
+    </button>
+
+    <button id="btnRebirth" class="mata-btn" style="background:#a78bfa">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M3 10v4h4"/><path d="M21 14v-4h-4"/><path d="M21 10a8 8 0 0 0-13.66-5.66L7 6"/><path d="M3 14a8 8 0 0 0 13.66 5.66L17 18"/></svg>
+      Rebirth
+    </button>
+
+    <div class="button-wrapper">
+      <button id="btnDaily" class="mata-btn">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
+        Regalo Diario
+      </button>
+      <span id="dotDaily" class="notify-dot hidden"></span>
+    </div>
+
+    <div class="button-wrapper">
+      <button id="btnAFK" class="mata-btn" style="background:#8e44ad">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Mejoras AFK
+      </button>
+      <span id="dotAFK" class="notify-dot hidden"></span>
+    </div>
+  </div>
+
+  <!-- Fila 3 (alineada a la derecha) -->
+  <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; width:100%">
+    <!-- Promo Codes -->
+    <div class="panel" style="display:flex; align-items:center; gap:8px; flex:1; max-width:300px">
+      <input id="promoInput" placeholder="Código promo" 
+             style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.12);
+                    background:rgba(255,255,255,0.03); color:#eef6ff"/>
+      <button id="promoBtn" class="mata-btn" style="background:#34d399">Canjear</button>
+    </div>
+
+    <button id="btnConfig" class="mata-btn" style="background:#c084fc">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V22a2 2 0 1 1-4 0v-.11a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H2a2 2 0 1 1 0-4h.11a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 6.06 3.3l.06.06a1.65 1.65 0 0 0 1.82.33H8a1.65 1.65 0 0 0 1-1.51V2a2 2 0 1 1 4 0v.11a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06A2 2 0 1 1 20.7 6.06l-.06.06a1.65 1.65 0 0 0-.33 1.82V8c0 .64.39 1.22 1 1.51.35.17.73.49.73.49"/></svg>
+      Configuración
+    </button>
+  </div>
 </div>
 
-<div class="button-wrapper">
-  <button id="btnAFK" class="mata-btn" style="background:#8e44ad">
-    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-      <circle cx="12" cy="12" r="9"/>
-      <path d="M12 7v5l3 3"/>
-    </svg>
-    Mejoras AFK
-  </button>
-  <span id="dotAFK" class="notify-dot hidden"></span>
-</div>
 
 
 
-
-  <!-- Configuración -->
-  <button id="btnConfig" class="mata-btn" style="background:#c084fc">
-    <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V22a2 2 0 1 1-4 0v-.11a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H2a2 2 0 1 1 0-4h.11a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 6.06 3.3l.06.06a1.65 1.65 0 0 0 1.82.33H8a1.65 1.65 0 0 0 1-1.51V2a2 2 0 1 1 4 0v.11a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06A2 2 0 1 1 20.7 6.06l-.06.06a1.65 1.65 0 0 0-.33 1.82V8c0 .64.39 1.22 1 1.51.35.17.73.49.73.49"/>
-    </svg>
-    Configuración
-  </button>
-</div>
-
-
-<div id="dailyStreakBox" style="
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(0,0,0,0.7);
-  border: 2px solid orange;
-  border-radius: 12px;
-  padding: 10px 15px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-  min-width: 120px;
-  box-shadow: 0 0 10px rgba(255,140,0,0.6);
-">
-  🔥 Racha: <span id="dailyStreak">0</span> días
-</div>
 
 
 
@@ -1309,6 +1261,111 @@ document.addEventListener("DOMContentLoaded", () => {
     border-radius: 4px;
   }
 </style>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ DOM cargado, iniciando script...");
+
+  let chargingInterval = null;
+  const batteryText = document.getElementById("batteryText");
+  const btnCharge = document.getElementById("btnChargeToggle");
+
+  // Cargar datos desde localStorage
+
+  function updateBattery() {
+    console.log("🔋 Actualizando batería:", gameData.battery + "%");
+    batteryText.textContent = `${gameData.battery}%`;
+    if (gameData.battery < 20) {
+      batteryText.setAttribute("fill", "red");
+    } else if (gameData.battery < 80) {
+      batteryText.setAttribute("fill", "yellow");
+    } else {
+      batteryText.setAttribute("fill", "lime");
+    }
+
+    // Guardar en localStorage
+    localStorage.setItem("gameData", JSON.stringify(gameData));
+  }
+
+  function chargeBattery() {
+    if (gameData.battery >= gameData.maxBattery) {
+      console.log("⚠️ La batería ya está llena.");
+      return;
+    }
+    if (chargingInterval) {
+      console.log("⚠️ Ya se está cargando.");
+      return;
+    }
+    console.log("▶️ Iniciando carga lenta (+2% por segundo)...");
+    chargingInterval = setInterval(() => {
+      if (gameData.battery < gameData.maxBattery) {
+        gameData.battery = Math.min(gameData.maxBattery, gameData.battery + 2);
+        console.log("🔼 Batería subió a:", gameData.battery + "%");
+        updateBattery();
+      } else {
+        console.log("✅ Batería llegó al 100%. Deteniendo carga.");
+        clearInterval(chargingInterval);
+        chargingInterval = null;
+      }
+    }, 1000);
+  }
+
+  if (btnCharge) {
+    console.log("✅ Botón de carga encontrado.");
+    btnCharge.addEventListener("click", () => {
+      console.log("👉 Botón de carga presionado.");
+      chargeBattery();
+    });
+  } else {
+    console.log("❌ No encontré el botón de carga (#btnChargeToggle).");
+  }
+
+  // Mostrar batería al inicio desde localStorage
+  updateBattery();
+
+
+  // ==============================
+  // 💨 CLICK EN EL FOSO (añade humo)
+  // ==============================
+  const vaperWrap = document.getElementById("vaperWrap");
+  const smokeLayer = document.getElementById("smokeLayer");
+
+  function spawnSmoke() {
+    if (gameData.battery <= 0) {
+      console.log("⚠️ Sin batería, no puedes hacer humo.");
+      return;
+    }
+
+    console.log("💨 Creando humo...");
+    const puff = document.createElement("div");
+    puff.className = "smoke";
+    puff.style.left = `${50 + (Math.random() * 20 - 10)}%`;
+    smokeLayer.appendChild(puff);
+
+    // Gastar 1% batería por cada click
+    gameData.battery = Math.max(0, gameData.battery - 1);
+    updateBattery();
+
+    setTimeout(() => {
+      console.log("💨 Humo eliminado.");
+      puff.remove();
+    }, 2500);
+  }
+
+  if (vaperWrap) {
+    console.log("✅ Zona del foso encontrada.");
+    vaperWrap.addEventListener("click", () => {
+      console.log("👉 Click en el foso.");
+      spawnSmoke();
+    });
+  } else {
+    console.log("❌ No encontré el foso (#vaperWrap).");
+  }
+});
+</script>
+
+
 <script>
 window.onload = () => {
   const btnShop = document.getElementById("btnShop");
@@ -1333,6 +1390,9 @@ window.onload = () => {
 */
 
 // Configuración inicial (puedes ajustar)
+
+let isCharging = false;
+
 const FOSOS = [
  {id:1,  name:'Foso 1',  cost:0,                    perClick:1},
  {id:2,  name:'Foso 2',  cost:100,                  perClick:2},
@@ -1407,6 +1467,9 @@ let state = {
     rebirths: 0,       // cuántos rebirths ha hecho
   rebirthBonus: 1,      // progreso en la lista de recompensas
 lastDailyClaim: null,  
+// --- Sistema de batería ---
+ // capacidad máxima
+
 
 afkLevel: 0,
 afkLastClaim: Date.now(),
@@ -1430,7 +1493,11 @@ afkLastClaim: Date.now(),
     extra_click: 0
   },
   extraClicks: 0
+  
 };
+if (typeof state.battery !== "number") state.battery = 0;
+if (typeof state.batteryMax !== "number") state.batteryMax = 100;
+
 
 
 // DOM refs
@@ -1517,7 +1584,7 @@ btnRebirth?.addEventListener("click", () => {
   state.sig = 0;
   state.totalClicks = 0;
   state.activeFosoIndex = 0;
-  state.battery = 100;
+
   state.maxBattery = 100;
 
   saveState();
@@ -1660,72 +1727,11 @@ function registerClick(){
 
 
 
-function setCharging(active){
-  isCharging = !!active;
-  const tickMs = 1000; // cada 1s actualizamos carga
-  const maxB = () => (state.maxBattery || 100);
-
-  if(isCharging){
-    chargeStartAt = Date.now();
-    btnChargeToggle.textContent = 'Parar Carga';
-    // limpiar timer previo
-    if(burnCheckTimer) clearInterval(burnCheckTimer);
-
-    // arrancar timer que incrementa batería y comprueba sobrecarga
-    burnCheckTimer = setInterval(()=>{
-      if(!isCharging) return;
-
-      // 1) incrementar batería de forma proporcional al tiempo de recarga configurado
-      const basePerSec = maxB() / (CONFIG.rechargeBaseSec || 120); // ej. si rechargeBaseSec=120 -> llena en 120s
-      const speedMultiplier = 1 + ((state.rechargeSpeedLevel || 0) * 0.1); // bonus por mejoras
-      const inc = basePerSec * speedMultiplier * (tickMs / 1000);
-
-      state.battery = Math.min(maxB(), state.battery + inc);
-
-      // 2) gestionar momento en que llega a full y empezar el contador de sobrecarga
-      if(state.battery >= maxB()){
-        if(timeWhenReachedFull === 0){
-          timeWhenReachedFull = Date.now();
-        }
-      } else {
-        // si baja de full mientras sigue cargando, resetear el contador
-        timeWhenReachedFull = 0;
-      }
-
-      // 3) si se mantiene FULL por 60s -> quemar
-      if(timeWhenReachedFull !== 0){
-        const overTimeMs = Date.now() - timeWhenReachedFull;
-        if(overTimeMs >= 60 * 1000){
-          state.burned = true;
-          state.battery = 0;
-          setCharging(false);
-          showBurnSmoke();
-          showToast('Se quemó por sobrecarga: 100% + 1 minuto.', "info");
-          render();
-          saveState();
-          return;
-        }
-      }
-
-      // 4) actualizar UI y guardar cada tick
-      render();
-      saveState();
-    }, tickMs);
-
-  } else {
-    // parar carga
-    btnChargeToggle.textContent = 'Cargar Foso';
-    timeWhenReachedFull = 0;
-    if(burnCheckTimer){ clearInterval(burnCheckTimer); burnCheckTimer = null; }
-    saveState();
-  }
-}
-
 
 
 btnChargeToggle?.addEventListener('click', ()=>{
   if(state.burned){ showToast('El foso está quemado. Equipa/compra otro.', "info"); return; }
-  setCharging(!isCharging);
+  chargeBattery(!isCharging);
 });
 
 function showBurnSmoke(){
@@ -2431,7 +2437,7 @@ if (btnShop) {
 
 btnChargeToggle?.addEventListener('click', ()=>{
   if(state.burned){ showToast('El foso está quemado. Equipa/compra otro.', "info"); return; }
-  setCharging(!isCharging);
+  chargeBattery(!isCharging);
 });
 
 
@@ -2996,6 +3002,16 @@ function updateDailyStreak() {
   const streak = state.dailyStreak || 0;
   streakEl.textContent = streak;
 }
+state.batteryMax = state.batteryMax || 100; // valor base
+battery = Math.min(state.batteryMax, battery + 1);
+function updateBatteryText(value) {
+  const batteryText = document.getElementById("batteryText");
+  const clamped = Math.max(0, Math.min(state.batteryMax, value));
+  batteryText.textContent = clamped + " / " + state.batteryMax;
+}
+state.batteryMax += 20; // aumenta capacidad
+saveState();
+
 
 // Cuando reclamas el diario
 btnClaimDaily?.addEventListener("click", () => {
@@ -3026,6 +3042,7 @@ function updateDailyStreakBox() {
   const streak = state.dailyStreak || 0;
   streakEl.textContent = streak;
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const today = new Date().toDateString();
@@ -3245,70 +3262,34 @@ function toggleCharge() {
 // --- Variables de batería ---
 
 
-function renderBattery() {
-  const batteryText = document.getElementById("batteryText");
-  if (!batteryText) return;
 
-  // Clamp estricto al máximo
-  if (state.battery > state.maxBattery) state.battery = state.maxBattery;
-  if (state.battery < 0) state.battery = 0;
-
-  batteryText.textContent = Math.floor(state.battery) + "%";
-  batteryText.setAttribute("fill", state.battery > 20 ? "#0f0" : "#f00");
-}
 
 
 // Botón Cargar
-document.getElementById("btnChargeToggle").addEventListener("click", () => {
-  if (battery < maxBattery) {
-    isCharging = true;
-    const interval = setInterval(() => {
-      if (battery >= maxBattery || !isCharging) {
-        clearInterval(interval);
-        isCharging = false;
-      } else {
-        battery++;
-        renderBattery();
-      }
-    }, 100); // cada 100ms sube 1%
-  }
-});
+
 
 // Botón Nuevo/Reparar Foso → reinicia batería
 document.getElementById("btnNuevoFoso").addEventListener("click", () => {
   battery = maxBattery;
-  renderBattery();
+  
 });
 
 // Si compras mejora de batería (+50)
 function upgradeBattery() {
   maxBattery += 50;
   battery = maxBattery;
-  renderBattery();
+  
 }
 
 // inicializar
-renderBattery();
+
 
 // ================= BATERÍA ==================
-if (!state.battery) state.battery = 100;
+if (!state.battery) ;
 if (!state.maxBattery) state.maxBattery = 100;
 
-let chargingInterval = null;
-let isCharging = false;
 
-function renderBattery() {
-  const batteryText = document.getElementById("batteryText");
-  if (!batteryText) return;
 
-  // clamp duro: nunca pasar del máximo ni ir por debajo de 0
-  if (state.battery > state.maxBattery) state.battery = state.maxBattery;
-  if (state.battery < 0) state.battery = 0;
-
-  // sin decimales
-  batteryText.textContent = Math.floor(state.battery) + "%";
-  batteryText.setAttribute("fill", state.battery > 20 ? "#0f0" : "#f00");
-}
 
 
 
@@ -3327,7 +3308,7 @@ if (btnParar) {
 // --- Botón Nuevo/Reparar Foso ---
 document.getElementById("btnNuevoFoso").addEventListener("click", () => {
   state.battery = state.maxBattery;
-  renderBattery();
+  
   saveState();
 });
 
@@ -3335,7 +3316,7 @@ document.getElementById("btnNuevoFoso").addEventListener("click", () => {
 function upgradeBattery() {
   state.maxBattery += 50;
   state.battery = state.maxBattery;
-  renderBattery();
+  
   saveState();
 }
 
@@ -3343,11 +3324,11 @@ function upgradeBattery() {
 const oldRender = render;
 render = function() {
   oldRender();
-  renderBattery();
+  
 };
 
 // Inicializar
-renderBattery();
+
 
 
 function updateBatteryText(value) {
@@ -3359,78 +3340,208 @@ function updateBatteryText(value) {
 
 let charging = false;
 
+document.getElementById("btnChargeToggle").addEventListener("click", () => { chargeBattery(); });
 
-document.getElementById("btnChargeToggle").addEventListener("click", () => {
-  if (!charging) {
-    charging = true;
-    chargeInterval = setInterval(() => {
-      battery = Math.min(100, battery + 1);
-      state.battery = battery;        // 🔹 Guardar en el estado
-      updateBatteryText(battery);
-      if (typeof saveState === "function") saveState(); // 🔹 persistir en localStorage
-      if (battery >= 100) {
-        clearInterval(chargeInterval);
-        charging = false;
-      }
-    }, 200);
-  } else {
-    clearInterval(chargeInterval);
-    charging = false;
-  }
-});
+
+
+
+if (typeof upgrade !== "undefined" && upgrade === "battery_plus50") {
+  state.batteryMax += 50;
+  saveState();
+  
+}
+
 
 
 
 </script>
 
 <script>
+// Eliminado bloque duplicado de carga para unificar la lógica
+
+
+// === BATERÍA — módulo unificado ===
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Inicializar batería desde el estado ---
-  if (typeof state.battery === "number") {
-    window.battery = state.battery; 
-  } else {
-    window.battery = 100; 
-    state.battery = 100;
+  // Estado inicial
+  // Migración de claves antiguas para evitar desajustes (batteryMax → maxBattery)
+  if (state && state.batteryMax != null && state.maxBattery == null) {
+    state.maxBattery = state.batteryMax;
+    try { if (typeof saveState === "function") saveState(); } catch {}
+  }
+  let battery = typeof state?.battery === "number" ? state.battery : 100;
+  let maxBattery = typeof state?.maxBattery === "number" ? state.maxBattery : 100;
+  if (battery > maxBattery) battery = maxBattery; // clamp si viniera corrupto
+
+  let rechargeTimer = null;
+
+  function saveBattery() {
+    state.battery = battery;
+    state.maxBattery = maxBattery;
+    if (typeof saveState === "function") saveState();
   }
 
-  function updateBatteryText(value) {
-    const batteryText = document.getElementById("batteryText");
-    if (batteryText) {
-      const clamped = Math.max(0, Math.min(100, value));
-      batteryText.textContent = clamped + "%";
-    }
+  function updateBatteryUI() {
+    const el = document.getElementById("batteryText");
+    if (el) el.textContent = Math.max(0, Math.min(100, battery)) + "%";
   }
 
-  updateBatteryText(window.battery);
-
-  // --- Lógica del botón Cargar ---
-  let charging = false;
-  let chargeInterval;
-
-  const btnCharge = document.getElementById("btnChargeToggle");
-  if (btnCharge) {
-    btnCharge.addEventListener("click", () => {
-      if (!charging) {
-        charging = true;
-        chargeInterval = setInterval(() => {
-          window.battery = Math.min(100, window.battery + 1);
-          state.battery = window.battery;   // guardar en estado
-          updateBatteryText(window.battery);
-          if (typeof saveState === "function") saveState();
-
-          if (window.battery >= 100) {
-            clearInterval(chargeInterval);
-            charging = false;
-          }
-        }, 200);
+  // Recarga manual (solo cuando pulsa Cargar). Velocidad depende de la capacidad.
+  function startRecharge() {
+    if (rechargeTimer) return;
+    const baseMs = 600; // base más lenta
+    const speedFactor = Math.max(0.4, 100 / maxBattery); // más capacidad → más rápido
+    const intervalMs = Math.max(60, Math.floor(baseMs * speedFactor));
+    rechargeTimer = setInterval(() => {
+      if (battery < maxBattery) {
+        battery++;
+        updateBatteryUI();
+        saveBattery();
       } else {
-        clearInterval(chargeInterval);
-        charging = false;
+        clearInterval(rechargeTimer);
+        rechargeTimer = null;
+        // Auto cambiar etiqueta a "Cargar" cuando se llena
+        const label = document.getElementById("chargeLabel");
+        if (label) label.textContent = "Cargar";
       }
-    });
+    }, intervalMs);
+    const label = document.getElementById("chargeLabel");
+    if (label) label.textContent = "Parar de cargar";
   }
+  function stopRecharge(){
+    if (rechargeTimer) { clearInterval(rechargeTimer); rechargeTimer = null; }
+    const label = document.getElementById("chargeLabel");
+    if (label) label.textContent = "Cargar";
+  }
+
+  // Consumo al hacer click en el foso (antes de otros listeners)
+  const foso = document.getElementById("vaperWrap");
+  if (foso) {
+    foso.addEventListener(
+      "click",
+      (e) => {
+        if (battery <= 0) {
+          e.stopImmediatePropagation?.();
+          if (typeof showToast === "function") showToast("🔋 Batería agotada", "warning");
+          return;
+        }
+        battery = Math.max(0, battery - 1);
+        updateBatteryUI();
+        saveBattery();
+        // La recarga es manual, no auto
+      },
+      { capture: true }
+    );
+  }
+
+  // Mejora de batería accesible globalmente
+  window.upgradeBattery = function () {
+    maxBattery = Math.floor(maxBattery * 1.5);
+    if (battery > maxBattery) battery = maxBattery;
+    updateBatteryUI();
+    saveBattery();
+    if (typeof showToast === "function") showToast("🔋 Capacidad máxima: " + maxBattery + "%", "success");
+    // Si estaba cargando, recalcula velocidad: parar y reiniciar
+    if (rechargeTimer){ stopRecharge(); startRecharge(); }
+  };
+
+  // Inicializar UI
+  updateBatteryUI();
+
+  // Botón Cargar/Parar (toggle)
+  document.getElementById("btnChargeToggle")?.addEventListener("click", () => {
+    if (rechargeTimer) { stopRecharge(); } else { startRecharge(); }
+  });
+
+  // ==== Autoclicker ====
+  const autoPointer = document.getElementById("autoClickPointer");
+  let autoClickLevel = Number(state.autoClickerLevel || 0); // 0..10
+  let autoClickActive = Boolean(state.autoClickerActive || false);
+  let autoClickTimer = null;
+
+  function saveAutoClickState(){
+    state.autoClickerLevel = autoClickLevel;
+    state.autoClickerActive = autoClickActive;
+    if (typeof saveState === "function") saveState();
+  }
+
+  function autoClickIntervalMs(level){
+    // Nivel 0: desactivado. 1..10: más nivel = más rápido.
+    // 900ms/lv con piso de 80ms
+    const base = 900;
+    const ms = Math.max(80, Math.floor(base / Math.max(1, level)));
+    return ms;
+  }
+
+  function performClick(){
+    // Simula un click al foso si hay batería
+    if (battery <= 0) return;
+    // Efecto visual opcional del puntero
+    if (autoPointer){
+      autoPointer.classList.add("active");
+      setTimeout(()=>autoPointer.classList.remove("active"), 120);
+    }
+    // Disminuir batería y propagar como un click normal
+    battery = Math.max(0, battery - 1);
+    updateBatteryUI();
+    saveBattery();
+    // Si existe una función global que otorga monedas por click, intenta llamarla
+    try { if (typeof window.handleFosoClick === "function") window.handleFosoClick(); } catch {}
+  }
+
+  function startAutoClick(){
+    if (autoClickActive || autoClickLevel <= 0) return;
+    autoClickActive = true;
+    const btn = document.getElementById("btnAutoClickToggle");
+    if (btn) btn.textContent = "Autoclicker: On";
+    autoClickTimer = setInterval(performClick, autoClickIntervalMs(autoClickLevel));
+    saveAutoClickState();
+  }
+  function stopAutoClick(){
+    if (!autoClickActive) return;
+    autoClickActive = false;
+    const btn = document.getElementById("btnAutoClickToggle");
+    if (btn) btn.textContent = "Autoclicker: Off";
+    if (autoClickTimer){ clearInterval(autoClickTimer); autoClickTimer = null; }
+    saveAutoClickState();
+  }
+  function restartAutoClickIfNeeded(){
+    if (!autoClickActive) return;
+    if (autoClickTimer){ clearInterval(autoClickTimer); autoClickTimer = null; }
+    autoClickTimer = setInterval(performClick, autoClickIntervalMs(autoClickLevel));
+  }
+
+  // Botones de autoclicker
+  document.getElementById("btnAutoClickToggle")?.addEventListener("click", () => {
+    if (!autoClickActive) startAutoClick(); else stopAutoClick();
+  });
+  document.getElementById("btnAutoClickUpgrade")?.addEventListener("click", () => {
+    if (autoClickLevel < 10){
+      autoClickLevel += 1;
+      const lbl = document.getElementById("autoClickLevelLabel");
+      if (lbl) lbl.textContent = String(autoClickLevel);
+      saveAutoClickState();
+      restartAutoClickIfNeeded();
+    } else {
+      if (typeof showToast === "function") showToast("Autoclicker ya está al nivel máximo (10)", "info");
+    }
+  });
+  // Reflejar nivel inicial en la UI
+  const levelLbl = document.getElementById("autoClickLevelLabel");
+  if (levelLbl) levelLbl.textContent = String(Math.min(10, Math.max(0, autoClickLevel)));
+  // Reflejar estado del toggle
+  const toggleBtn = document.getElementById("btnAutoClickToggle");
+  if (toggleBtn) toggleBtn.textContent = autoClickActive ? "Autoclicker: On" : "Autoclicker: Off";
 });
+
 </script>
+
+
+
+
+
+
+
+
 
 
 <!-- Social bar -->
@@ -3463,3 +3574,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
+
+
