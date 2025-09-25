@@ -361,28 +361,23 @@
               <div id="autoClickPointer"></div> 
           </div>
 
-         <div class="controlsRow" id="controlsRow">
 
   <!-- Fila 1 -->
   <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:100%">
     <button id="btnPower" class="mata-btn" style="background:#0ea5b7">
       <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v8"/><path d="M5.2 5.2a9 9 0 1 0 12.7 0"/></svg>
-      Power
+      Power 
     </button>
+<button id="btnChargeToggle" class="mata-btn" style="background:#00cfff; color:white">
+  <svg class="icon" viewBox="0 0 24 24">
+    <path d="M13 2 L4 14h6l-1 8 10-12h-7z" stroke="currentColor" stroke-width="2" fill="none"/>
+  </svg>
+  <span id="chargeLabel">Cargar</span>
+</button>
 
-    <button id="btnChargeToggle" class="mata-btn" style="background:#00cfff">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M13 2 L4 14h6l-1 8 10-12h-7z" fill="currentColor"/></svg>
-      <span id="chargeLabel">Cargar</span>
-    </button>
-    <button id="btnAutoClickToggle" class="mata-btn" style="background:#36d399">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M4 12h16M12 4v16" stroke="currentColor" fill="none"/></svg>
-      Autoclicker: Off
-    </button>
-    <button id="btnAutoClickUpgrade" class="mata-btn" style="background:#60a5fa">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3 6 6 1-4 4 1 6-6-3-6 3 1-6-4-4 6-1z" fill="currentColor"/></svg>
-      Subir Autoclicker (Lv <span id="autoClickLevelLabel">0</span>/10)
-    </button>
 
+
+ 
     <button id="btnNuevoFoso" class="mata-btn" style="background:#ffa726">
       <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg>
       Nuevo Foso
@@ -734,26 +729,37 @@
 
 <!-- --- SECCION: Mejoras permanentes --- -->
 <div style="grid-column:1/-1; font-weight:800; margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.03)">
-  🔧 Mejoras permanentes
+  🔧 Mejoras permanentes (máx. nivel 10)
 </div>
 
-<!-- Upgrade: Batería -->
-<div class="shopCard" data-upgrade="battery_plus50" title="Aumenta la batería en +50">
-  <div class="metaTiny" style="font-weight:700">Batería +50</div>
-  <div class="priceTag"></div>
+<!-- Auto-clicker -->
+<div class="shopCard" data-upgrade="autoclicker" title="Genera clicks automáticos">
+  <svg viewBox="0 0 24 24" width="72" height="72">
+    <path d="M12 2v4M12 18v4M4 12H2M22 12h-2M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3" stroke="#fff" stroke-width="1.2" fill="none"/>
+  </svg>
+  <div style="font-weight:700; margin-top:6px">Auto-clicker</div>
+  <div class="priceTag">500 ΣC</div>
 </div>
 
-<!-- Upgrade: Auto-clicker -->
-<div class="shopCard" data-upgrade="autoclick_1" title="Añade 1 clic automático por segundo">
-  <div class="metaTiny" style="font-weight:700">Auto-clicker +1 CPS</div>
-  <div class="priceTag"></div>
+<!-- Batería -->
+<div class="shopCard" data-upgrade="battery" title="Aumenta la duración de batería">
+  <svg viewBox="0 0 24 24" width="72" height="72">
+    <rect x="1" y="6" width="18" height="12" rx="2" stroke="#fff" fill="none" stroke-width="1.2"/>
+    <rect x="20" y="10" width="2" height="4" fill="#fff"/>
+  </svg>
+  <div style="font-weight:700; margin-top:6px">Duración batería</div>
+  <div class="priceTag">250 ΣC</div>
 </div>
 
-<!-- Upgrade: Extra clic -->
-<div class="shopCard" data-upgrade="extra_click" title="Permite 1 clic extra antes de gastar batería">
-  <div class="metaTiny" style="font-weight:700">+1 clic extra</div>
-  <div class="priceTag"></div>
+<!-- Carga rápida -->
+<div class="shopCard" data-upgrade="fastcharge" title="Reduce el tiempo de carga">
+  <svg viewBox="0 0 24 24" width="72" height="72">
+    <path d="M13 2L3 14h7v8l11-14h-8z" stroke="#fff" fill="none" stroke-width="1.2"/>
+  </svg>
+  <div style="font-weight:700; margin-top:6px">Carga rápida</div>
+  <div class="priceTag">600 ΣC</div>
 </div>
+
 
 
       </div>
@@ -881,6 +887,7 @@
 
 
 <script>
+  let autoClickInterval = null;
 // --- Configuración de recompensas diarias ---
 const DAILY_REWARDS = [
   { type: "coins", amount: 100, label: "100 ΣC", icon: "💰" },
@@ -1274,22 +1281,22 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cargar datos desde localStorage
 
   function updateBattery() {
-    console.log("🔋 Actualizando batería:", gameData.battery + "%");
-    batteryText.textContent = `${gameData.battery}%`;
-    if (gameData.battery < 20) {
+    console.log("🔋 Actualizando batería:", state.battery + "%");
+    batteryText.textContent = `${state.battery}%`;
+    if (state.battery < 20) {
       batteryText.setAttribute("fill", "red");
-    } else if (gameData.battery < 80) {
+    } else if (state.battery < 80) {
       batteryText.setAttribute("fill", "yellow");
     } else {
       batteryText.setAttribute("fill", "lime");
     }
 
     // Guardar en localStorage
-    localStorage.setItem("gameData", JSON.stringify(gameData));
+    localStorage.setItem("state", JSON.stringify(state));
   }
 
   function chargeBattery() {
-    if (gameData.battery >= gameData.maxBattery) {
+    if (state.battery >= state.maxBattery) {
       console.log("⚠️ La batería ya está llena.");
       return;
     }
@@ -1299,9 +1306,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     console.log("▶️ Iniciando carga lenta (+2% por segundo)...");
     chargingInterval = setInterval(() => {
-      if (gameData.battery < gameData.maxBattery) {
-        gameData.battery = Math.min(gameData.maxBattery, gameData.battery + 2);
-        console.log("🔼 Batería subió a:", gameData.battery + "%");
+      if (state.battery < state.maxBattery) {
+        state.battery = Math.min(state.maxBattery, state.battery + 2);
+        console.log("🔼 Batería subió a:", state.battery + "%");
         updateBattery();
       } else {
         console.log("✅ Batería llegó al 100%. Deteniendo carga.");
@@ -1332,7 +1339,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const smokeLayer = document.getElementById("smokeLayer");
 
   function spawnSmoke() {
-    if (gameData.battery <= 0) {
+    if (state.battery <= 0) {
       console.log("⚠️ Sin batería, no puedes hacer humo.");
       return;
     }
@@ -1344,7 +1351,7 @@ document.addEventListener("DOMContentLoaded", () => {
     smokeLayer.appendChild(puff);
 
     // Gastar 1% batería por cada click
-    gameData.battery = Math.max(0, gameData.battery - 1);
+    state.battery = Math.max(0, state.battery - 1);
     updateBattery();
 
     setTimeout(() => {
@@ -1962,16 +1969,22 @@ document.getElementById('btnNuevoFoso')?.addEventListener('click', ()=>{
 
 
 function updateAutoClickLoop() {
-  if (autoClickTimer) clearInterval(autoClickTimer);
+  // limpiar intervalos anteriores
+  if (autoClickInterval) {
+    clearInterval(autoClickInterval);
+    autoClickInterval = null;
+  }
 
-  const lvl = state.autoClickerLevel || 0;
+  const lvl = state.upgradeLevels?.autoclicker || 0;
   if (lvl > 0) {
-    autoClickTimer = setInterval(() => {
-      if (isCharging) return; // ⛔ no autoclick mientras carga
+    autoClickInterval = setInterval(() => {
       for (let i = 0; i < lvl; i++) {
-        doClick(); // 🔥 dispara un click por cada nivel
+        // 👇 simula un click real en el foso
+        if (typeof handleClick === "function") {
+          handleClick();  // esto suma caladas, monedas y lanza el humo
+        }
       }
-    }, 1000);
+    }, 1000); // cada segundo
   }
 }
 
@@ -3236,7 +3249,14 @@ function buyFoso(index, cost) {
   }
 }
 
-let chargeInterval;
+function clickFoso() {
+  state.sig = (state.sig || 0) + (state.perClick || 1);
+  state.totalClicks = (state.totalClicks || 0) + 1;
+  saveState();
+  render();
+}
+
+
 
 function toggleCharge() {
   if (charging) {
@@ -3338,7 +3358,7 @@ function updateBatteryText(value) {
 }
 
 
-let charging = false;
+
 
 document.getElementById("btnChargeToggle").addEventListener("click", () => { chargeBattery(); });
 
@@ -3537,7 +3557,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+<script>
+  // ... (mantén el código que ya tenías antes) ...
 
+  // Nuevas variables de estado
+  let charging = false;
+  let chargeInterval;
+
+  // Nueva función para detener la carga de forma consistente
+  function stopCharging() {
+    clearInterval(chargeInterval);
+    charging = false;
+    chargeLabel.textContent = "Cargar";
+  }
+
+  // Nueva función principal que maneja el inicio y la detención
+  function toggleCharging() {
+    if (!state) return;
+
+    if (!charging) {
+      // Inicia la carga
+      charging = true;
+      chargeLabel.textContent = "⚡ Cargando...";
+      chargeInterval = setInterval(() => {
+        if (state.battery < state.maxBattery) {
+          state.battery = Math.min(state.maxBattery, (state.battery || 0) + 5);
+          if (typeof saveState === "function") saveState();
+          updateBatteryDisplay();
+        } else {
+          // Si la batería llega al 100%, la detiene automáticamente
+          stopCharging();
+        }
+      }, 1000);
+    } else {
+      // Si el usuario presiona el botón, la detiene manualmente
+      stopCharging();
+    }
+  }
+
+  // ... (el resto de tu código que ya tenías) ...
+</script>
 
 
 
@@ -3572,8 +3631,559 @@ document.addEventListener("DOMContentLoaded", () => {
   </a>
 </nav>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const batteryText = document.getElementById("batteryText");
+  const btnChargeToggle = document.getElementById("btnChargeToggle");
+  const chargeLabel = document.getElementById("chargeLabel");
+
+  let charging = false;
+  let chargeInterval;
+
+  function updateBatteryDisplay() {
+    if (!state) return;
+    const level = state.battery || 0;
+    batteryText.textContent = level + "%";
+
+    if (level < 30) {
+      batteryText.setAttribute("fill", "#f00"); // ðŸ”´ rojo
+    } else if (level < 70) {
+      batteryText.setAttribute("fill", "#ff0"); // ðŸŸ¡ amarillo
+    } else {
+      batteryText.setAttribute("fill", "#0f0"); // ðŸŸ¢ verde
+    }
+  }
+
+  function toggleCharging() {
+    if (!state) return;
+    if (!charging) {
+      charging = true;
+      chargeLabel.textContent = "âš¡ Cargando...";
+      chargeInterval = setInterval(() => {
+        if (state.battery < state.maxBattery) {
+          state.battery = Math.min(state.maxBattery, (state.battery || 0) + 5);
+          if (typeof saveState === "function") saveState();
+          updateBatteryDisplay();
+        } else {
+          clearInterval(chargeInterval);
+          charging = false;
+          chargeLabel.textContent = "Cargar";
+        }
+      }, 1000);
+    } else {
+      clearInterval(chargeInterval);
+      charging = false;
+      chargeLabel.textContent = "Cargar";
+    }
+  }
+
+  if (btnChargeToggle) {
+    btnChargeToggle.addEventListener("click", toggleCharging);
+  }
+
+  updateBatteryDisplay();
+});
+
+
+(function(){
+  function safeToast(msg, type){
+    if(typeof window.showToast === 'function') return window.showToast(msg, type);
+    try{ alert(msg); }catch(e){ console.log(msg); }
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    // 1) Eliminar botones del DOM (los listeners también quedan inservibles al quitar el nodo)
+    const toRemoveIds = ['btnAutoClick','btnAutoClickToggle','btnAutoClickUpgrade','btnAutoClickButton','btnAutoClickToggle'];
+    toRemoveIds.forEach(id=>{ const el = document.getElementById(id); if(el) el.remove(); });
+
+    // También eliminar cualquier botón con texto 'Autoclicker' o 'Autoclick' dentro de .controlsRow (precaución)
+    Array.from(document.querySelectorAll('.controlsRow .mata-btn')).forEach(b=>{
+      const t = (b.textContent||'').toLowerCase();
+      if(t.includes('autoclick') || t.includes('autoclicker') || t.includes('autoclik') || t.includes('cargar')){
+        // NO eliminamos el botón "Tienda", "Mata Foso", etc. Solo intentamos eliminar botones problemáticos.
+        // Evitamos eliminar si el id es btnShop, btnMata, btnNuevoFoso, btnPower, btnDaily, btnAFK, btnRebirth, btnConfig
+        const keep = ['btnShop','btnMata','btnNuevoFoso','btnPower','btnDaily','btnAFK','btnRebirth','btnConfig','promoBtn'];
+        if(!keep.includes(b.id)) b.remove();
+      }
+    });
+
+    // 2) Preparar estructuras
+    window.UPGRADES = window.UPGRADES || {};
+    window.state = window.state || {};
+    state.upgradeLevels = state.upgradeLevels || {};
+
+    function costPow(base, level){ return Math.max(1, Math.floor(base * Math.pow(1.65, Math.max(0, level)))); }
+
+    // 3) Registrar upgrades (si no existen) — maxLevel 10
+    if(!UPGRADES.autoclicker){
+      UPGRADES.autoclicker = {
+        baseCost: 500,
+        name: 'Auto-clicker',
+        maxLevel: 10,
+        getCost: (lvl)=> costPow(500, lvl),
+        apply: ()=>{
+          state.autoClickerLevel = (state.autoClickerLevel||0) + 1;
+          // arrancar/actualizar loop de autoclick si existe
+          if(typeof updateAutoClickLoop === 'function') updateAutoClickLoop();
+        }
+      };
+    }
+
+    if(!UPGRADES.battery){
+      UPGRADES.battery = {
+        baseCost: 250,
+        name: 'Batería (capacidad)',
+        maxLevel: 10,
+        getCost: (lvl)=> costPow(250, lvl),
+        apply: ()=>{
+          state.maxBattery = (state.maxBattery || 100) + 20; // +20 por nivel
+          if(state.battery > state.maxBattery) state.battery = state.maxBattery;
+        }
+      };
+    }
+
+    if(!UPGRADES.fastcharge){
+      UPGRADES.fastcharge = {
+        baseCost: 600,
+        name: 'Carga rápida',
+        maxLevel: 10,
+        getCost: (lvl)=> costPow(600, lvl),
+        apply: ()=>{
+          state.fastChargeLevel = (state.fastChargeLevel||0) + 1;
+          // no hacemos más aquí; la lógica de carga usa state.fastChargeLevel abajo
+        }
+      };
+    }
+
+    // 4) Asegurar que haya tarjetas en la tienda (shopGrid)
+    const shopGrid = document.getElementById('shopGrid');
+    if(!shopGrid){ console.warn('shopGrid no encontrado — abortando parche de tienda'); return; }
+
+    function createCard(key){
+      const u = UPGRADES[key];
+      const card = document.createElement('div');
+      card.className = 'shopCard';
+      card.setAttribute('data-upgrade', key);
+      card.setAttribute('title', `${u.name} — Nivel ${state.upgradeLevels[key]||0}/${u.maxLevel}`);
+      // icon SVGs sencillos pero llamativos — puedes reemplazarlos por los tuyos
+      const icons = {
+        autoclicker: `<svg viewBox="0 0 24 24" width="72" height="72" xmlns="http://www.w3.org/2000/svg"><path d="M12 2v4M12 18v4M4 12H2M22 12h-2M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3" stroke="#fff" stroke-width="1.2" fill="none"/></svg>`,
+        battery: `<svg viewBox="0 0 24 24" width="72" height="72" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="6" width="18" height="12" rx="2" stroke="#fff" fill="none" stroke-width="1.2"/><rect x="20" y="10" width="2" height="4" fill="#fff"/></svg>`,
+        fastcharge: `<svg viewBox="0 0 24 24" width="72" height="72" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L3 14h7v8l11-14h-8z" stroke="#fff" fill="none" stroke-width="1.2"/></svg>`
+      };
+
+      card.innerHTML = `\n        ${icons[key] || ''}\n        <div style="font-weight:700; margin-top:6px">${u.name}</div>\n        <div class="priceTag">${u.getCost(state.upgradeLevels[key]||0)} ΣC</div>\n      `;
+      return card;
+    }
+
+    ['autoclicker','battery','fastcharge'].forEach(k=>{
+      if(!shopGrid.querySelector(`.shopCard[data-upgrade="${k}"]`)){
+        shopGrid.appendChild(createCard(k));
+      }
+    });
+
+    // 5) Interceptor de compras: si ya existe buyUpgrade lo usamos; si no, lo manejamos aquí
+    function localBuyUpgrade(key, card){
+      const u = UPGRADES[key];
+      if(!u){ safeToast('Upgrade no encontrado', 'error'); return; }
+      const lvl = state.upgradeLevels[key] || 0;
+      if(lvl >= u.maxLevel){ safeToast(u.name + ' ya está al máximo', 'info'); return; }
+      const cost = u.getCost(lvl);
+      if((state.sig||0) < cost){ safeToast('No tienes suficientes ΣC', 'error'); return; }
+      state.sig = (state.sig||0) - cost;
+      u.apply();
+      state.upgradeLevels[key] = lvl + 1;
+      if(typeof saveState === 'function') saveState();
+      if(typeof renderUpgradeShop === 'function') renderUpgradeShop(); else {
+        // actualizar priceTag básico
+        const priceEl = shopGrid.querySelector(`.shopCard[data-upgrade="${key}"] .priceTag`);
+        if(priceEl) priceEl.textContent = `${u.getCost(state.upgradeLevels[key]||0)} ΣC (Lv ${state.upgradeLevels[key]}/${u.maxLevel})`;
+      }
+if (key === "autoclicker") updateAutoClickLoop();
+if (key === "fastcharge") patchedStartRecharge();
+
+if(typeof render === 'function') render();
+safeToast(`${u.name} subido a nivel ${state.upgradeLevels[key]}`, 'success');
+
+    }
+
+    // Conectar listener de la grid de la tienda (si ya existe uno no lo duplicará pues usamos captura logica)
+localBuyUpgrade(key, card);
+
+
+    // 6) Parche para la carga rápida: reemplazar/alterar startRecharge si existe, o crear nueva
+    // La idea: baseChargeAmount por tick escala con fastChargeLevel
+    function patchedStartRecharge(){
+      // pararla si ya existe
+      if(window._patchedChargeInterval) clearInterval(window._patchedChargeInterval);
+      const base = 5; // unidades por segundo en implementación original
+      const fast = state.fastChargeLevel || 0;
+      const multiplier = 1 + fast * 0.35; // +35% por nivel (ajustable)
+      window._patchedChargeInterval = setInterval(()=>{
+        if(!state) return;
+        const maxB = state.maxBattery || 100;
+        if((state.battery||0) >= maxB){ clearInterval(window._patchedChargeInterval); window._patchedChargeInterval = null; return; }
+        state.battery = Math.min(maxB, (state.battery||0) + Math.ceil(base * multiplier));
+        if(typeof saveState === 'function') saveState();
+        if(typeof render === 'function') render();
+      }, 1000);
+    }
+
+    // Exportamos patchedStartRecharge para que el resto del juego lo pueda usar
+    window.patchedStartRecharge = patchedStartRecharge;
+
+    // Si la app ya tenía startRecharge, sustituimos la llamada interna para que use patchedStartRecharge
+    // No intentamos eliminar la función original (por seguridad), sólo definimos una versión global preferente
+    window.startRecharge = window.startRecharge || patchedStartRecharge;
+
+    // 7) Asegurar que el autoclick use state.autoClickerLevel: si existe updateAutoClickLoop respetará ese valor
+    if(typeof updateAutoClickLoop === 'function') updateAutoClickLoop();
+
+    // 8) Forzar render inicial de tienda/estado
+    if(typeof renderUpgradeShop === 'function') renderUpgradeShop();
+    if(typeof render === 'function') render();
+
+    console.log('Patch: botones movidos a tienda y upgrades registrados (autoclicker / battery / fastcharge)');
+  });
+})();
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const promoInput = document.getElementById("promoInput");
+  const promoBtn = document.getElementById("promoBtn");
+
+  if (promoBtn && promoInput) {
+    promoBtn.addEventListener("click", () => {
+      const code = (promoInput.value || "").trim().toLowerCase();
+
+      if (code === "sigma_coins") {
+        // Activa dinero infinito
+        state.infiniteCoins = true;
+        if (typeof showToast === "function") {
+          showToast("💸 ¡Dinero infinito activado!", "success");
+        } else {
+          alert("💸 ¡Dinero infinito activado!");
+        }
+      } else {
+        if (typeof showToast === "function") {
+          showToast("❌ Código no válido", "error");
+        } else {
+          alert("Código no válido");
+        }
+      }
+    });
+  }
+
+  // Parchea la función render para mostrar infinito
+  const originalRender = window.render;
+  window.render = function() {
+    if (state.infiniteCoins) {
+      state.sig = Number.MAX_SAFE_INTEGER; // básicamente infinito
+    }
+    if (typeof originalRender === "function") {
+      originalRender();
+    }
+  };
+});
+</script>
+<script>
+// === AUTOCLICKER LOOP ===
+
+function updateAutoClickLoop() {
+  if (autoClickInterval) clearInterval(autoClickInterval);
+
+  const lvl = state.upgradeLevels?.autoclicker || 0;
+  if (lvl > 0) {
+    autoClickInterval = setInterval(() => {
+      const gain = (state.perClick || 1);
+      state.sig = (state.sig || 0) + gain * lvl;
+      state.totalClicks = (state.totalClicks || 0) + lvl;
+      if (typeof saveState === "function") saveState();
+      if (typeof render === "function") render();
+    }, 1000);
+  }
+}
+window.updateAutoClickLoop = updateAutoClickLoop;
+
+// === CARGA RÁPIDA ===
+function patchedStartRecharge(){
+  if(window._patchedChargeInterval) clearInterval(window._patchedChargeInterval);
+  const base = 5; // batería por segundo
+  const fast = state.upgradeLevels?.fastcharge || 0;
+  const multiplier = 1 + fast * 0.35;
+  window._patchedChargeInterval = setInterval(()=>{
+    const maxB = state.maxBattery || 100;
+    state.battery = Math.min(maxB, (state.battery||0) + Math.ceil(base * multiplier));
+    if(typeof render === "function") render();
+  }, 1000);
+}
+window.startRecharge = patchedStartRecharge;
+
+
+// --- Autoclicker ---
+
+
+function activarAutoclicker() {
+  if (autoClickInterval) return; // evitar duplicados
+
+  autoClickInterval = setInterval(() => {
+    clickFoso(); // simula un click normal
+
+    // animar el puntero en el foso
+    const pointer = document.getElementById("autoClickPointer");
+    if (pointer) {
+      pointer.classList.add("active");
+      setTimeout(() => pointer.classList.remove("active"), 150);
+    }
+  }, 1000); // 1 click cada segundo
+}
+
+if (upgrade === "autoclicker") {
+  const cost = 500; // precio del autoclicker
+  if ((state.sig || 0) >= cost && !state.autoclicker) {
+    // Pagar
+    state.sig -= cost;
+    state.autoclicker = true;
+
+    // Guardar y actualizar
+    saveState();
+    render();
+
+    // Activar el autoclicker
+    activarAutoclicker();
+
+    // Aviso al jugador
+    if (typeof showToast === "function") {
+      showToast("✅ Autoclicker activado", "success");
+    } else {
+      alert("Autoclicker activado");
+    }
+
+  } else if (state.autoclicker) {
+    // Ya lo tenías
+    showToast("⚠️ Ya tienes el autoclicker", "info");
+  } else {
+    // No tienes dinero
+    showToast("❌ No tienes suficientes ΣC", "error");
+  }
+}
+
+// Forzar a que el botón exista siempre
+window.addEventListener("DOMContentLoaded", () => {
+  const foso = document.getElementById("fosoContainer");
+  if (foso && !document.getElementById("btnChargeToggle")) {
+    const btn = document.createElement("button");
+    btn.id = "btnChargeToggle";
+    btn.className = "mata-btn";
+    btn.style.background = "#00cfff";
+    btn.style.color = "white";
+    btn.innerHTML = `
+      <svg class="icon" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M13 2 L4 14h6l-1 8 10-12h-7z" stroke="currentColor" stroke-width="2" fill="none"/>
+      </svg>
+      <span id="chargeLabel">Cargar</span>
+    `;
+    foso.appendChild(btn);
+  }
+});
+
+
+(function() {
+  console.log("🛠️ Inicializando mejoras permanentes...");
+
+  // --- Estado global ---
+  if (!window.state) window.state = {};
+  state.upgradeLevels = state.upgradeLevels || {};
+
+  // --- Definiciones ---
+  window.UPGRADES = {
+    autoclicker: {
+      baseCost: 500,
+      name: "Auto-clicker",
+      maxLevel: 10,
+      getCost: lvl => Math.floor(500 * Math.pow(1.8, lvl)),
+      apply: () => {
+        state.autoClickerLevel = (state.autoClickerLevel || 0) + 1;
+        if (typeof updateAutoClickLoop === 'function') updateAutoClickLoop();
+      }
+    },
+    battery: {
+      baseCost: 250,
+      name: "Duración batería",
+      maxLevel: 10,
+      getCost: lvl => Math.floor(250 * Math.pow(1.8, lvl)),
+      apply: () => {
+        state.maxBattery = (state.maxBattery || 100) + 20;
+        state.battery = Math.min(state.maxBattery, state.battery || 100);
+        if (typeof updateBattery === 'function') updateBattery();
+      }
+    },
+    fastcharge: {
+      baseCost: 600,
+      name: "Carga rápida",
+      maxLevel: 10,
+      getCost: lvl => Math.floor(600 * Math.pow(1.8, lvl)),
+      apply: () => {
+        state.rechargeSpeedLevel = (state.rechargeSpeedLevel || 0) + 1;
+        if (typeof patchedStartRecharge === 'function') patchedStartRecharge();
+      }
+    }
+  };
+
+  // --- Compra ---
+  function buyUpgrade(key, card) {
+    const upgrade = UPGRADES[key];
+    if (!upgrade) return;
+
+    const level = state.upgradeLevels[key] || 0;
+    if (level >= upgrade.maxLevel) return;
+
+    const cost = upgrade.getCost(level);
+    if ((state.sig || 0) < cost) {
+      showToast?.(`❌ Necesitas ${cost} ΣC`, "error");
+      return;
+    }
+
+    state.sig -= cost;
+    upgrade.apply();
+    state.upgradeLevels[key] = level + 1;
+    saveState?.();
+    render?.();
+
+    const nextCost = upgrade.getCost(state.upgradeLevels[key]);
+    const priceTag = card.querySelector(".priceTag");
+    if (priceTag) {
+      if (state.upgradeLevels[key] >= upgrade.maxLevel) {
+        priceTag.textContent = `MAX (Lv ${upgrade.maxLevel})`;
+        card.style.opacity = "0.6";
+      } else {
+        priceTag.textContent = `${nextCost} ΣC (Lv ${state.upgradeLevels[key]}/${upgrade.maxLevel})`;
+      }
+    }
+
+    showToast?.(`✅ ${upgrade.name} subido a nivel ${state.upgradeLevels[key]}`, "success");
+  }
+
+  // --- Listeners ---
+  function initShopListeners() {
+    const shopGrid = document.getElementById("shopGrid");
+    if (!shopGrid) return;
+
+    shopGrid.addEventListener("click", e => {
+      const card = e.target.closest(".shopCard");
+      if (!card) return;
+      const upgradeKey = card.getAttribute("data-upgrade");
+      if (upgradeKey) buyUpgrade(upgradeKey, card);
+    });
+  }
+
+  // --- Inicialización ---
+  function init() {
+    initShopListeners();
+    console.log("🎉 Mejoras permanentes listas");
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+// --- AUTCLICKER ---
+// Cada nivel = 1 click automático por segundo
+
+
+function startAutoClicker() {
+  if (autoClickInterval) clearInterval(autoClickInterval);
+
+  if ((state.autoclicker || 0) > 0) {
+    autoClickInterval = setInterval(() => {
+      const clicks = state.autoclicker; // nº de clics por tick
+      for (let i = 0; i < clicks; i++) {
+        addSigma(state.perClick || 1); // misma función que usas al clickear el foso
+      }
+      render(); // refresca la UI
+    }, 1000); // cada segundo
+  }
+}
+
+// Llamar cuando se cargue el juego
+document.addEventListener("DOMContentLoaded", () => {
+  startAutoClicker();
+});
+
+// Y también cada vez que compres mejoras
+function onUpgradeBought(type) {
+  if (type === "autoclicker") {
+    startAutoClicker(); // reinicia el bucle con el nuevo nivel
+  }
+}
+
+// 👇 Contador de caladas para consumo de batería
+let puffCounter = 0;
+
+// Función para reducir batería
+function reduceBattery() {
+  // valor actual de batería (0–100%)
+  let batteryPercent = state.batteryPercent ?? 100;
+
+  if (batteryPercent > 0) {
+    batteryPercent -= 1;
+    if (batteryPercent < 0) batteryPercent = 0;
+
+    state.batteryPercent = batteryPercent;
+
+    // actualizar pantalla del foso central
+    const txt = document.getElementById("batteryText");
+    if (txt) txt.textContent = batteryPercent + "%";
+
+    saveState();
+  }
+}
+
+// Hook al final de handleClick()
+// ------------------ LÓGICA DE BATERÍA ------------------
+let clickCounter = 0;
+
+// Estado inicial de la batería
+if (!state.batteryLevel) state.batteryLevel = 100;  
+if (!state.batteryUpgrade) state.batteryUpgrade = 0;  
+
+const batteryText = document.getElementById("batteryText");
+
+// Actualizar visualmente la batería
+function renderBattery() {
+  batteryText.textContent = state.batteryLevel + "%";
+  batteryText.setAttribute("fill", state.batteryLevel > 20 ? "#0f0" : "#f00");
+}
+
+// Enganchar al click central
+document.getElementById("vaperWrap").addEventListener("click", () => {
+  clickCounter++;
+
+  // Si la mejora de batería está en nivel 3
+  if (state.batteryUpgrade >= 3) {
+    if (clickCounter % 3 === 0) { // cada 3 clics
+      state.batteryLevel = Math.max(0, state.batteryLevel - 1);
+      renderBattery();
+    }
+  }
+});
+
+// Render inicial
+renderBattery();
+
+
+</script>
+
+</script>
+
+
 </body>
 </html>
+
 
 
 
