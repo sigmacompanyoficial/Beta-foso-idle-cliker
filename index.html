@@ -251,14 +251,15 @@
 }
 
 .click-value {
-    position: absolute;
-    z-index: 10;
-    pointer-events: none;
-    font-size: 22px;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 0 0 5px #ffc107, 0 0 10px #ffc107;
-    transition: all 1s ease-out;
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+  font-size: 22px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 0 5px #ffc107, 0 0 10px #ffc107;
+  animation: floatUp 1s ease-out forwards;
+  white-space: nowrap; /* Evita que el texto se parta */
 }
 
 
@@ -306,6 +307,11 @@
 .foso-shaking {
     animation: shake 0.5s infinite;
 }
+@keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to   { transform: translateY(-60px); opacity: 0; }
+}
+
 
 /* Humo negro para foso dañado */
 .black-smoke {
@@ -528,7 +534,7 @@
         <h1>Idle Foso Cliker</h1>
     </div>
     <div id="intro-text3" style="opacity:0;transition:opacity 1s;display:none;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" style="width:90%;max-width:800px;height:auto">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" style="width:95%;max-width:800px;height:auto">
           <defs>
             <radialGradient id="gBg" cx="50%" cy="40%" r="70%">
               <stop offset="0%" stop-color="#111"/>
@@ -537,16 +543,16 @@
           </defs>
           <rect width="800" height="600" fill="url(#gBg)"/>
           <polygon points="400,100 500,300 300,300" fill="yellow" stroke="black" stroke-width="5"/>
-          <text x="400" y="270" text-anchor="middle" font-size="80" fill="black" font-weight="bold">!</text>
-          <text x="400" y="380" text-anchor="middle" font-size="28" fill="white" font-family="Arial" font-weight="bold">FOSO IDLE TYCOON es una obra de ficción.</text>
-          <text x="400" y="420" text-anchor="middle" font-size="24" fill="white" font-family="Arial">Fumar y vapear dañan la salud y generan adicción.</text>
-          <text x="400" y="460" text-anchor="middle" font-size="22" fill="white" font-family="Arial">Juega de forma responsable.</text>
+          <text x="400" y="280" text-anchor="middle" font-size="100" fill="black" font-weight="bold">!</text>
+          <text x="400" y="400" text-anchor="middle" font-size="36" fill="white" font-family="Arial" font-weight="bold">FOSO IDLE TYCOON es una obra de ficción.</text>
+          <text x="400" y="450" text-anchor="middle" font-size="30" fill="white" font-family="Arial">Fumar y vapear dañan la salud y generan adicción.</text>
+          <text x="400" y="500" text-anchor="middle" font-size="28" fill="white" font-family="Arial">Juega de forma responsable.</text>
         </svg>
     </div>
   </div>
   <!-- Pantalla de advertencia mejorada -->
-  <div id="advertencia" style="position:fixed;inset:0;background:#000;display:flex;justify-content:center;align-items:center;z-index:9999">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" style="width:80%;height:auto">
+  <div id="advertencia" style="position:fixed;inset:0;background:#000;display:flex;justify-content:center;align-items:center;z-index:9999; padding: 10px;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" style="width:100%;max-width:1200px;height:auto" font-family="Arial" font-weight="bold" text-anchor="middle">
       <defs>
         <radialGradient id="gBg" cx="50%" cy="40%" r="70%">
           <stop offset="0%" stop-color="#111"/>
@@ -555,10 +561,11 @@
       </defs>
       <rect width="800" height="600" fill="url(#gBg)"/>
       <polygon points="400,100 500,300 300,300" fill="yellow" stroke="black" stroke-width="5"/>
-      <text x="400" y="270" text-anchor="middle" font-size="80" fill="black" font-weight="bold">!</text>
-      <text x="400" y="380" text-anchor="middle" font-size="28" fill="white" font-family="Arial" font-weight="bold">FOSO IDLE TYCOON es una obra de ficción.</text>
-      <text x="400" y="420" text-anchor="middle" font-size="24" fill="white" font-family="Arial">Fumar y vapear dañan la salud y generan adicción.</text>
-      <text x="400" y="460" text-anchor="middle" font-size="22" fill="white" font-family="Arial">Juega de forma responsable.</text>
+      <text x="400" y="280" font-size="150" fill="black">!</text>
+      <text x="400" y="380" font-size="54" fill="white">FOSO IDLE TYCOON</text>
+      <text x="400" y="430" font-size="54" fill="white">es una obra de ficción.</text>
+      <text x="400" y="500" font-size="45" fill="white">Fumar y vapear dañan la salud.</text>
+      <text x="400" y="560" font-size="42" fill="white">Juega de forma responsable.</text>
     </svg>
   </div>
   
@@ -729,6 +736,17 @@
         </button>
         <span id="dotChests" class="notify-dot hidden"></span>
     </div>
+  </div>
+
+  <!-- Fila 4 -->
+  <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:100%">
+      <div class="button-wrapper">
+          <button id="btnPets" class="mata-btn" style="background:#6366f1">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z"></path><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              <span data-lang="pets">Mascotas</span>
+          </button>
+          <span id="dotPets" class="notify-dot hidden"></span>
+      </div>
   </div>
 
 
@@ -1180,6 +1198,14 @@
                 <label data-lang="repeat_tutorial_label">Repetir Tutorial 🎓</label>
                 <button id="btnRepeatTutorial" class="mata-btn" data-lang="repeat_tutorial_button">Reiniciar Tutorial</button>
             </div>
+            <div class="config-item">
+                <label for="musicVolume" data-lang="music_volume_label">Volumen de Música 🎵</label>
+                <input type="range" id="musicVolume" min="0" max="1" step="0.05" class="slider-input">
+            </div>
+            <div class="config-item">
+                <label for="sfxVolume" data-lang="sfx_volume_label">Volumen de Efectos 🔊</label>
+                <input type="range" id="sfxVolume" min="0" max="1" step="0.05" class="slider-input">
+            </div>
         </div>
     </div>
   </div>
@@ -1293,6 +1319,25 @@
                 <!-- Puntos de mantenimiento generados por JS -->
             </div>
             <p id="maintenanceRewardText" class="metaTiny"></p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Mascotas -->
+<div id="petsModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title" data-lang="pets_title">🐾 Tienda de Mascotas</div>
+            <button class="close-btn" data-close>&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <p class="hint" data-lang="pets_desc">Compra mascotas con gemas para obtener bonus permanentes.</p>
+                <div class="priceTag" style="background-color: #8e44ad;">💎 <span id="petsGems">0</span></div>
+            </div>
+            <div id="petsGrid" class="shopGrid" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); max-height: 60vh;">
+                <!-- Las mascotas se generarán aquí -->
+            </div>
         </div>
     </div>
 </div>
@@ -1413,7 +1458,6 @@
                 afk_upgrades: "Mejoras AFK",
                 missions: "Misiones",
                 redeem: "Canjear",
-                chests: "Cofres",
                 maintenance: "Mantenimiento",
                 foso_condition: "Condición del Foso",
                 maintenance_title: "🔧 Mantenimiento de Foso",
@@ -1479,6 +1523,8 @@
                 rank_5: "Leyenda Sigma",
                 repeat_tutorial_label: "Repetir Tutorial 🎓",
                 repeat_tutorial_button: "Reiniciar Tutorial",
+                music_volume_label: "Volumen de Música 🎵",
+                sfx_volume_label: "Volumen de Efectos 🔊",
             },
             en: {
                 game_title: "Foso Tycoon",
@@ -1502,7 +1548,6 @@
                 afk_upgrades: "AFK Upgrades",
                 missions: "Missions",
                 redeem: "Redeem",
-                chests: "Chests",
                 maintenance: "Maintenance",
                 foso_condition: "Foso Condition",
                 maintenance_title: "🔧 Foso Maintenance",
@@ -1568,6 +1613,8 @@
                 rank_5: "Sigma Legend",
                 repeat_tutorial_label: "Repeat Tutorial 🎓",
                 repeat_tutorial_button: "Restart Tutorial",
+                music_volume_label: "Music Volume 🎵",
+                sfx_volume_label: "SFX Volume 🔊",
             }
         };
 
@@ -1815,6 +1862,18 @@
             { id: 'black_market', name_key: 'event_black_market', duration: 60000, onStart: () => openBlackMarket(), onEnd: () => blackMarketModal.classList.add('hidden') }
         ];
 
+        const PETS = {
+            dog: {
+                id: 'dog', name: 'Perro Leal', description: 'Multiplica las ganancias por clic x2.',
+                cost: 5000, multiplier: 2, icon: '🐶'
+            },
+            cat: {
+                id: 'cat', name: 'Gato Cósmico', description: 'Multiplica las ganancias por clic x3.',
+                cost: 25000, multiplier: 3, icon: '🐱'
+            }
+        };
+
+
         let state = {
             sig: 0,
             totalClicks: 0,
@@ -1823,6 +1882,9 @@
             fososOwned: [0],
             fosoConditions: {},
             achievements: {},
+            gems: 0,
+            unlockedPets: [],
+            equippedPet: null,
             chests: [],
             wheelLastSpin: 0,
             dailyMissions: [],
@@ -1873,6 +1935,10 @@
             blackMarketOffers: [],
             lastEventCheck: 0
         };
+
+        // Audio elements
+        let bgMusic, clickSfx, buySfx, successSfx, errorSfx, chestOpenSfx;
+        let musicStarted = false;
 
         // DOM refs
         const sigTotalEl = document.getElementById('sigTotal');
@@ -1933,6 +1999,9 @@
         const dotMissions = document.getElementById('dotMissions');
         const btnChests = document.getElementById('btnChests');
         const chestsModal = document.getElementById('chestsModal');
+        const btnCustomize = document.getElementById('btnCustomize');
+        const customizeModal = document.getElementById('customizeModal');
+        const dotCustomize = document.getElementById('dotCustomize');
         const dotChests = document.getElementById('dotChests');
         const comboContainer = document.getElementById('comboContainer');
         const comboText = document.getElementById('comboText');
@@ -1944,11 +2013,15 @@
         const maintenanceGameArea = document.getElementById('maintenanceGameArea');
         const maintenanceInstructions = document.getElementById('maintenanceInstructions');
         const maintenanceRewardText = document.getElementById('maintenanceRewardText');
+        const gemsTotalEl = document.getElementById('gemsTotal');
         const eventBanner = document.getElementById('eventBanner');
         const eventName = document.getElementById('eventName');
         const eventTimer = document.getElementById('eventTimer');
         const blackMarketModal = document.getElementById('blackMarketModal');
+        const promoInput = document.getElementById('promoInput');
         const blackMarketGrid = document.getElementById('blackMarketGrid');
+        const musicVolumeSlider = document.getElementById('musicVolume');
+        const sfxVolumeSlider = document.getElementById('sfxVolume');
 
         let isCharging = false;
         let chargeInterval = null;
@@ -2221,14 +2294,22 @@
         }
 
         function openChest(index) {
+            const chestEl = document.querySelector(`#chestsGrid > div:nth-child(${index + 1})`);
+            if (chestEl) {
+                chestEl.style.pointerEvents = 'none';
+                chestEl.style.animation = 'shake 0.5s';
+            }
+
             state.chests.splice(index, 1);
             
-            // Simple reward logic for now
-            const rewardAmount = Math.floor(Math.random() * 5000) + 1000;
-            state.sig += rewardAmount;
-            state.totalSigEarned += rewardAmount;
-            showToast(`¡El cofre contenía ${formatNum(rewardAmount)} ΣC!`, 'success');
-            openChestsModal(); // Refresh the modal
+            setTimeout(() => {
+                // Simple reward logic for now
+                const rewardAmount = Math.floor(Math.random() * 5000) + 1000;
+                state.sig += rewardAmount;
+                state.totalSigEarned += rewardAmount;
+                showToast(`¡El cofre contenía ${formatNum(rewardAmount)} ΣC!`, 'success');
+                openChestsModal(); // Refresh the modal
+            }, 500);
         }
 
         function saveState() {
@@ -2273,6 +2354,15 @@
                 if (!state.chests) {
                     state.chests = [];
                 }
+                if (!state.gems) {
+                    state.gems = 0;
+                }
+                if (!state.unlockedPets) {
+                    state.unlockedPets = [];
+                }
+                if (!state.equippedPet) {
+                    state.equippedPet = null;
+                }
                 if (!state.combo) {
                     state.combo = { count: 0, expires: 0 };
                 }
@@ -2287,6 +2377,12 @@
                         smokeEnabled: true,
                         clickNumbersEnabled: true
                     };
+                }
+                if (state.settings.musicVolume === undefined) {
+                    state.settings.musicVolume = 0.2;
+                }
+                if (state.settings.sfxVolume === undefined) {
+                    state.settings.sfxVolume = 0.5;
                 }
             } catch (e) {
                 console.warn('load state err', e);
@@ -2303,6 +2399,7 @@
         function render() {
             sigTotalEl.textContent = formatNum(state.sig);
             if(shopSigma) shopSigma.textContent = formatNum(state.sig);
+            if(gemsTotalEl) gemsTotalEl.textContent = formatNum(state.gems);
             totalClicksEl.textContent = state.totalClicks;
 
             const currentRank = RANKS.slice().reverse().find(r => state.totalClicks >= r.clicks) || RANKS[0];
@@ -2310,12 +2407,17 @@
                 rankTitleEl.textContent = `Rango: ${LANGUAGES[state.lang || 'es'][currentRank.key]}`;
             }
 
+            let petMultiplier = 1;
+            if (state.equippedPet && PETS[state.equippedPet]) {
+                petMultiplier = PETS[state.equippedPet].multiplier;
+            }
+
             const fosoHealth = state.fosoConditions[state.activeFosoIndex] || 100;
             const isBroken = fosoHealth <= 0;
 
             const basePer = FOSOS[state.activeFosoIndex]?.perClick || 1; // Ganancia base del foso
             const comboBonus = state.combo.count > 1 ? 1 + (state.combo.count * 0.1) : 1;
-            let per = basePer * state.perClickMult * (1 + state.rebirthBonus) * comboBonus; // Aplicar multiplicadores y bonus de rebirth
+            let per = basePer * state.perClickMult * (1 + state.rebirthBonus) * comboBonus * petMultiplier; // Aplicar multiplicadores, rebirth y mascotas
             if (isBroken) per = 0;
             perClickEl.textContent = formatNum(per);
 
@@ -2453,20 +2555,15 @@
         }
 
         function showClickAnimation(value, x, y, isCritical = false) {
-            if (!state.settings.clickNumbersEnabled) return;
+            if (!chkClickNumbers.checked) return;
             const anim = document.createElement('div');
             anim.className = isCritical ? 'click-value critical' : 'click-value';
             anim.textContent = isCritical ? `CRÍTICO! +${formatNum(value)}` : `+${formatNum(value)}`;
             const rect = vaperWrap.getBoundingClientRect();
             anim.style.left = `${x - rect.left}px`;
             anim.style.top = `${y - rect.top - 20}px`; // Start slightly higher
-            vaperWrap.appendChild(anim);
-
-            setTimeout(() => {
-                anim.style.transform = 'translateY(-50px)';
-                anim.style.opacity = '0';
-                setTimeout(() => anim.remove(), 1000);
-            }, 10);
+            vaperWrap.appendChild(anim);            
+            setTimeout(() => anim.remove(), 1000); // Coincide con la duración de la animación
         }
 
         function createSmokeParticle() {
@@ -2557,6 +2654,7 @@
                 }
             }
 
+            state.gems += 1; // Gana 1 gema por clic
             state.sig += per;
             state.totalSigEarned += per;
             state.totalClicks++;
@@ -2590,6 +2688,14 @@
                 createSmokeParticle(isDamaged);
             }
 
+            // Play sounds
+            playSound('clickSfx');
+            if (!musicStarted) {
+                bgMusic.volume = state.settings.musicVolume;
+                bgMusic.play().catch(e => console.warn("Music autoplay was blocked."));
+                musicStarted = true;
+            }
+
             checkAchievements();
             checkTutorialProgress();
             render();
@@ -2602,28 +2708,27 @@
             const cardSvg = activeCard.querySelector('svg');
             const cardDefs = cardSvg?.querySelector('defs');
             const centralDefs = centralFoso.querySelector('defs');
-            if(!cardDefs || !centralDefs) return;
-
-            const gradBody = cardDefs.querySelector('linearGradient[id^="g"]');
-            const gradMouth = cardDefs.querySelector('linearGradient[id^="mouth"]');
+            if (!centralDefs) return;
 
             centralDefs.querySelectorAll('#gActive, #mouthActive').forEach(n=>n.remove());
 
-            if(gradBody){
-                const cloneBody = gradBody.cloneNode(true);
-                cloneBody.setAttribute('id','gActive');
-                centralDefs.appendChild(cloneBody);
-            }
-            if(gradMouth){
-                const cloneMouth = gradMouth.cloneNode(true);
-                cloneMouth.setAttribute('id','mouthActive');
-                centralDefs.appendChild(cloneMouth);
-            }
+            if (!cardDefs) return;
+            centralDefs.insertAdjacentHTML('beforeend', cardDefs.innerHTML.replace(/_shop/g, '').replace(/id="g(\d+)"/g, 'id="gActive"').replace(/id="mouth(\d+)"/g, 'id="mouthActive"'));
 
             const rects = centralFoso.querySelectorAll('rect');
             const bodyRect = rects[0];
             if(bodyRect) bodyRect.setAttribute('fill','url(#gActive)');
         }
+
+        function playSound(id) {
+            const audio = document.getElementById(id);
+            if (audio && state.settings.sfxVolume > 0) {
+                audio.volume = state.settings.sfxVolume;
+                audio.currentTime = 0;
+                audio.play().catch(e => {}); // Ignore play errors
+            }
+        }
+
 
         function showToast(message, type = "info", duration = 3000) {
             const container = document.getElementById("toastContainer");
@@ -2641,10 +2746,15 @@
             toast.style.transition = "opacity 0.3s, transform 0.3s";
             toast.style.transform = "translateY(-10px)";
 
-            if (type === "success") toast.style.background = "#27ae60";
-            else if (type === "error") toast.style.background = "#e74c3c";
-            else if (type === "warning") toast.style.background = "#f39c12";
-            else toast.style.background = "#3498db";
+            if (type === "success") {
+                toast.style.background = "#27ae60";
+                playSound('successSfx');
+            } else if (type === "error") {
+                toast.style.background = "#e74c3c";
+                playSound('errorSfx');
+            } else if (type === "warning") {
+                toast.style.background = "#f39c12";
+            } else toast.style.background = "#3498db";
 
             container.appendChild(toast);
 
@@ -2910,6 +3020,12 @@
                     state.rebirthBonus += nextLevel.bonus;
                     state.rebirths++;
 
+                    // Recompensa de Gemas por Rebirth
+                    const gemsFromRebirth = 10 + (state.rebirths * 5);
+                    state.gems += gemsFromRebirth;
+                    showToast(`¡Has ganado ${gemsFromRebirth} gemas 💎 por el Rebirth!`, 'success');
+
+
                     // Resetear estado
                     state.sig = 0;
                     state.totalClicks = state.totalClicks; // Mantener clics totales
@@ -3081,6 +3197,57 @@
             }
         }
 
+        function renderPets() {
+            const petsGrid = document.getElementById('petsGrid');
+            const petsGems = document.getElementById('petsGems');
+            if (!petsGrid || !petsGems) return;
+
+            petsGems.textContent = formatNum(state.gems);
+            petsGrid.innerHTML = '';
+
+            Object.values(PETS).forEach(pet => {
+                const isUnlocked = state.unlockedPets.includes(pet.id);
+                const isEquipped = state.equippedPet === pet.id;
+
+                const card = document.createElement('div');
+                card.className = 'shopCard';
+                card.dataset.petId = pet.id;
+
+                if (isEquipped) {
+                    card.style.borderColor = 'var(--accent)';
+                    card.style.boxShadow = '0 0 15px -3px var(--accent)';
+                }
+
+                card.innerHTML = `
+                    <div style="font-size: 48px;">${pet.icon}</div>
+                    <div style="font-weight:700;">${pet.name}</div>
+                    <p class="hint" style="font-size:11px; margin: 4px 0; min-height: 2.5em;">${pet.description}</p>
+                    <button class="mata-btn pet-action-btn" style="width: 100%; justify-content: center;"></button>
+                `;
+
+                const actionBtn = card.querySelector('.pet-action-btn');
+                if (isEquipped) {
+                    actionBtn.textContent = 'Equipado';
+                    actionBtn.disabled = true;
+                    actionBtn.style.background = '#27ae60';
+                } else if (isUnlocked) {
+                    actionBtn.textContent = 'Equipar';
+                    actionBtn.dataset.action = 'equip';
+                } else {
+                    actionBtn.textContent = `Comprar (${formatNum(pet.cost)} 💎)`;
+                    actionBtn.dataset.action = 'buy';
+                    actionBtn.disabled = state.gems < pet.cost;
+                }
+
+                petsGrid.appendChild(card);
+            });
+        }
+
+        function openPetsModal() {
+            renderPets();
+            petsModal.classList.remove('hidden');
+        }
+
         function triggerRandomEvent() {
             if (state.activeEvent) return; // Don't start a new event if one is active
 
@@ -3152,7 +3319,7 @@
                 card.className = 'shopCard';
                 card.dataset.offerIndex = i;
                 card.innerHTML = `
-                    <div class="metaTiny" style="font-weight:700">${LANGUAGES[state.lang || 'es']['foso_' + offer.fosoIndex + '_name']}</div>
+                    <div class="metaTiny" style="font-weight:700">${document.querySelector(`.shopCard[data-index="${offer.fosoIndex}"] .metaTiny`).textContent}</div>
                     <div class="priceTag" style="color: #2ecc71;">${formatNum(offer.cost)} ΣC</div>
                 `;
                 card.addEventListener('click', () => buyBlackMarketOffer(i));
@@ -3240,6 +3407,30 @@
                 });
             }
 
+            const promoBtn = document.getElementById('promoBtn');
+            if (promoBtn) {
+                promoBtn.addEventListener('click', () => {
+                    const code = promoInput.value.trim().toUpperCase();
+                    if (!code) return;
+
+                    if (code === 'IG') {
+                        state.perClickMult *= 2;
+                        showToast('¡Código IG! x2 de ganancias por 10 minutos.', 'success');
+                        setTimeout(() => {
+                            state.perClickMult /= 2;
+                            showToast('El bonus del código IG ha terminado.', 'info');
+                        }, 10 * 60 * 1000); // 10 minutos
+                        promoInput.value = '';
+                    } else if (code === 'ALR') {
+                        state.sig = Infinity;
+                        state.gems = Infinity;
+                        showToast('¡Código ALR! ¡Dinero y gemas infinitas!', 'success');
+                        promoInput.value = '';
+                    } else {
+                        showToast('Código promocional no válido.', 'error');
+                    }
+                });
+            }
 
 
             if(btnPower) {
@@ -3281,6 +3472,8 @@
               if(configModal) configModal.classList.remove('hidden');
               chkSmoke.checked = state.settings.smokeEnabled;
               chkClickNumbers.checked = state.settings.clickNumbersEnabled;
+              musicVolumeSlider.value = state.settings.musicVolume;
+              sfxVolumeSlider.value = state.settings.sfxVolume;
             });
 
             if(configModal) {
@@ -3303,6 +3496,15 @@
 
             if(chkClickNumbers) chkClickNumbers.addEventListener('change', (e) => {
                 state.settings.clickNumbersEnabled = e.target.checked;
+            });
+
+            if(musicVolumeSlider) musicVolumeSlider.addEventListener('input', (e) => {
+                state.settings.musicVolume = parseFloat(e.target.value);
+                if(bgMusic) bgMusic.volume = state.settings.musicVolume;
+            });
+
+            if(sfxVolumeSlider) sfxVolumeSlider.addEventListener('input', (e) => {
+                state.settings.sfxVolume = parseFloat(e.target.value);
             });
 
             if(btnManualSave) btnManualSave.addEventListener('click', () => {
@@ -3396,6 +3598,19 @@
                 });
             }
 
+            if (btnPets) {
+                btnPets.addEventListener('click', openPetsModal);
+            }
+            if (petsModal) {
+                petsModal.querySelector('.close-btn').addEventListener('click', () => {
+                    petsModal.classList.add('hidden');
+                });
+                petsModal.querySelector('#petsGrid').addEventListener('click', handlePetAction);
+            }
+
+
+
+
 
             if (shopGrid) {
                 shopGrid.addEventListener('click', (e) => {
@@ -3419,6 +3634,7 @@
                                 state.fososOwned.push(index);
                                 state.activeFosoIndex = index;
                                 showToast(`Foso ${item.name} comprado y equipado!`, 'success');
+                                playSound('buySfx');
                                 updateMissionProgress('buy_foso', 1);
                                 checkTutorialProgress(); // Check tutorial after buying
                                 checkAchievements();
@@ -3437,6 +3653,7 @@
                                 if (upgradeType === 'battery') {
                                     state.maxBattery = upgrades[level].capacity;
                                 }
+                                playSound('buySfx');
                                 showToast(`¡${upgradeType} mejorado!`, 'success');
                                 if (upgradeType === 'autoclicker') updateAutoClickLoop();
                             } else {
@@ -3449,7 +3666,41 @@
             }
 
         });
+
+        function handlePetAction(e) {
+            const button = e.target.closest('.pet-action-btn');
+            if (!button) return;
+
+            const card = button.closest('.shopCard');
+            const petId = card.dataset.petId;
+            const pet = PETS[petId];
+            const action = button.dataset.action;
+
+            if (action === 'buy') {
+                if (state.gems >= pet.cost) {
+                    state.gems -= pet.cost;
+                    state.unlockedPets.push(petId);
+                    playSound('buySfx');
+                    showToast(`¡Has adoptado a ${pet.name}!`, 'success');
+                    renderPets();
+                } else {
+                    showToast('No tienes suficientes gemas.', 'error');
+                }
+            } else if (action === 'equip') {
+                state.equippedPet = petId;
+                playSound('successSfx');
+                renderPets();
+            }
+        }
     })();
 </script>
+
+<!-- Elementos de Audio -->
+<audio id="bgMusic" loop src="data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjQ1LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAAAAAACQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEA//tA0BMAAAAAAABEluZm8AAAAPAAAABAAAASAAAAAAAAAAAAAAAAAAAAAAQU1BVE9SQUxTVE9SRQAA//tA1BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tA2BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tA3BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tA4BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tA5BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tA6BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tA7BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tA8BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tA9BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tA+BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tA/BMAAAAAAAABAAAAAQU1BVE9SQUxTVE9SRQAA//tBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-"></audio>
+<audio id="clickSfx" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAAABkYXRhAAAAAA=="></audio>
+<audio id="buySfx" src="data:audio/wav;base64,UklGRlIAAABXQVZFZm10IBAAAAABAAIARKwAABCxAgAEABgAZGF0YUYAAAD/////////////////v/7//v/+/////v/9//7/+//6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/e/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/a/UklGRlIAAABXQVZFZm10IBAAAAABAAIARKwAABCxAgAEABgAZGF0YUYAAAD/////////////////v/7//v/+/////v/9//7/+//6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/a/UklGRlIAAABXQVZFZm10IBAAAAABAAIARKwAABCxAgAEABgAZGF0YUYAAAD/////////////////v/7//v/+/////v/9//7/+//6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/6//r/+v/-"></audio>
+<audio id="errorSfx" src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAP//8v/L/8f/x//D/8T/wv/C/8P/w//E/8T/xP/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8-"></audio>
+<audio id="successSfx" src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAP//8v/L/8f/x//D/8T/wv/C/8P/w//E/8T/xP/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8//-"></audio>
+<audio id="chestOpenSfx" src="data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAAABkYXRhPAAAAP//8v/L/8f/x//D/8T/wv/C/8P/w//E/8T/xP/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8X/xf/F/8//-"></audio>
 </body>
 </html>
