@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8" />
@@ -266,6 +266,166 @@
   display: inline-block;
 }
 
+/* Achievement Styles */
+#achievementsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+.achievement-card {
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.achievement-card.unlocked {
+    background: linear-gradient(145deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.02));
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.achievement-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.achievement-card.locked .achievement-icon {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+.achievement-info h4 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    color: #fff;
+}
+
+.achievement-card.locked .achievement-info h4 {
+    color: var(--muted);
+}
+
+.achievement-info p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.achievement-card.unlocked .achievement-info p {
+    color: #f5b041;
+}
+
+/* Wheel Styles */
+.wheel-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 20px auto;
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 35px solid var(--accent);
+    z-index: 10;
+    filter: drop-shadow(0 -2px 2px rgba(0,0,0,0.5));
+}
+
+.wheel {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: transform 5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: 8px solid #1a2a4a;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6), inset 0 0 15px rgba(0,0,0,0.4);
+}
+
+.wheel .segment {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 50%;
+    transform-origin: 0% 100%;
+}
+
+.wheel .segment .text {
+    position: absolute;
+    left: -100%;
+    width: 200%;
+    height: 200%;
+    text-align: center;
+    display: block;
+    transform: skewY(45deg) rotate(22.5deg);
+    background: var(--color);
+    padding-top: 50px;
+    font-weight: bold;
+    color: white;
+    font-size: 14px;
+}
+
+/* Mission Styles */
+#missionsGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mission-card {
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mission-info {
+    flex-grow: 1;
+}
+
+.mission-info h4 {
+    margin: 0 0 4px;
+    font-size: 14px;
+}
+
+.mission-progress-bar {
+    width: 100%;
+    height: 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.mission-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+}
+
+.mission-card button {
+    flex-shrink: 0;
+}
+
 </style>
   <link rel="icon" type="image/png" href="logo%20oficial.png">
   <link rel="apple-touch-icon" href="logo%20oficial.png">
@@ -434,13 +594,30 @@
     </div>
 
     <div class="button-wrapper">
+        <button id="btnWheel" class="mata-btn" style="background:#ff6b6b">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+            <span id="wheelBtnLabel">Ruleta</span>
+        </button>
+        <span id="dotWheel" class="notify-dot hidden"></span>
+    </div>
+
+    <div class="button-wrapper">
       <button id="btnAFK" class="mata-btn" style="background:#8e44ad">
         <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
         Mejoras AFK
       </button>
       <span id="dotAFK" class="notify-dot hidden"></span>
     </div>
+
+    <div class="button-wrapper">
+        <button id="btnMissions" class="mata-btn" style="background:#3498db">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="9 17 4 12 9 7"></polyline><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="15 7 20 12 15 17"></polyline></svg>
+            <span id="missionsBtnLabel">Misiones</span>
+        </button>
+        <span id="dotMissions" class="notify-dot hidden"></span>
+    </div>
   </div>
+
 
   <!-- Fila 3 (alineada a la derecha) -->
   <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; width:100%">
@@ -451,11 +628,32 @@
                     background:rgba(255,255,255,0.03); color:#eef6ff"/>
       <button id="promoBtn" class="mata-btn" style="background:#34d399">Canjear</button>
     </div>
+        <div class="button-wrapper">
+        <button id="btnAchievements" class="mata-btn" style="background:#f59e0b">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            Logros
+        </button>
+        <span id="dotAchievements" class="notify-dot hidden"></span>
+    </div>
 
     <button id="btnConfig" class="mata-btn" style="background:#c084fc">
       <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V22a2 2 0 1 1-4 0v-.11a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H2a2 2 0 1 1 0-4h.11a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 6.06 3.3l.06.06a1.65 1.65 0 0 0 1.82.33H8a1.65 1.65 0 0 0 1-1.51V2a2 2 0 1 1 4 0v.11a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06A2 2 0 1 1 20.7 6.06l-.06.06a1.65 1.65 0 0 0-.33 1.82V8c0 .64.39 1.22 1 1.51.35.17.73.49.73.49"/></svg>
       Configuración
     </button>
+
+  </div>
+</div>
+
+<!-- Modal Logros -->
+<div id="achievementsModal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">🏆 Logros</div>
+      <button class="close-btn" data-close>&times;</button>
+    </div>
+    <div class="modal-body" id="achievementsGrid">
+      <!-- Los logros se generarán aquí -->
+    </div>
   </div>
 </div>
 
@@ -903,6 +1101,37 @@
   </div>
 </div>
 
+<!-- Modal Ruleta -->
+<div id="wheelModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">🎡 Ruleta de la Fortuna</div>
+            <button class="close-btn" data-close>&times;</button>
+        </div>
+        <div class="modal-body" style="align-items: center; text-align: center;">
+            <div class="wheel-container">
+                <div class="wheel-pointer"></div>
+                <div class="wheel"></div>
+            </div>
+            <button id="btnSpinWheel" class="mata-btn" style="margin-top: 20px; background: var(--accent);">Girar</button>
+            <p id="wheelCooldownText" class="metaTiny" style="margin-top: 10px;"></p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Misiones -->
+<div id="missionsModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">🎯 Misiones Diarias</div>
+            <button class="close-btn" data-close>&times;</button>
+        </div>
+        <div class="modal-body" id="missionsGrid">
+            <!-- Las misiones se generarán aquí -->
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -1111,11 +1340,106 @@
             rechargeBaseSec: 60
         };
 
+        const ACHIEVEMENTS = {
+            CLICK_1: { id: 'CLICK_1', name: "Iniciado", description: "Haz 1 clic.", icon: "👆", reward: "+1% por clic (permanente)" },
+            CLICK_100: { id: 'CLICK_100', name: "Clickeador", description: "Haz 100 clics.", icon: "🖱️", reward: "+2% por clic (permanente)" },
+            CLICK_1K: { id: 'CLICK_1K', name: "Dedos Ágiles", description: "Haz 1,000 clics.", icon: "🤌", reward: "+3% por clic (permanente)" },
+            CLICK_10K: { id: 'CLICK_10K', name: "Profesional del Clic", description: "Haz 10,000 clics.", icon: "🏆", reward: "+5% por clic (permanente)" },
+            CLICK_100K: { id: 'CLICK_100K', name: "Deidad del Clic", description: "Haz 100,000 clics.", icon: "🙏", reward: "+10% por clic (permanente)" },
+
+            SIG_1K: { id: 'SIG_1K', name: "Ahorrador", description: "Acumula 1,000 ΣC en total.", icon: "💰", reward: "Gana 500 ΣC extra" },
+            SIG_100K: { id: 'SIG_100K', name: "Pudiente", description: "Acumula 100,000 ΣC en total.", icon: "💵", reward: "Gana 5,000 ΣC extra" },
+            SIG_1M: { id: 'SIG_1M', name: "Millonario", description: "Acumula 1,000,000 ΣC en total.", icon: "💎", reward: "+5% a las ganancias por clic" },
+            SIG_1B: { id: 'SIG_1B', name: "Billonario", description: "Acumula 1,000,000,000 ΣC en total.", icon: "🌌", reward: "+10% a las ganancias por clic" },
+
+            FOSO_5: { id: 'FOSO_5', name: "Coleccionista", description: "Posee 5 fosos diferentes.", icon: "📚", reward: "+10% por clic (permanente)" },
+            FOSO_10: { id: 'FOSO_10', name: "Entusiasta", description: "Posee 10 fosos diferentes.", icon: "📖", reward: "+15% por clic (permanente)" },
+            FOSO_15: { id: 'FOSO_15', name: "Magnate de Fosos", description: "Posee los 15 fosos.", icon: "👑", reward: "+20% por clic (permanente)" },
+
+            REBIRTH_1: { id: 'REBIRTH_1', name: "Renacido", description: "Realiza tu primer Rebirth.", icon: "🔄", reward: "Bonus de Rebirth +10% extra" },
+            REBIRTH_3: { id: 'REBIRTH_3', name: "Iluminado", description: "Alcanza 3 Rebirths.", icon: "✨", reward: "Bonus de Rebirth +20% extra" },
+            REBIRTH_5: { id: 'REBIRTH_5', name: "Ascendido", description: "Alcanza 5 Rebirths.", icon: "🌟", reward: "Bonus de Rebirth +30% extra" },
+
+            WHEEL_1: { id: 'WHEEL_1', name: "Afortunado", description: "Gira la ruleta por primera vez.", icon: "🍀", reward: "1 Giro Gratis" },
+            WHEEL_10: { id: 'WHEEL_10', name: "Ludópata", description: "Gira la ruleta 10 veces.", icon: "🎡", reward: "Las recompensas de la ruleta son un 10% mejores" },
+
+            MATA_1: { id: 'MATA_1', name: "Impaciente", description: "Usa Mata Foso por primera vez.", icon: "💥", reward: "Mata Foso da 100 ΣC extra" },
+            MATA_10: { id: 'MATA_10', name: "Destructor", description: "Usa Mata Foso 10 veces.", icon: "💣", reward: "El cooldown de Mata Foso se reduce en 1 minuto" },
+
+            AFK_1: { id: 'AFK_1', name: "Ingresos Pasivos", description: "Mejora el AFK al nivel 1.", icon: "💤", reward: "+5% de ganancias AFK" },
+            AFK_MAX: { id: 'AFK_MAX', name: "Magnate Durmiente", description: "Lleva las mejoras de AFK al máximo.", icon: "😴", reward: "+25% de ganancias AFK" },
+        };
+
+        const ACHIEVEMENT_LOGIC = {
+            CLICK_1: { condition: s => s.totalClicks >= 1, apply: s => s.perClickMult *= 1.01 },
+            CLICK_100: { condition: s => s.totalClicks >= 100, apply: s => s.perClickMult *= 1.02 },
+            CLICK_1K: { condition: s => s.totalClicks >= 1000, apply: s => s.perClickMult *= 1.03 },
+            CLICK_10K: { condition: s => s.totalClicks >= 10000, apply: s => s.perClickMult *= 1.05 },
+            CLICK_100K: { condition: s => s.totalClicks >= 100000, apply: s => s.perClickMult *= 1.10 },
+            SIG_1K: { condition: s => s.totalSigEarned >= 1000, apply: s => s.sig += 500 },
+            SIG_100K: { condition: s => s.totalSigEarned >= 100000, apply: s => s.sig += 5000 },
+            SIG_1M: { condition: s => s.totalSigEarned >= 1000000, apply: s => s.perClickMult *= 1.05 },
+            SIG_1B: { condition: s => s.totalSigEarned >= 1000000000, apply: s => s.perClickMult *= 1.10 },
+            FOSO_5: { condition: s => s.fososOwned.length >= 5, apply: s => s.perClickMult *= 1.10 },
+            FOSO_10: { condition: s => s.fososOwned.length >= 10, apply: s => s.perClickMult *= 1.15 },
+            FOSO_15: { condition: s => s.fososOwned.length >= 15, apply: s => s.perClickMult *= 1.20 },
+            REBIRTH_1: { condition: s => s.rebirths >= 1, apply: s => s.rebirthBonus += 0.1 },
+            REBIRTH_3: { condition: s => s.rebirths >= 3, apply: s => s.rebirthBonus += 0.2 },
+            REBIRTH_5: { condition: s => s.rebirths >= 5, apply: s => s.rebirthBonus += 0.3 },
+            WHEEL_1: { condition: s => s.wheelSpins >= 1, apply: s => s.wheelLastSpin = 0 },
+            WHEEL_10: { condition: s => s.wheelSpins >= 10, apply: s => s.wheelRewardMultiplier = 1.1 },
+            MATA_1: { condition: s => s.mataUses >= 1, apply: s => CONFIG.mataReward += 100 },
+            MATA_10: { condition: s => s.mataUses >= 10, apply: s => CONFIG.mataCooldownSec -= 60 },
+            AFK_1: { condition: s => (s.upgradeLevels.afk || 0) >= 1, apply: s => s.afkMultiplier = 1.05 },
+            AFK_MAX: { condition: s => (s.upgradeLevels.afk || 0) >= AFK_UPGRADES.length, apply: s => s.afkMultiplier = 1.25 },
+        };
+
+        const MISSION_TYPES = [
+            { id: 'click', description: (target) => `Haz ${target} clics.`, reward: (target) => target * 10, unit: 'clics' },
+            { id: 'earn', description: (target) => `Gana ${formatNum(target)} ΣC.`, reward: (target) => target / 2, unit: 'ΣC' },
+            { id: 'spin', description: (target) => `Gira la ruleta ${target} veces.`, reward: (target) => target * 5000, unit: 'giros' },
+            { id: 'buy_foso', description: (target) => `Compra ${target} fosos.`, reward: (target) => target * 10000, unit: 'fosos' },
+        ];
+
+        const WHEEL_REWARDS = [
+            { label: "1K ΣC", reward: (s) => { const amount = 1000 * (s.wheelRewardMultiplier || 1); s.sig += amount; showToast(`+${formatNum(amount)} ΣC!`, "success"); } },
+            { label: "5K ΣC", reward: (s) => { const amount = 5000 * (s.wheelRewardMultiplier || 1); s.sig += amount; showToast(`+${formatNum(amount)} ΣC!`, "success"); } },
+            { label: "x2 Clics (1min)", reward: (s) => {
+                s.perClickMult *= 2;
+                showToast("x2 Clics por 1 minuto!", "success");
+                setTimeout(() => {
+                    s.perClickMult /= 2;
+                    showToast("x2 Clics ha terminado.", "info");
+                }, 60000);
+            }},
+            { label: "Batería Max", reward: (s) => { s.battery = s.maxBattery; showToast("Batería Recargada!", "success"); } },
+            { label: "10K ΣC", reward: (s) => { const amount = 10000 * (s.wheelRewardMultiplier || 1); s.sig += amount; showToast(`+${formatNum(amount)} ΣC!`, "success"); } },
+            { label: "Nada", reward: (s) => { showToast("¡Más suerte la próxima vez!", "info"); } },
+            { label: "25K ΣC", reward: (s) => { const amount = 25000 * (s.wheelRewardMultiplier || 1); s.sig += amount; showToast(`+${formatNum(amount)} ΣC!`, "success"); } },
+            { label: "x3 Clics (30s)", reward: (s) => {
+                s.perClickMult *= 3;
+                showToast("x3 Clics por 30 segundos!", "success");
+                setTimeout(() => {
+                    s.perClickMult /= 3;
+                    showToast("x3 Clics ha terminado.", "info");
+                }, 30000);
+            }},
+        ];
+
         let state = {
             sig: 0,
             totalClicks: 0,
+            totalSigEarned: 0,
             activeFosoIndex: 0,
             fososOwned: [0],
+            achievements: {},
+            wheelLastSpin: 0,
+            dailyMissions: [],
+            lastMissionCheck: 0,
+            wheelSpins: 0,
+            mataUses: 0,
+            wheelRewardMultiplier: 1,
+            afkMultiplier: 1,
             battery: 100,
             maxBattery: 100,
             burned: false,
@@ -1181,12 +1505,234 @@
         const afkInfo = document.getElementById('afkInfo');
         const dotAFK = document.getElementById('dotAFK');
         const btnPower = document.getElementById('btnPower');
+        const btnAchievements = document.getElementById('btnAchievements');
+        const achievementsModal = document.getElementById('achievementsModal');
+        const achievementsGrid = document.getElementById('achievementsGrid');
+        const dotAchievements = document.getElementById('dotAchievements');
+        const btnWheel = document.getElementById('btnWheel');
+        const wheelModal = document.getElementById('wheelModal');
+        const wheel = document.querySelector('.wheel');
+        const btnSpinWheel = document.getElementById('btnSpinWheel');
+        const wheelCooldownText = document.getElementById('wheelCooldownText');
+        const wheelBtnLabel = document.getElementById('wheelBtnLabel');
+        const dotWheel = document.getElementById('dotWheel');
+        const btnMissions = document.getElementById('btnMissions');
+        const missionsModal = document.getElementById('missionsModal');
+        const missionsGrid = document.getElementById('missionsGrid');
+        const dotMissions = document.getElementById('dotMissions');
 
         let isCharging = false;
         let chargeInterval = null;
         let autoClickTimer = null;
         let canClaimDaily = false;
         let nextRewardInterval = null;
+        let wheelSpinning = false;
+
+        function generateDailyMissions() {
+            state.dailyMissions = [];
+            const availableMissions = [...MISSION_TYPES];
+            for (let i = 0; i < 3; i++) {
+                if (availableMissions.length === 0) break;
+
+                const missionIndex = Math.floor(Math.random() * availableMissions.length);
+                const missionType = availableMissions.splice(missionIndex, 1)[0];
+                
+                let target;
+                if (missionType.id === 'click') target = 100 + Math.floor(Math.random() * 900); // 100-1000
+                else if (missionType.id === 'earn') target = 1000 + Math.floor(Math.random() * 9000); // 1000-10000
+                else if (missionType.id === 'spin') target = 1 + Math.floor(Math.random() * 2); // 1-3
+                else if (missionType.id === 'buy_foso') target = 1 + Math.floor(Math.random() * 2); // 1-3
+
+                state.dailyMissions.push({
+                    id: missionType.id,
+                    description: missionType.description(target),
+                    target: target,
+                    progress: 0,
+                    reward: missionType.reward(target),
+                    claimed: false
+                });
+            }
+            state.lastMissionCheck = new Date().setHours(0, 0, 0, 0);
+        }
+
+        function checkMissionReset() {
+            const today = new Date().setHours(0, 0, 0, 0);
+            if (!state.lastMissionCheck || state.lastMissionCheck < today) {
+                generateDailyMissions();
+            }
+        }
+
+        function renderMissions() {
+            missionsGrid.innerHTML = '';
+            let canClaim = false;
+            state.dailyMissions.forEach((mission, index) => {
+                const card = document.createElement('div');
+                card.className = 'mission-card';
+                const progressPercent = Math.min(100, (mission.progress / mission.target) * 100);
+
+                card.innerHTML = `
+                    <div class="mission-info">
+                        <h4>${mission.description}</h4>
+                        <div class="mission-progress-bar">
+                            <div class="mission-progress-fill" style="width: ${progressPercent}%;"></div>
+                        </div>
+                        <p class="metaTiny">Progreso: ${mission.progress} / ${mission.target}</p>
+                        <p class="metaTiny">Recompensa: ${formatNum(mission.reward)} ΣC</p>
+                    </div>
+                    <button class="mata-btn claim-mission-btn" data-index="${index}" ${mission.progress < mission.target || mission.claimed ? 'disabled' : ''}>
+                        ${mission.claimed ? 'Reclamado' : 'Reclamar'}
+                    </button>
+                `;
+                missionsGrid.appendChild(card);
+
+                if (progressPercent >= 100 && !mission.claimed) {
+                    canClaim = true;
+                }
+            });
+
+            dotMissions.classList.toggle('hidden', !canClaim);
+
+            document.querySelectorAll('.claim-mission-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const missionIndex = e.target.dataset.index;
+                    const mission = state.dailyMissions[missionIndex];
+                    if (mission && mission.progress >= mission.target && !mission.claimed) {
+                        state.sig += mission.reward;
+                        state.totalSigEarned += mission.reward;
+                        mission.claimed = true;
+                        showToast(`+${formatNum(mission.reward)} ΣC! Misión completada!`, 'success');
+                        renderMissions();
+                    }
+                });
+            });
+        }
+
+        function updateMissionProgress(missionId, value) {
+            if (!state.dailyMissions) return;
+            state.dailyMissions.forEach(mission => {
+                if (mission.id === missionId && !mission.claimed) {
+                    mission.progress += value;
+                }
+            });
+        }
+
+        function checkWheelCooldown() {
+            const now = Date.now();
+            const cooldown = 20 * 60 * 1000; // 20 minutes
+            const timeSinceSpin = now - state.wheelLastSpin;
+
+            if (timeSinceSpin >= cooldown) {
+                wheelBtnLabel.textContent = "Ruleta";
+                dotWheel.classList.remove('hidden');
+                if(wheelCooldownText) wheelCooldownText.textContent = "¡Listo para girar!";
+                if(btnSpinWheel) btnSpinWheel.disabled = false;
+            } else {
+                const remaining = cooldown - timeSinceSpin;
+                const minutes = Math.floor(remaining / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+                const timeStr = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                wheelBtnLabel.textContent = `Ruleta (${timeStr})`;
+                dotWheel.classList.add('hidden');
+                if(wheelCooldownText) wheelCooldownText.textContent = `Próximo giro en: ${timeStr}`;
+                if(btnSpinWheel) btnSpinWheel.disabled = true;
+            }
+        }
+
+        function spinWheel() {
+            if (wheelSpinning) return;
+
+            const now = Date.now();
+            const cooldown = 20 * 60 * 1000;
+            if (now - state.wheelLastSpin < cooldown) {
+                showToast("La ruleta aún está en cooldown.", "info");
+                return;
+            }
+
+            wheelSpinning = true;
+            btnSpinWheel.disabled = true;
+
+            const segmentCount = WHEEL_REWARDS.length;
+            const segmentAngle = 360 / segmentCount;
+            const randomSegment = Math.floor(Math.random() * segmentCount);
+            
+            const spinAngle = (360 * 5) - (randomSegment * segmentAngle) - (segmentAngle / 2);
+
+            wheel.style.transition = 'transform 5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            wheel.style.transform = `rotate(${spinAngle}deg)`;
+
+            setTimeout(() => {
+                const selectedReward = WHEEL_REWARDS[randomSegment];
+                selectedReward.reward(state);
+                updateMissionProgress('spin', 1);
+                state.wheelSpins = (state.wheelSpins || 0) + 1;
+                state.wheelLastSpin = Date.now();
+                wheelSpinning = false;
+                checkWheelCooldown();
+                checkAchievements();
+                render();
+                
+            }, 5000); // Match CSS transition time
+        }
+
+        function renderWheel() {
+            const wheelEl = document.querySelector('.wheel');
+            wheelEl.innerHTML = '';
+            const colors = ['#ff6b6b', '#f06595', '#cc5de8', '#845ef7', '#5c7cfa', '#339af0', '#22b8cf', '#20c997'];
+            const segmentAngle = 45;
+
+            WHEEL_REWARDS.forEach((reward, i) => {
+                const segment = document.createElement('li');
+                segment.className = 'segment';
+                segment.style.transform = `rotate(${i * segmentAngle}deg) skewY(-45deg)`;
+
+                const text = document.createElement('div');
+                text.className = 'text';
+                text.textContent = reward.label;
+                text.style.setProperty('--color', colors[i % colors.length]);
+                
+                segment.appendChild(text);
+                wheelEl.appendChild(segment);
+            });
+        }
+
+        function checkAchievements() {
+            let newAchievementUnlocked = false;
+            for (const id in ACHIEVEMENT_LOGIC) {
+                if (!state.achievements[id]) {
+                    const logic = ACHIEVEMENT_LOGIC[id];
+                    if (logic.condition(state)) {
+                        state.achievements[id] = true;
+                        logic.apply(state);
+                        showToast(`Logro: ${ACHIEVEMENTS[id].name}!`, 'success');
+                        newAchievementUnlocked = true;
+                    }
+                }
+            }
+            if (newAchievementUnlocked) {
+                dotAchievements.classList.remove('hidden');
+            }
+        }
+
+        function renderAchievements() {
+            achievementsGrid.innerHTML = '';
+            for (const id in ACHIEVEMENTS) {
+                const achievement = ACHIEVEMENTS[id];
+                const unlocked = state.achievements[id];
+
+                const card = document.createElement('div');
+                card.className = `achievement-card ${unlocked ? 'unlocked' : 'locked'}`;
+                
+                card.innerHTML = `
+                    <div class="achievement-icon">${achievement.icon}</div>
+                    <div class="achievement-info">
+                        <h4>${achievement.name}</h4>
+                        <p>${achievement.description}</p>
+                        <p style="color: var(--muted); font-style: italic;">Recompensa: ${achievement.reward}</p>
+                    </div>
+                `;
+                achievementsGrid.appendChild(card);
+            }
+        }
 
         function saveState() {
             state.lastPlayed = Date.now();
@@ -1208,6 +1754,21 @@
                 }
                 if (!state.upgradeLevels) {
                     state.upgradeLevels = { battery: 0, autoclicker: 0, afk: 0 };
+                }
+                if (!state.achievements) {
+                    state.achievements = {};
+                }
+                if (!state.wheelLastSpin) {
+                    state.wheelLastSpin = 0;
+                }
+                if (!state.totalSigEarned) {
+                    state.totalSigEarned = state.sig;
+                }
+                if (!state.dailyMissions) {
+                    state.dailyMissions = [];
+                }
+                if (!state.lastMissionCheck) {
+                    state.lastMissionCheck = 0;
                 }
             } catch (e) {
                 console.warn('load state err', e);
@@ -1354,7 +1915,10 @@
             const basePer = FOSOS[state.activeFosoIndex].perClick; // Ganancia base del foso
             const per = basePer * state.perClickMult * (1 + state.rebirthBonus); // Aplicar multiplicadores y bonus de rebirth
             state.sig += per;
+            state.totalSigEarned += per;
             state.totalClicks++;
+            updateMissionProgress('click', 1);
+            updateMissionProgress('earn', per);
             const drainEff = Math.max(0.2, 1 - (state.activeFosoIndex * 0.05) - ((state.upgradeLevels.battery || 0) * 0.1));
             const drain = CONFIG.baseBatteryDrainPerClick * drainEff;
             state.battery = Math.max(0, state.battery - drain);
@@ -1363,6 +1927,7 @@
                 showClickAnimation(per, e.clientX, e.clientY);
             }
 
+            checkAchievements();
             render();
         }
         
@@ -1533,6 +2098,7 @@
 
             if (reward.type === 'sig') {
                 state.sig += reward.value;
+                state.totalSigEarned += reward.value;
                 showToast(`+${reward.value} ΣC!`, 'success');
             } else if (reward.type === 'multiplier') {
                 // This needs a mechanism to expire. Let's add it to the state.
@@ -1540,6 +2106,7 @@
                 showToast(`Multiplicador x${reward.value} activado!`, 'success');
             } else if (reward.type === 'combo') {
                 state.sig += reward.value.sig;
+                state.totalSigEarned += reward.value.sig;
                 showToast(`+${reward.value.sig} ΣC y multiplicador activado!`, 'success');
             }
 
@@ -1573,9 +2140,10 @@
             const lastClaim = state.afkLastClaim || state.lastPlayed || now;
             const diffSeconds = Math.floor((now - lastClaim) / 1000);
             const afkLevel = state.upgradeLevels.afk || 0;
+            // showToast(`AFK check: ${diffSeconds}s since last claim. Level: ${afkLevel}`, "info"); // DEBUG
             if (afkLevel > 0) {
                 const sph = AFK_UPGRADES[afkLevel - 1].sph;
-                const earnings = (sph / 3600) * diffSeconds;
+                const earnings = (sph / 3600) * diffSeconds * (state.afkMultiplier || 1);
                 state.afkEarnings = earnings;
                 if (earnings > 0) {
                     dotAFK.classList.remove('hidden');
@@ -1612,6 +2180,7 @@
             const earnings = state.afkEarnings || 0;
             if (earnings > 0) {
                 state.sig += earnings;
+                state.totalSigEarned += earnings;
                 showToast(`+${formatNum(earnings)} ΣC de ganancias AFK!`, 'success');
                 state.afkEarnings = 0;
                 state.afkLastClaim = Date.now();
@@ -1690,6 +2259,7 @@
 
                     showToast(`¡Rebirth completado! Ahora tienes un +${(state.rebirthBonus * 100).toFixed(0)}% de bonus.`, 'success', 5000);
                     rebirthModal.classList.add('hidden');
+                    checkAchievements();
                     updateAutoClickLoop();
                     render();
                 }
@@ -1701,13 +2271,17 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadState();
+            checkMissionReset();
+            renderWheel();
             calculateAfkEarnings();
             checkDailyReward();
+            checkWheelCooldown();
             updateAutoClickLoop();
             render();
             setInterval(saveState, CONFIG.autosaveMs);
             setInterval(render, CONFIG.uiTickMs);
             setInterval(calculateAfkEarnings, 60000);
+            setInterval(checkWheelCooldown, 1000);
 
             if(centralFoso) centralFoso.addEventListener('click', handleCentralClick);
 
@@ -1770,7 +2344,10 @@
               const now = Date.now();
               if(state.mataCooldownUntil && state.mataCooldownUntil > now) return;
               state.sig += CONFIG.mataReward;
+              state.totalSigEarned += CONFIG.mataReward;
+              state.mataUses = (state.mataUses || 0) + 1;
               state.mataCooldownUntil = now + CONFIG.mataCooldownSec*1000;
+              checkAchievements();
               render();
             });
 
@@ -1782,6 +2359,49 @@
             if(afkModal) afkModal.querySelector('.close-btn').addEventListener('click', () => afkModal.classList.add('hidden'));
             if(btnClaimAFK) btnClaimAFK.addEventListener('click', claimAfkEarnings);
             if(btnUpgradeAFK) btnUpgradeAFK.addEventListener('click', upgradeAfk);
+
+            if(btnWheel) {
+                btnWheel.addEventListener('click', () => {
+                    wheelModal.classList.remove('hidden');
+                });
+            }
+
+            if(wheelModal) {
+                wheelModal.querySelector('.close-btn').addEventListener('click', () => {
+                    wheelModal.classList.add('hidden');
+                });
+            }
+
+            if(btnSpinWheel) {
+                btnSpinWheel.addEventListener('click', spinWheel);
+            }
+
+            if(btnMissions) {
+                btnMissions.addEventListener('click', () => {
+                    renderMissions();
+                    missionsModal.classList.remove('hidden');
+                });
+            }
+
+            if(missionsModal) {
+                missionsModal.querySelector('.close-btn').addEventListener('click', () => {
+                    missionsModal.classList.add('hidden');
+                });
+            }
+
+            if(btnAchievements) {
+                btnAchievements.addEventListener('click', () => {
+                    renderAchievements();
+                    achievementsModal.classList.remove('hidden');
+                    dotAchievements.classList.add('hidden');
+                });
+            }
+
+            if(achievementsModal) {
+                achievementsModal.querySelector('.close-btn').addEventListener('click', () => {
+                    achievementsModal.classList.add('hidden');
+                });
+            }
 
             if (shopGrid) {
                 shopGrid.addEventListener('click', (e) => {
@@ -1803,6 +2423,8 @@
                                 state.fososOwned.push(index);
                                 state.activeFosoIndex = index;
                                 showToast(`Foso ${item.name} comprado y equipado!`, 'success');
+                                updateMissionProgress('buy_foso', 1);
+                                checkAchievements();
                             } else {
                                 showToast('No tienes suficientes Sigmacoins.', 'error');
                             }
