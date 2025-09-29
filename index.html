@@ -697,6 +697,11 @@
       <span data-lang="rebirth">Rebirth</span>
     </button>
 
+    <button id="btnPrestige" class="mata-btn hidden" style="background:linear-gradient(45deg, #f59e0b, #f39c12, #e58e26); color:black;">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      <span data-lang="prestige">Prestigio</span>
+    </button>
+
     <div class="button-wrapper">
       <button id="btnDaily" class="mata-btn">
         <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
@@ -807,6 +812,25 @@
   </div>
 </div>
 
+<!-- Modal Prestigio -->
+<div id="prestigeModal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title" data-lang="prestige_title">🌟 Prestigio</div>
+      <button class="close-btn" data-close>&times;</button>
+    </div>
+    <div class="modal-body">
+      <p data-lang="prestige_desc">¡Felicidades! Has llegado al final del camino... por ahora. Hacer Prestigio reiniciará tu progreso (como un Rebirth) pero te otorgará Puntos de Prestigio (PP) para desbloquear mejoras permanentes increíblemente poderosas.</p>
+      <div id="prestigeInfo" style="background: var(--panel); padding: 12px; border-radius: 8px; margin: 12px 0;">
+        <!-- Contenido dinámico aquí -->
+      </div>
+      <div id="prestigeUpgradesGrid" class="shopGrid" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); max-height: 300px; margin-bottom: 15px;"></div>
+      <button id="btnConfirmPrestige" class="mata-btn" style="width: 100%; background: #f59e0b; justify-content: center;" data-lang="confirm_prestige">
+        Confirmar Prestigio
+      </button>
+    </div>
+  </div>
+</div>
 
           <div class="hint" data-lang="shop_hint">Tienda: clic en la miniatura para equipar/comprar. El central cambia según lo equipado.</div>
         </section>
@@ -846,7 +870,10 @@
           </svg>
           <div style="font-weight:800" data-lang="shop_title">Tienda — Fositos</div>
         </div>
-        <div class="metaTiny">ΣC: <span id="shopSigma">0</span></div>
+        <div>
+          <div class="metaTiny" style="text-align: right;">ΣC: <span id="shopSigma">0</span></div>
+          <div class="metaTiny" style="text-align: right;">💎: <span id="shopGems">0</span></div>
+        </div>
       </div>
 
       <div class="shopGrid" id="shopGrid">
@@ -1093,6 +1120,553 @@
   </svg>
   <div style="font-weight:700" data-lang="foso_14_name">Foso 15: Black Diamond Reserve 💎🔥</div>
   <div class="priceTag" data-cost="600000000">600 000 000 ΣC</div>
+</div>
+
+<!-- 16 -->
+<div class="shopCard" data-index="15" title="Foso 16: Cosmic Swirl 🌌 (2B ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g16_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth16_shop)"/>
+    <defs>
+      <linearGradient id="g16_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#434343"/><stop offset="100%" stop-color="#000000"/></linearGradient>
+      <linearGradient id="mouth16_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#333"/><stop offset="100%" stop-color="#111"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_15_name">Foso 16: Cosmic Swirl 🌌</div>
+  <div class="priceTag" data-cost="2000000000">2B ΣC</div>
+</div>
+
+<!-- 17 -->
+<div class="shopCard" data-index="16" title="Foso 17: Golden Dragon 🐉 (6B ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g17_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth17_shop)"/>
+    <defs>
+      <linearGradient id="g17_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FFA500"/></linearGradient>
+      <linearGradient id="mouth17_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4a2c00"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_16_name">Foso 17: Golden Dragon 🐉</div>
+  <div class="priceTag" data-cost="6000000000">6B ΣC</div>
+</div>
+
+<!-- 18 -->
+<div class="shopCard" data-index="17" title="Foso 18: Ocean Breeze 🌊 (20B ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g18_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth18_shop)"/>
+    <defs>
+      <linearGradient id="g18_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00c6ff"/><stop offset="100%" stop-color="#0072ff"/></linearGradient>
+      <linearGradient id="mouth18_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#eee"/><stop offset="100%" stop-color="#ccc"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_17_name">Foso 18: Ocean Breeze 🌊</div>
+  <div class="priceTag" data-cost="20000000000">20B ΣC</div>
+</div>
+
+<!-- 19 -->
+<div class="shopCard" data-index="18" title="Foso 19: Ruby Red ❤️ (60B ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g19_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth19_shop)"/>
+    <defs>
+      <linearGradient id="g19_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e52d27"/><stop offset="100%" stop-color="#b31217"/></linearGradient>
+      <linearGradient id="mouth19_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_18_name">Foso 19: Ruby Red ❤️</div>
+  <div class="priceTag" data-cost="60000000000">60B ΣC</div>
+</div>
+
+<!-- 20 -->
+<div class="shopCard" data-index="19" title="Foso 20: Emerald Green 💚 (200B ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g20_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth20_shop)"/>
+    <defs>
+      <linearGradient id="g20_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#50c878"/><stop offset="100%" stop-color="#009e60"/></linearGradient>
+      <linearGradient id="mouth20_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_19_name">Foso 20: Emerald Green 💚</div>
+  <div class="priceTag" data-cost="200000000000">200B ΣC</div>
+</div>
+
+<!-- 21 -->
+<div class="shopCard" data-index="20" title="Foso 21: Sapphire Blue 💙 (600B ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g21_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth21_shop)"/>
+    <defs>
+      <linearGradient id="g21_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0f52ba"/><stop offset="100%" stop-color="#003366"/></linearGradient>
+      <linearGradient id="mouth21_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_20_name">Foso 21: Sapphire Blue 💙</div>
+  <div class="priceTag" data-cost="600000000000">600B ΣC</div>
+</div>
+
+<!-- 22 -->
+<div class="shopCard" data-index="21" title="Foso 22: Amethyst Purple 💜 (2T ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g22_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth22_shop)"/>
+    <defs>
+      <linearGradient id="g22_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9966cc"/><stop offset="100%" stop-color="#6a0dad"/></linearGradient>
+      <linearGradient id="mouth22_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_21_name">Foso 22: Amethyst Purple 💜</div>
+  <div class="priceTag" data-cost="2000000000000">2T ΣC</div>
+</div>
+
+<!-- 23 -->
+<div class="shopCard" data-index="22" title="Foso 23: Topaz Yellow 💛 (6T ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g23_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth23_shop)"/>
+    <defs>
+      <linearGradient id="g23_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffc87c"/><stop offset="100%" stop-color="#ffac4b"/></linearGradient>
+      <linearGradient id="mouth23_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_22_name">Foso 23: Topaz Yellow 💛</div>
+  <div class="priceTag" data-cost="6000000000000">6T ΣC</div>
+</div>
+
+<!-- 24 -->
+<div class="shopCard" data-index="23" title="Foso 24: Onyx Black 🖤 (20T ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g24_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth24_shop)"/>
+    <defs>
+      <linearGradient id="g24_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#353535"/><stop offset="100%" stop-color="#000000"/></linearGradient>
+      <linearGradient id="mouth24_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_23_name">Foso 24: Onyx Black 🖤</div>
+  <div class="priceTag" data-cost="20000000000000">20T ΣC</div>
+</div>
+
+<!-- 25 -->
+<div class="shopCard" data-index="24" title="Foso 25: Pearl White 🤍 (60T ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g25_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth25_shop)"/>
+    <defs>
+      <linearGradient id="g25_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fdfbfb"/><stop offset="100%" stop-color="#ebedee"/></linearGradient>
+      <linearGradient id="mouth25_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_24_name">Foso 25: Pearl White 🤍</div>
+  <div class="priceTag" data-cost="60000000000000">60T ΣC</div>
+</div>
+
+<!-- 26 -->
+<div class="shopCard" data-index="25" title="Foso 26: Lava Flow 🌋 (200T ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g26_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth26_shop)"/>
+    <defs>
+      <linearGradient id="g26_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff4e00"/><stop offset="100%" stop-color="#ec9f05"/></linearGradient>
+      <linearGradient id="mouth26_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_25_name">Foso 26: Lava Flow 🌋</div>
+  <div class="priceTag" data-cost="200000000000000">200T ΣC</div>
+</div>
+
+<!-- 27 -->
+<div class="shopCard" data-index="26" title="Foso 27: Arctic Chill 🧊 (600T ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g27_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth27_shop)"/>
+    <defs>
+      <linearGradient id="g27_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e0eafc"/><stop offset="100%" stop-color="#cfdef3"/></linearGradient>
+      <linearGradient id="mouth27_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_26_name">Foso 27: Arctic Chill 🧊</div>
+  <div class="priceTag" data-cost="600000000000000">600T ΣC</div>
+</div>
+
+<!-- 28 -->
+<div class="shopCard" data-index="27" title="Foso 28: Jungle Vine 🌿 (2Qa ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g28_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth28_shop)"/>
+    <defs>
+      <linearGradient id="g28_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#add100"/><stop offset="100%" stop-color="#7b920a"/></linearGradient>
+      <linearGradient id="mouth28_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_27_name">Foso 28: Jungle Vine 🌿</div>
+  <div class="priceTag" data-cost="2000000000000000">2Qa ΣC</div>
+</div>
+
+<!-- 29 -->
+<div class="shopCard" data-index="28" title="Foso 29: Desert Mirage 🏜️ (6Qa ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g29_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth29_shop)"/>
+    <defs>
+      <linearGradient id="g29_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffb75e"/><stop offset="100%" stop-color="#ed8f03"/></linearGradient>
+      <linearGradient id="mouth29_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_28_name">Foso 29: Desert Mirage 🏜️</div>
+  <div class="priceTag" data-cost="6000000000000000">6Qa ΣC</div>
+</div>
+
+<!-- 30 -->
+<div class="shopCard" data-index="29" title="Foso 30: Cyber Punk 🤖 (20Qa ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g30_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth30_shop)"/>
+    <defs>
+      <linearGradient id="g30_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00f2ff"/><stop offset="100%" stop-color="#00c9db"/></linearGradient>
+      <linearGradient id="mouth30_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_29_name">Foso 30: Cyber Punk 🤖</div>
+  <div class="priceTag" data-cost="20000000000000000">20Qa ΣC</div>
+</div>
+
+<!-- 31 -->
+<div class="shopCard" data-index="30" title="Foso 31: Steampunk ⚙️ (60Qa ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g31_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth31_shop)"/>
+    <defs>
+      <linearGradient id="g31_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c9a475"/><stop offset="100%" stop-color="#7a5c3c"/></linearGradient>
+      <linearGradient id="mouth31_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_30_name">Foso 31: Steampunk ⚙️</div>
+  <div class="priceTag" data-cost="60000000000000000">60Qa ΣC</div>
+</div>
+
+<!-- 32 -->
+<div class="shopCard" data-index="31" title="Foso 32: Galaxy Quest 🌠 (200Qa ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g32_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth32_shop)"/>
+    <defs>
+      <linearGradient id="g32_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c3e50"/><stop offset="100%" stop-color="#fd746c"/></linearGradient>
+      <linearGradient id="mouth32_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_31_name">Foso 32: Galaxy Quest 🌠</div>
+  <div class="priceTag" data-cost="200000000000000000">200Qa ΣC</div>
+</div>
+
+<!-- 33 -->
+<div class="shopCard" data-index="32" title="Foso 33: Void 🕳️ (600Qa ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g33_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth33_shop)"/>
+    <defs>
+      <linearGradient id="g33_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#000000"/><stop offset="100%" stop-color="#434343"/></linearGradient>
+      <linearGradient id="mouth33_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_32_name">Foso 33: Void 🕳️</div>
+  <div class="priceTag" data-cost="600000000000000000">600Qa ΣC</div>
+</div>
+
+<!-- 34 -->
+<div class="shopCard" data-index="33" title="Foso 34: Aether ✨ (2Qi ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g34_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth34_shop)"/>
+    <defs>
+      <linearGradient id="g34_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c0c0c0"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
+      <linearGradient id="mouth34_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_33_name">Foso 34: Aether ✨</div>
+  <div class="priceTag" data-cost="2000000000000000000">2Qi ΣC</div>
+</div>
+
+<!-- 35 -->
+<div class="shopCard" data-index="34" title="Foso 35: Inferno 🔥 (6Qi ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g35_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth35_shop)"/>
+    <defs>
+      <linearGradient id="g35_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff416c"/><stop offset="100%" stop-color="#ff4b2b"/></linearGradient>
+      <linearGradient id="mouth35_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_34_name">Foso 35: Inferno 🔥</div>
+  <div class="priceTag" data-cost="6000000000000000000">6Qi ΣC</div>
+</div>
+
+<!-- 36 -->
+<div class="shopCard" data-index="35" title="Foso 36: Tsunami 🌊 (20Qi ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g36_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth36_shop)"/>
+    <defs>
+      <linearGradient id="g36_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1cb5e0"/><stop offset="100%" stop-color="#000046"/></linearGradient>
+      <linearGradient id="mouth36_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_35_name">Foso 36: Tsunami 🌊</div>
+  <div class="priceTag" data-cost="20000000000000000000">20Qi ΣC</div>
+</div>
+
+<!-- 37 -->
+<div class="shopCard" data-index="36" title="Foso 37: Earthquake 🌍 (60Qi ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g37_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth37_shop)"/>
+    <defs>
+      <linearGradient id="g37_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8c5221"/><stop offset="100%" stop-color="#5a3815"/></linearGradient>
+      <linearGradient id="mouth37_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_36_name">Foso 37: Earthquake 🌍</div>
+  <div class="priceTag" data-cost="60000000000000000000">60Qi ΣC</div>
+</div>
+
+<!-- 38 -->
+<div class="shopCard" data-index="37" title="Foso 38: Hurricane 🌪️ (200Qi ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g38_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth38_shop)"/>
+    <defs>
+      <linearGradient id="g38_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#bdc3c7"/><stop offset="100%" stop-color="#2c3e50"/></linearGradient>
+      <linearGradient id="mouth38_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_37_name">Foso 38: Hurricane 🌪️</div>
+  <div class="priceTag" data-cost="200000000000000000000">200Qi ΣC</div>
+</div>
+
+<!-- 39 -->
+<div class="shopCard" data-index="38" title="Foso 39: Supernova 🌟 (600Qi ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g39_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth39_shop)"/>
+    <defs>
+      <linearGradient id="g39_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fffc00"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
+      <linearGradient id="mouth39_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_38_name">Foso 39: Supernova 🌟</div>
+  <div class="priceTag" data-cost="600000000000000000000">600Qi ΣC</div>
+</div>
+
+<!-- 40 -->
+<div class="shopCard" data-index="39" title="Foso 40: Black Hole ⚫ (2Sx ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g40_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth40_shop)"/>
+    <defs>
+      <linearGradient id="g40_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#000000"/><stop offset="100%" stop-color="#000000"/></linearGradient>
+      <linearGradient id="mouth40_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_39_name">Foso 40: Black Hole ⚫</div>
+  <div class="priceTag" data-cost="2000000000000000000000">2Sx ΣC</div>
+</div>
+
+<!-- 41 -->
+<div class="shopCard" data-index="40" title="Foso 41: Nebula ☁️ (6Sx ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g41_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth41_shop)"/>
+    <defs>
+      <linearGradient id="g41_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#da4453"/><stop offset="100%" stop-color="#89216b"/></linearGradient>
+      <linearGradient id="mouth41_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_40_name">Foso 41: Nebula ☁️</div>
+  <div class="priceTag" data-cost="6000000000000000000000">6Sx ΣC</div>
+</div>
+
+<!-- 42 -->
+<div class="shopCard" data-index="41" title="Foso 42: Quasar 💫 (20Sx ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g42_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth42_shop)"/>
+    <defs>
+      <linearGradient id="g42_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1fa2ff"/><stop offset="100%" stop-color="#12d8fa"/></linearGradient>
+      <linearGradient id="mouth42_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_41_name">Foso 42: Quasar 💫</div>
+  <div class="priceTag" data-cost="20000000000000000000000">20Sx ΣC</div>
+</div>
+
+<!-- 43 -->
+<div class="shopCard" data-index="42" title="Foso 43: Pulsar 🎇 (60Sx ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g43_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth43_shop)"/>
+    <defs>
+      <linearGradient id="g43_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a0e7e5"/><stop offset="100%" stop-color="#ffa8b6"/></linearGradient>
+      <linearGradient id="mouth43_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_42_name">Foso 43: Pulsar 🎇</div>
+  <div class="priceTag" data-cost="60000000000000000000000">60Sx ΣC</div>
+</div>
+
+<!-- 44 -->
+<div class="shopCard" data-index="43" title="Foso 44: Magnetar 🧲 (200Sx ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g44_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth44_shop)"/>
+    <defs>
+      <linearGradient id="g44_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff00cc"/><stop offset="100%" stop-color="#333399"/></linearGradient>
+      <linearGradient id="mouth44_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_43_name">Foso 44: Magnetar 🧲</div>
+  <div class="priceTag" data-cost="200000000000000000000000">200Sx ΣC</div>
+</div>
+
+<!-- 45 -->
+<div class="shopCard" data-index="44" title="Foso 45: The Singularity ✨ (600Sx ΣC)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="20" width="60" height="220" rx="12" fill="url(#g45_shop)"/>
+    <rect x="20" y="0" width="60" height="20" rx="10" fill="url(#mouth45_shop)"/>
+    <defs>
+      <linearGradient id="g45_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#000000"/></linearGradient>
+      <linearGradient id="mouth45_shop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c2c54"/><stop offset="100%" stop-color="#000"/></linearGradient>
+    </defs>
+  </svg>
+  <div style="font-weight:700" data-lang="foso_44_name">Foso 45: The Singularity ✨</div>
+  <div class="priceTag" data-cost="600000000000000000000000">600Sx ΣC</div>
+</div>
+
+<!-- --- SECCION: Fosos de Gema --- -->
+<div style="grid-column:1/-1; font-weight:800; margin-top:10px; padding-top:8px; border-top:1px solid rgba(245, 158, 11, 0.3)" data-lang="gem_fosos">
+  💎 Fosos de Gema (+5% Ganancias c/u)
+</div>
+
+<!-- Fosos de Gema 1-30 -->
+<div class="shopCard" data-gem-foso-index="0" title="Foso de Gema 1 (100 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf1_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><radialGradient id="gf1_shop"><stop offset="0%" stop-color="#f8ffae"/><stop offset="100%" stop-color="#43c6ac"/></radialGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 1</div><div class="priceTag gem-price" data-cost="100">100 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="1" title="Foso de Gema 2 (120 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf2_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><radialGradient id="gf2_shop"><stop offset="0%" stop-color="#ff9a9e"/><stop offset="100%" stop-color="#fad0c4"/></radialGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 2</div><div class="priceTag gem-price" data-cost="120">120 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="2" title="Foso de Gema 3 (140 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf3_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><radialGradient id="gf3_shop"><stop offset="0%" stop-color="#a1c4fd"/><stop offset="100%" stop-color="#c2e9fb"/></radialGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 3</div><div class="priceTag gem-price" data-cost="140">140 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="3" title="Foso de Gema 4 (160 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf4_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><radialGradient id="gf4_shop"><stop offset="0%" stop-color="#8fd3f4"/><stop offset="100%" stop-color="#84fab0"/></radialGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 4</div><div class="priceTag gem-price" data-cost="160">160 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="4" title="Foso de Gema 5 (180 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf5_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><radialGradient id="gf5_shop"><stop offset="0%" stop-color="#d4fc79"/><stop offset="100%" stop-color="#96e6a1"/></radialGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 5</div><div class="priceTag gem-price" data-cost="180">180 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="5" title="Foso de Gema 6 (200 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf6_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><radialGradient id="gf6_shop"><stop offset="0%" stop-color="#fbc2eb"/><stop offset="100%" stop-color="#a6c1ee"/></radialGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 6</div><div class="priceTag gem-price" data-cost="200">200 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="6" title="Foso de Gema 7 (250 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf7_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf7_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff0844"/><stop offset="100%" stop-color="#ffb199"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 7</div><div class="priceTag gem-price" data-cost="250">250 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="7" title="Foso de Gema 8 (300 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf8_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf8_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00dbde"/><stop offset="100%" stop-color="#fc00ff"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 8</div><div class="priceTag gem-price" data-cost="300">300 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="8" title="Foso de Gema 9 (350 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf9_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf9_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fdfc47"/><stop offset="100%" stop-color="#24fe41"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 9</div><div class="priceTag gem-price" data-cost="350">350 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="9" title="Foso de Gema 10 (400 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf10_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf10_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e0c3fc"/><stop offset="100%" stop-color="#8ec5fc"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 10</div><div class="priceTag gem-price" data-cost="400">400 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="10" title="Foso de Gema 11 (500 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf11_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf11_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#43e97b"/><stop offset="100%" stop-color="#38f9d7"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 11</div><div class="priceTag gem-price" data-cost="500">500 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="11" title="Foso de Gema 12 (600 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf12_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf12_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fa709a"/><stop offset="100%" stop-color="#fee140"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 12</div><div class="priceTag gem-price" data-cost="600">600 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="12" title="Foso de Gema 13 (700 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf13_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf13_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#30cfd0"/><stop offset="100%" stop-color="#330867"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 13</div><div class="priceTag gem-price" data-cost="700">700 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="13" title="Foso de Gema 14 (800 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf14_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf14_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f43b47"/><stop offset="100%" stop-color="#453a94"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 14</div><div class="priceTag gem-price" data-cost="800">800 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="14" title="Foso de Gema 15 (900 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf15_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf15_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2af598"/><stop offset="100%" stop-color="#009efd"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 15</div><div class="priceTag gem-price" data-cost="900">900 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="15" title="Foso de Gema 16 (1000 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf16_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf16_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#667eea"/><stop offset="100%" stop-color="#764ba2"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 16</div><div class="priceTag gem-price" data-cost="1000">1K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="16" title="Foso de Gema 17 (1200 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf17_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf17_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff758c"/><stop offset="100%" stop-color="#ff7eb3"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 17</div><div class="priceTag gem-price" data-cost="1200">1.2K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="17" title="Foso de Gema 18 (1400 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf18_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf18_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f5f7fa"/><stop offset="100%" stop-color="#c3cfe2"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 18</div><div class="priceTag gem-price" data-cost="1400">1.4K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="18" title="Foso de Gema 19 (1600 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf19_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf19_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f093fb"/><stop offset="100%" stop-color="#f5576c"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 19</div><div class="priceTag gem-price" data-cost="1600">1.6K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="19" title="Foso de Gema 20 (1800 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf20_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf20_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#5ee7df"/><stop offset="100%" stop-color="#b490ca"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 20</div><div class="priceTag gem-price" data-cost="1800">1.8K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="20" title="Foso de Gema 21 (2000 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf21_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf21_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#c1dfc4"/><stop offset="100%" stop-color="#deecdd"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 21</div><div class="priceTag gem-price" data-cost="2000">2K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="21" title="Foso de Gema 22 (2200 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf22_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf22_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0fd850"/><stop offset="100%" stop-color="#f9f047"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 22</div><div class="priceTag gem-price" data-cost="2200">2.2K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="22" title="Foso de Gema 23 (2400 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf23_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf23_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f83600"/><stop offset="100%" stop-color="#f9d423"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 23</div><div class="priceTag gem-price" data-cost="2400">2.4K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="23" title="Foso de Gema 24 (2600 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf24_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf24_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a8edea"/><stop offset="100%" stop-color="#fed6e3"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 24</div><div class="priceTag gem-price" data-cost="2600">2.6K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="24" title="Foso de Gema 25 (2800 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf25_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf25_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d299c2"/><stop offset="100%" stop-color="#fef9d7"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 25</div><div class="priceTag gem-price" data-cost="2800">2.8K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="25" title="Foso de Gema 26 (3000 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf26_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf26_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fdfbfb"/><stop offset="100%" stop-color="#ebedee"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 26</div><div class="priceTag gem-price" data-cost="3000">3K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="26" title="Foso de Gema 27 (3500 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf27_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf27_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#48c6ef"/><stop offset="100%" stop-color="#6f86d6"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 27</div><div class="priceTag gem-price" data-cost="3500">3.5K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="27" title="Foso de Gema 28 (4000 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf28_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf28_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#96fbc4"/><stop offset="100%" stop-color="#f9f586"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 28</div><div class="priceTag gem-price" data-cost="4000">4K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="28" title="Foso de Gema 29 (4500 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf29_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf29_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffb199"/><stop offset="100%" stop-color="#ff0844"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 29</div><div class="priceTag gem-price" data-cost="4500">4.5K 💎</div>
+</div>
+<div class="shopCard" data-gem-foso-index="29" title="Foso de Gema 30 (5000 💎)">
+  <svg viewBox="0 0 100 260" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="60" height="220" rx="12" fill="url(#gf30_shop)"/><rect x="20" y="0" width="60" height="20" rx="10" fill="#222"/><defs><linearGradient id="gf30_shop" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#000"/><stop offset="100%" stop-color="#fff"/></linearGradient></defs></svg>
+  <div style="font-weight:700">Gema Foso 30</div><div class="priceTag gem-price" data-cost="5000">5K 💎</div>
 </div>
 
 <!-- --- SECCION: Mejoras permanentes --- -->
@@ -1455,6 +2029,11 @@
                 rebirth: "Rebirth",
                 daily_gift: "Regalo Diario",
                 wheel: "Ruleta",
+                prestige: "Prestigio",
+                prestige_title: "🌟 Prestigio",
+                prestige_desc: "¡Felicidades! Has llegado al final del camino... por ahora. Hacer Prestigio reiniciará tu progreso (como un Rebirth) pero te otorgará Puntos de Prestigio (PP) para desbloquear mejoras permanentes increíblemente poderosas.",
+                confirm_prestige: "Confirmar Prestigio",
+                prestige_points: "Puntos de Prestigio",
                 afk_upgrades: "Mejoras AFK",
                 missions: "Misiones",
                 redeem: "Canjear",
@@ -1693,7 +2272,171 @@
             name: 'Foso 15',
             cost: 600000000,
             perClick: 10000000000000
+        }, {
+            id: 16,
+            name: 'Foso 16',
+            cost: 2e9,
+            perClick: 1e14
+        }, {
+            id: 17,
+            name: 'Foso 17',
+            cost: 6e9,
+            perClick: 1e15
+        }, {
+            id: 18,
+            name: 'Foso 18',
+            cost: 2e10,
+            perClick: 1e16
+        }, {
+            id: 19,
+            name: 'Foso 19',
+            cost: 6e10,
+            perClick: 1e17
+        }, {
+            id: 20,
+            name: 'Foso 20',
+            cost: 2e11,
+            perClick: 1e18
+        }, {
+            id: 21,
+            name: 'Foso 21',
+            cost: 6e11,
+            perClick: 1e19
+        }, {
+            id: 22,
+            name: 'Foso 22',
+            cost: 2e12,
+            perClick: 1e20
+        }, {
+            id: 23,
+            name: 'Foso 23',
+            cost: 6e12,
+            perClick: 1e21
+        }, {
+            id: 24,
+            name: 'Foso 24',
+            cost: 2e13,
+            perClick: 1e22
+        }, {
+            id: 25,
+            name: 'Foso 25',
+            cost: 6e13,
+            perClick: 1e23
+        }, {
+            id: 26,
+            name: 'Foso 26',
+            cost: 2e14,
+            perClick: 1e24
+        }, {
+            id: 27,
+            name: 'Foso 27',
+            cost: 6e14,
+            perClick: 1e25
+        }, {
+            id: 28,
+            name: 'Foso 28',
+            cost: 2e15,
+            perClick: 1e26
+        }, {
+            id: 29,
+            name: 'Foso 29',
+            cost: 6e15,
+            perClick: 1e27
+        }, {
+            id: 30,
+            name: 'Foso 30',
+            cost: 2e16,
+            perClick: 1e28
+        }, {
+            id: 31,
+            name: 'Foso 31',
+            cost: 6e16,
+            perClick: 1e29
+        }, {
+            id: 32,
+            name: 'Foso 32',
+            cost: 2e17,
+            perClick: 1e30
+        }, {
+            id: 33,
+            name: 'Foso 33',
+            cost: 6e17,
+            perClick: 1e31
+        }, {
+            id: 34,
+            name: 'Foso 34',
+            cost: 2e18,
+            perClick: 1e32
+        }, {
+            id: 35,
+            name: 'Foso 35',
+            cost: 6e18,
+            perClick: 1e33
+        }, {
+            id: 36,
+            name: 'Foso 36',
+            cost: 2e19,
+            perClick: 1e34
+        }, {
+            id: 37,
+            name: 'Foso 37',
+            cost: 6e19,
+            perClick: 1e35
+        }, {
+            id: 38,
+            name: 'Foso 38',
+            cost: 2e20,
+            perClick: 1e36
+        }, {
+            id: 39,
+            name: 'Foso 39',
+            cost: 6e20,
+            perClick: 1e37
+        }, {
+            id: 40,
+            name: 'Foso 40',
+            cost: 2e21,
+            perClick: 1e38
+        }, {
+            id: 41,
+            name: 'Foso 41',
+            cost: 6e21,
+            perClick: 1e39
+        }, {
+            id: 42,
+            name: 'Foso 42',
+            cost: 2e22,
+            perClick: 1e40
+        }, {
+            id: 43,
+            name: 'Foso 43',
+            cost: 6e22,
+            perClick: 1e41
+        }, {
+            id: 44,
+            name: 'Foso 44',
+            cost: 2e23,
+            perClick: 1e42
+        }, {
+            id: 45,
+            name: 'Foso 45',
+            cost: 6e23,
+            perClick: 1e43
         }];
+
+        const GEM_FOSOS = Array.from({ length: 30 }, (_, i) => ({
+            id: i + 1,
+            cost: 100 + i * (i > 15 ? 100 : 20) + (i > 25 ? 500 : 0), // Coste incremental en gemas
+            bonus: 0.05 // +5% de bonus a las ganancias por cada uno
+        }));
+
+        const PRESTIGE_UPGRADES = {
+            all_earnings: { name: "Ganancias Totales", icon: "💰", cost: 1, maxLevel: 20, bonus: 0.1, description: "Aumenta todas las ganancias de ΣC en un 10% por nivel." },
+            afk_earnings: { name: "Ganancias AFK", icon: "⏰", cost: 1, maxLevel: 10, bonus: 0.2, description: "Aumenta las ganancias AFK en un 20% por nivel." },
+            crit_chance: { name: "Prob. Crítico", icon: "💥", cost: 2, maxLevel: 10, bonus: 0.005, description: "Aumenta la probabilidad de crítico en 0.5% por nivel." },
+            gem_chance: { name: "Suerte de Gema", icon: "💎", cost: 3, maxLevel: 5, bonus: 0.001, description: "Aumenta la probabilidad de encontrar gemas en 0.1% por nivel." },
+        };
+
 
         const REBIRTH_LEVELS = [
             { cost: 1000, requiredFosos: 3, bonus: 0.05 }, // +5%
@@ -1880,6 +2623,7 @@
             totalSigEarned: 0,
             activeFosoIndex: 0,
             fososOwned: [0],
+            gemFososOwned: [],
             fosoConditions: {},
             achievements: {},
             gems: 0,
@@ -1903,6 +2647,9 @@
             dailyDay: 0,
             rebirths: 0,
             rebirthBonus: 0, // Bonificación porcentual aditiva, 0.05 = +5%
+            prestigeLevel: 0,
+            prestigePoints: 0,
+            prestigeUpgrades: {},
             lastDailyClaim: null,
             afkLevel: 0,
             afkLastClaim: Date.now(),
@@ -1946,6 +2693,7 @@
         const totalClicksEl = document.getElementById('totalClicks');
         const shopSigma = document.getElementById('shopSigma');
         const rankTitleEl = document.getElementById('rankTitle');
+        const shopGems = document.getElementById('shopGems');
         const btnMata = document.getElementById('btnMata');
         const mataLabel = document.getElementById('mataLabel');
         const centralFoso = document.getElementById('centralFoso');
@@ -1958,6 +2706,8 @@
         const shopModal = document.getElementById('shopModal');
         const rebirthModal = document.getElementById('rebirthModal');
         const btnRebirth = document.getElementById("btnRebirth");
+        const btnPrestige = document.getElementById("btnPrestige");
+        const prestigeModal = document.getElementById("prestigeModal");
         const btnConfig = document.getElementById('btnConfig');
         const configModal = document.getElementById('configModal');
         const langSelect = document.getElementById('langSelect');
@@ -2399,6 +3149,10 @@
         function render() {
             sigTotalEl.textContent = formatNum(state.sig);
             if(shopSigma) shopSigma.textContent = formatNum(state.sig);
+            if(shopGems) shopGems.textContent = formatNum(state.gems);
+
+            // Mostrar/ocultar botón de prestigio
+            btnPrestige.classList.toggle('hidden', state.fososOwned.length < FOSOS.length);
             if(gemsTotalEl) gemsTotalEl.textContent = formatNum(state.gems);
             totalClicksEl.textContent = state.totalClicks;
 
@@ -2416,8 +3170,13 @@
             const isBroken = fosoHealth <= 0;
 
             const basePer = FOSOS[state.activeFosoIndex]?.perClick || 1; // Ganancia base del foso
+            const prestigeBonus = 1 + (state.prestigeUpgrades.all_earnings || 0) * PRESTIGE_UPGRADES.all_earnings.bonus;
+            const gemFosoBonus = 1 + state.gemFososOwned.length * 0.05;
             const comboBonus = state.combo.count > 1 ? 1 + (state.combo.count * 0.1) : 1;
-            let per = basePer * state.perClickMult * (1 + state.rebirthBonus) * comboBonus * petMultiplier; // Aplicar multiplicadores, rebirth y mascotas
+            let per = basePer * state.perClickMult * (1 + state.rebirthBonus) * comboBonus * petMultiplier * prestigeBonus * gemFosoBonus;
+
+
+
             if (isBroken) per = 0;
             perClickEl.textContent = formatNum(per);
 
@@ -2488,6 +3247,20 @@
                 }
             });
 
+            // Update Gem Foso items
+            shopGrid.querySelectorAll('.shopCard[data-gem-foso-index]').forEach(card => {
+                const index = parseInt(card.dataset.gemFosoIndex, 10);
+                const priceTag = card.querySelector('.priceTag');
+
+                if (state.gemFososOwned.includes(index)) {
+                    card.classList.add('owned');
+                    priceTag.textContent = LANGUAGES[state.lang || 'es']['owned'];
+                    priceTag.style.background = '#27ae60';
+                } else {
+                    card.classList.remove('owned');
+                    priceTag.style.background = '';
+                }
+            });
             const autoClickerUpgrade = shopGrid.querySelector('[data-upgrade="autoclicker"]');
             if (autoClickerUpgrade) {
                 const level = state.upgradeLevels.autoclicker || 0;
@@ -2639,13 +3412,17 @@
             const comboBonus = state.combo.count > 1 ? 1 + (state.combo.count * 0.1) : 1;
             let per = basePer * state.perClickMult * (1 + state.rebirthBonus) * comboBonus; // Aplicar multiplicadores y bonus de rebirth
             let isCritical = false;
+            const prestigeBonus = 1 + (state.prestigeUpgrades.all_earnings || 0) * PRESTIGE_UPGRADES.all_earnings.bonus;
+            const gemFosoBonus = 1 + state.gemFososOwned.length * 0.05;
+            per *= prestigeBonus * gemFosoBonus;
 
             // Apply event effects
             if (state.activeEvent?.id === 'frenzy') {
                 per *= 5;
             }
 
-            const critLevel = state.upgradeLevels.critical || 0;
+            const prestigeCritBonus = (state.prestigeUpgrades.crit_chance || 0) * PRESTIGE_UPGRADES.crit_chance.bonus;
+            const critLevel = (state.upgradeLevels.critical || 0) + prestigeCritBonus;
             if (critLevel > 0) {
                 const critUpgrade = CRITICAL_UPGRADES[critLevel - 1];
                 if (Math.random() < critUpgrade.chance) {
@@ -2654,7 +3431,10 @@
                 }
             }
 
-            state.gems += 1; // Gana 1 gema por clic
+            // Ganancia de gemas
+            const gemPrestigeBonus = (state.prestigeUpgrades.gem_chance || 0) * PRESTIGE_UPGRADES.gem_chance.bonus;
+            if (Math.random() < (0.001 + gemPrestigeBonus)) { state.gems += 1; showToast('+1 💎!', 'success'); }
+
             state.sig += per;
             state.totalSigEarned += per;
             state.totalClicks++;
@@ -3047,6 +3827,84 @@
             }
         }
 
+        function openPrestigeModal() {
+            const prestigeInfoEl = document.getElementById('prestigeInfo');
+            const btnConfirmPrestige = document.getElementById('btnConfirmPrestige');
+            const prestigeUpgradesGrid = document.getElementById('prestigeUpgradesGrid');
+
+            const canPrestige = state.fososOwned.length >= FOSOS.length;
+            const pointsToGain = canPrestige ? Math.floor(Math.log10(state.totalSigEarned) / 2) : 0;
+
+            prestigeInfoEl.innerHTML = `
+                <p>Nivel de Prestigio actual: <strong>${state.prestigeLevel}</strong></p>
+                <p>Puntos de Prestigio (PP) actuales: <strong>${state.prestigePoints}</strong></p>
+                <p>PP que ganarás al prestigiar: <strong>${pointsToGain}</strong></p>
+            `;
+
+            btnConfirmPrestige.disabled = !canPrestige;
+
+            // Render prestige upgrades
+            prestigeUpgradesGrid.innerHTML = '';
+            for (const id in PRESTIGE_UPGRADES) {
+                const upgrade = PRESTIGE_UPGRADES[id];
+                const level = state.prestigeUpgrades[id] || 0;
+                const cost = upgrade.cost * (level + 1);
+
+                const card = document.createElement('div');
+                card.className = 'shopCard';
+                card.title = upgrade.description;
+
+                card.innerHTML = `
+                    <div style="font-size: 24px;">${upgrade.icon}</div>
+                    <div style="font-weight:700; font-size: 12px;">${upgrade.name} (Lvl ${level})</div>
+                    <button class="mata-btn buy-prestige-btn" data-id="${id}" ${state.prestigePoints < cost || level >= upgrade.maxLevel ? 'disabled' : ''}>
+                        ${level >= upgrade.maxLevel ? 'MAX' : `${cost} PP`}
+                    </button>
+                `;
+                prestigeUpgradesGrid.appendChild(card);
+            }
+
+            prestigeModal.classList.remove('hidden');
+        }
+
+        function handlePrestige() {
+            if (state.fososOwned.length < FOSOS.length) return;
+
+            const pointsToGain = Math.floor(Math.log10(state.totalSigEarned) / 2);
+            if (confirm(`¿Seguro que quieres hacer Prestigio? Ganarás ${pointsToGain} Puntos de Prestigio y reiniciarás tu progreso.`)) {
+                state.prestigeLevel++;
+                state.prestigePoints += pointsToGain;
+
+                // Reset
+                state.sig = 0;
+                state.activeFosoIndex = 0;
+                state.fososOwned = [0];
+                state.battery = 100;
+                state.maxBattery = 100;
+                state.upgradeLevels = { battery: 0, autoclicker: 0, afk: 0, critical: 0 };
+                state.rebirths = 0;
+                state.rebirthBonus = 0;
+
+                showToast(`¡Prestigio completado! Nivel ${state.prestigeLevel}. Has ganado ${pointsToGain} PP.`, 'success', 5000);
+                prestigeModal.classList.add('hidden');
+                updateAutoClickLoop();
+                render();
+            }
+        }
+
+        function buyPrestigeUpgrade(id) {
+            const upgrade = PRESTIGE_UPGRADES[id];
+            const level = state.prestigeUpgrades[id] || 0;
+            const cost = upgrade.cost * (level + 1);
+
+            if (state.prestigePoints >= cost && level < upgrade.maxLevel) {
+                state.prestigePoints -= cost;
+                state.prestigeUpgrades[id] = level + 1;
+                showToast(`¡Mejora de prestigio '${upgrade.name}' comprada!`, 'success');
+                openPrestigeModal(); // Refresh
+            }
+        }
+
         function checkTutorialProgress() {
             if (state.tutorialCompleted) return;
 
@@ -3421,12 +4279,31 @@
                             showToast('El bonus del código IG ha terminado.', 'info');
                         }, 10 * 60 * 1000); // 10 minutos
                         promoInput.value = '';
-                    } else if (code === 'ALR') {
+                    } else if  (code === 'ALR') {
                         state.sig = Infinity;
                         state.gems = Infinity;
                         showToast('¡Código ALR! ¡Dinero y gemas infinitas!', 'success');
                         promoInput.value = '';
-                    } else {
+                    } 
+                    else if (code === 'SIGMA') {
+                        state.sig += 1000;
+                        state.totalSigEarned += 1000;
+                        showToast('¡Código SIGMA! +1,000 ΣC.', 'success');
+                        promoInput.value = '';
+                    } else if (code === 'FOSO') {
+                        if (!state.fososOwned.includes(1)) {
+                            state.fososOwned.push(1);
+                            showToast('¡Código FOSO! Has desbloqueado el Foso 2.', 'success');
+                        } else {
+                            showToast('Ya tienes el Foso 2 desbloqueado.', 'warning');
+                        }
+                        promoInput.value = '';
+                    } else if (code === 'GEMAS') {
+                        state.gems += 50;
+                        showToast('¡Código GEMAS! +50 gemas.', 'success');
+                        promoInput.value = '';
+
+                    }else {
                         showToast('Código promocional no válido.', 'error');
                     }
                 });
