@@ -752,6 +752,11 @@
           </button>
           <span id="dotPets" class="notify-dot hidden"></span>
       </div>
+      <button id="btnCrafting" class="mata-btn" style="background:#20c997">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <span data-lang="crafting">Laboratorio</span>
+      </button>
+      <span id="dotCrafting" class="notify-dot hidden"></span>
   </div>
 
 
@@ -812,6 +817,43 @@
   </div>
 </div>
 
+<!-- Modal Crafteo -->
+<div id="craftingModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title" data-lang="crafting_title">🧪 Laboratorio de Sabores</div>
+            <button class="close-btn" data-close>&times;</button>
+        </div>
+        <div class="modal-body">
+            <p class="hint" data-lang="crafting_desc">Arrastra líquidos de tu inventario a las ranuras para combinarlos y crear sabores temporales con bonus.</p>
+            
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 15px;">
+                <div>
+                    <h4 data-lang="liquid_inventory">Inventario de Líquidos</h4>
+                    <div id="liquidInventoryGrid" class="shopGrid" style="grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); max-height: 250px;">
+                        <!-- Líquidos del jugador aquí -->
+                    </div>
+                </div>
+                <div>
+                    <h4 data-lang="crafting_area">Área de Crafteo</h4>
+                    <div id="craftingSlots" style="display: flex; gap: 10px; justify-content: center; background: var(--bg); padding: 15px; border-radius: 8px; min-height: 100px; align-items: center;">
+                        <div class="crafting-slot" data-slot="0"></div>
+                        <span style="font-size: 24px;">+</span>
+                        <div class="crafting-slot" data-slot="1"></div>
+                    </div>
+                    <button id="btnCombine" class="mata-btn" style="width: 100%; justify-content: center; margin-top: 10px;" data-lang="combine">Combinar</button>
+                    <div id="activeFlavorInfo" style="margin-top: 15px; background: var(--bg); padding: 10px; border-radius: 8px;">
+                        <h5 data-lang="active_flavor">Sabor Activo</h5>
+                        <div id="activeFlavorDetails">
+                            <p class="metaTiny" data-lang="no_active_flavor">Ninguno</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Prestigio -->
 <div id="prestigeModal" class="modal hidden">
   <div class="modal-content">
@@ -832,6 +874,23 @@
   </div>
 </div>
 
+<style>
+    .liquid-item { text-align: center; cursor: grab; user-select: none; }
+    .liquid-item:active { cursor: grabbing; }
+    .liquid-icon { font-size: 32px; }
+    .liquid-name { font-size: 12px; }
+    .liquid-count { font-size: 11px; background: rgba(0,0,0,0.5); padding: 2px 4px; border-radius: 4px; }
+
+    .crafting-slot {
+        width: 60px; height: 60px; background: rgba(0,0,0,0.2); border: 2px dashed var(--muted);
+        border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        font-size: 24px; transition: background 0.2s;
+    }
+    .crafting-slot.over {
+        background: rgba(34, 211, 238, 0.2);
+        border-color: var(--accent);
+    }
+</style>
           <div class="hint" data-lang="shop_hint">Tienda: clic en la miniatura para equipar/comprar. El central cambia según lo equipado.</div>
         </section>
       </main>
@@ -1542,6 +1601,53 @@
   <div class="priceTag" data-cost="600000000000000000000000">600Sx ΣC</div>
 </div>
 
+<!-- --- SECCION: Sabores Especiales (Consumibles) --- -->
+<div style="grid-column:1/-1; font-weight:800; margin-top:10px; padding-top:8px; border-top:1px solid rgba(46, 204, 113, 0.3)" data-lang="special_flavors">
+  🧪 Sabores Especiales (Consumibles)
+</div>
+
+<div class="shopCard" data-flavor-id="mint_burst" title="Aumenta la probabilidad de crítico en +5% durante 2 minutos.">
+  <div style="font-size: 32px;">🌿💥</div>
+  <div style="font-weight:700">Ráfaga de Menta</div>
+  <div class="priceTag" data-cost="500000">500K ΣC</div>
+</div>
+<div class="shopCard" data-flavor-id="strawberry_boost" title="Aumenta las ganancias de ΣC en +50% durante 5 minutos.">
+  <div style="font-size: 32px;">🍓🚀</div>
+  <div style="font-weight:700">Impulso de Fresa</div>
+  <div class="priceTag" data-cost="2000000">2M ΣC</div>
+</div>
+<div class="shopCard" data-flavor-id="gem_essence" title="Aumenta la probabilidad de encontrar gemas en +1% durante 10 minutos.">
+  <div style="font-size: 32px;">💎✨</div>
+  <div style="font-weight:700">Esencia de Gema</div>
+  <div class="priceTag gem-price" data-cost="50">50 💎</div>
+</div>
+<div class="shopCard" data-flavor-id="tycoon_elixir" title="Aumenta TODAS las ganancias de ΣC en +100% durante 15 minutos.">
+  <div style="font-size: 32px;">👑🧪</div>
+  <div style="font-weight:700">Elixir del Magnate</div>
+  <div class="priceTag gem-price" data-cost="150">150 💎</div>
+</div>
+
+<div class="shopCard" data-flavor-id="battery_chew" title="Reduce el consumo de batería en un 50% durante 10 minutos.">
+  <div style="font-size: 32px;">🔋🍬</div>
+  <div style="font-weight:700">Chicle de Batería</div>
+  <div class="priceTag" data-cost="10000000">10M ΣC</div>
+</div>
+<div class="shopCard" data-flavor-id="repair_tonic" title="Repara instantáneamente el 25% de la condición de tu foso actual.">
+  <div style="font-size: 32px;">🔧💧</div>
+  <div style="font-weight:700">Tónico de Reparación</div>
+  <div class="priceTag" data-cost="25000000">25M ΣC</div>
+</div>
+<div class="shopCard" data-flavor-id="chest_magnet" title="Aumenta la probabilidad de encontrar cofres en +5% durante 10 minutos.">
+  <div style="font-size: 32px;">🎁🧲</div>
+  <div style="font-weight:700">Imán de Cofres</div>
+  <div class="priceTag gem-price" data-cost="75">75 💎</div>
+</div>
+<div class="shopCard" data-flavor-id="time_potion" title="Otorga instantáneamente 1 hora de ganancias AFK.">
+  <div style="font-size: 32px;">⏳🍾</div>
+  <div style="font-weight:700">Poción del Tiempo</div>
+  <div class="priceTag gem-price" data-cost="200">200 💎</div>
+</div>
+
 <!-- --- SECCION: Fosos de Gema --- -->
 <div style="grid-column:1/-1; font-weight:800; margin-top:10px; padding-top:8px; border-top:1px solid rgba(245, 158, 11, 0.3)" data-lang="gem_fosos">
   💎 Fosos de Gema (+5% Ganancias c/u)
@@ -2034,6 +2140,17 @@
                 prestige_desc: "¡Felicidades! Has llegado al final del camino... por ahora. Hacer Prestigio reiniciará tu progreso (como un Rebirth) pero te otorgará Puntos de Prestigio (PP) para desbloquear mejoras permanentes increíblemente poderosas.",
                 confirm_prestige: "Confirmar Prestigio",
                 prestige_points: "Puntos de Prestigio",
+                crafting: "Laboratorio",
+                crafting_title: "🧪 Laboratorio de Sabores",
+                crafting_desc: "Arrastra líquidos de tu inventario a las ranuras para combinarlos y crear sabores temporales con bonus.",
+                liquid_inventory: "Inventario de Líquidos",
+                crafting_area: "Área de Crafteo",
+                combine: "Combinar",
+                active_flavor: "Sabor Activo",
+                no_active_flavor: "Ninguno",
+                gem_fosos: "💎 Fosos de Gema (+5% Ganancias c/u)",
+                special_flavors: "🧪 Sabores Especiales (Consumibles)",
+                permanent_upgrades: "🔧 Mejoras permanentes",
                 afk_upgrades: "Mejoras AFK",
                 missions: "Misiones",
                 redeem: "Canjear",
@@ -2205,223 +2322,223 @@
         }, {
             id: 2,
             name: 'Foso 2',
-            cost: 200,
-            perClick: 2
+            cost: 250,
+            perClick: 5
         }, {
             id: 3,
             name: 'Foso 3',
-            cost: 600,
-            perClick: 10
+            cost: 1000,
+            perClick: 20
         }, {
             id: 4,
             name: 'Foso 4',
-            cost: 2000,
-            perClick: 100
+            cost: 4000,
+            perClick: 80
         }, {
             id: 5,
             name: 'Foso 5',
-            cost: 6000,
-            perClick: 1000
+            cost: 15000,
+            perClick: 300
         }, {
             id: 6,
             name: 'Foso 6',
-            cost: 20000,
-            perClick: 10000
+            cost: 50000,
+            perClick: 1200
         }, {
             id: 7,
             name: 'Foso 7',
-            cost: 60000,
-            perClick: 100000
+            cost: 200000,
+            perClick: 5000
         }, {
             id: 8,
             name: 'Foso 8',
-            cost: 200000,
-            perClick: 1000000
+            cost: 750000,
+            perClick: 20000
         }, {
             id: 9,
             name: 'Foso 9',
-            cost: 600000,
-            perClick: 10000000
+            cost: 3000000,
+            perClick: 80000
         }, {
             id: 10,
             name: 'Foso 10',
-            cost: 2000000,
-            perClick: 100000000
+            cost: 1.2e7,
+            perClick: 350000
         }, {
             id: 11,
             name: 'Foso 11',
-            cost: 6000000,
-            perClick: 1000000000
+            cost: 5e7,
+            perClick: 1.5e6
         }, {
             id: 12,
             name: 'Foso 12',
-            cost: 20000000,
-            perClick: 10000000000
+            cost: 2e8,
+            perClick: 6e6
         }, {
             id: 13,
             name: 'Foso 13',
-            cost: 60000000,
-            perClick: 100000000000
+            cost: 8e8,
+            perClick: 2.5e7
         }, {
             id: 14,
             name: 'Foso 14',
-            cost: 200000000,
-            perClick: 1000000000000
+            cost: 3e9,
+            perClick: 1e8
         }, {
             id: 15,
             name: 'Foso 15',
-            cost: 600000000,
-            perClick: 10000000000000
+            cost: 1e10,
+            perClick: 4e8
         }, {
             id: 16,
             name: 'Foso 16',
-            cost: 2e9,
-            perClick: 1e14
+            cost: 4e10,
+            perClick: 1.5e9
         }, {
             id: 17,
             name: 'Foso 17',
-            cost: 6e9,
-            perClick: 1e15
+            cost: 1.5e11,
+            perClick: 6e9
         }, {
             id: 18,
             name: 'Foso 18',
-            cost: 2e10,
-            perClick: 1e16
+            cost: 6e11,
+            perClick: 2.5e10
         }, {
             id: 19,
             name: 'Foso 19',
-            cost: 6e10,
-            perClick: 1e17
+            cost: 2e12,
+            perClick: 1e11
         }, {
             id: 20,
             name: 'Foso 20',
-            cost: 2e11,
-            perClick: 1e18
+            cost: 8e12,
+            perClick: 4e11
         }, {
             id: 21,
             name: 'Foso 21',
-            cost: 6e11,
-            perClick: 1e19
+            cost: 3e13,
+            perClick: 1.5e12
         }, {
             id: 22,
             name: 'Foso 22',
-            cost: 2e12,
-            perClick: 1e20
+            cost: 1e14,
+            perClick: 6e12
         }, {
             id: 23,
             name: 'Foso 23',
-            cost: 6e12,
-            perClick: 1e21
+            cost: 4e14,
+            perClick: 2.5e13
         }, {
             id: 24,
             name: 'Foso 24',
-            cost: 2e13,
-            perClick: 1e22
+            cost: 1.5e15,
+            perClick: 1e14
         }, {
             id: 25,
             name: 'Foso 25',
-            cost: 6e13,
-            perClick: 1e23
+            cost: 6e15,
+            perClick: 4e14
         }, {
             id: 26,
             name: 'Foso 26',
-            cost: 2e14,
-            perClick: 1e24
+            cost: 2e16,
+            perClick: 1.5e15
         }, {
             id: 27,
             name: 'Foso 27',
-            cost: 6e14,
-            perClick: 1e25
+            cost: 8e16,
+            perClick: 6e15
         }, {
             id: 28,
             name: 'Foso 28',
-            cost: 2e15,
-            perClick: 1e26
+            cost: 3e17,
+            perClick: 2.5e16
         }, {
             id: 29,
             name: 'Foso 29',
-            cost: 6e15,
-            perClick: 1e27
+            cost: 1e18,
+            perClick: 1e17
         }, {
             id: 30,
             name: 'Foso 30',
-            cost: 2e16,
-            perClick: 1e28
+            cost: 4e18,
+            perClick: 4e17
         }, {
             id: 31,
             name: 'Foso 31',
-            cost: 6e16,
-            perClick: 1e29
+            cost: 1.5e19,
+            perClick: 1.5e18
         }, {
             id: 32,
             name: 'Foso 32',
-            cost: 2e17,
-            perClick: 1e30
+            cost: 6e19,
+            perClick: 6e18
         }, {
             id: 33,
             name: 'Foso 33',
-            cost: 6e17,
-            perClick: 1e31
+            cost: 2e20,
+            perClick: 2.5e19
         }, {
             id: 34,
             name: 'Foso 34',
-            cost: 2e18,
-            perClick: 1e32
+            cost: 8e20,
+            perClick: 1e20
         }, {
             id: 35,
             name: 'Foso 35',
-            cost: 6e18,
-            perClick: 1e33
+            cost: 3e21,
+            perClick: 4e20
         }, {
             id: 36,
             name: 'Foso 36',
-            cost: 2e19,
-            perClick: 1e34
+            cost: 1e22,
+            perClick: 1.5e21
         }, {
             id: 37,
             name: 'Foso 37',
-            cost: 6e19,
-            perClick: 1e35
+            cost: 4e22,
+            perClick: 6e21
         }, {
             id: 38,
             name: 'Foso 38',
-            cost: 2e20,
-            perClick: 1e36
+            cost: 1.5e23,
+            perClick: 2.5e22
         }, {
             id: 39,
             name: 'Foso 39',
-            cost: 6e20,
-            perClick: 1e37
+            cost: 6e23,
+            perClick: 1e23
         }, {
             id: 40,
             name: 'Foso 40',
-            cost: 2e21,
-            perClick: 1e38
+            cost: 2e24,
+            perClick: 4e23
         }, {
             id: 41,
             name: 'Foso 41',
-            cost: 6e21,
-            perClick: 1e39
+            cost: 8e24,
+            perClick: 1.5e24
         }, {
             id: 42,
             name: 'Foso 42',
-            cost: 2e22,
-            perClick: 1e40
+            cost: 3e25,
+            perClick: 6e24
         }, {
             id: 43,
             name: 'Foso 43',
-            cost: 6e22,
-            perClick: 1e41
+            cost: 1e26,
+            perClick: 2.5e25
         }, {
             id: 44,
             name: 'Foso 44',
-            cost: 2e23,
-            perClick: 1e42
+            cost: 4e26,
+            perClick: 1e26
         }, {
             id: 45,
             name: 'Foso 45',
-            cost: 6e23,
-            perClick: 1e43
+            cost: 1e27,
+            perClick: 5e26
         }];
 
         const GEM_FOSOS = Array.from({ length: 30 }, (_, i) => ({
@@ -2435,6 +2552,36 @@
             afk_earnings: { name: "Ganancias AFK", icon: "⏰", cost: 1, maxLevel: 10, bonus: 0.2, description: "Aumenta las ganancias AFK en un 20% por nivel." },
             crit_chance: { name: "Prob. Crítico", icon: "💥", cost: 2, maxLevel: 10, bonus: 0.005, description: "Aumenta la probabilidad de crítico en 0.5% por nivel." },
             gem_chance: { name: "Suerte de Gema", icon: "💎", cost: 3, maxLevel: 5, bonus: 0.001, description: "Aumenta la probabilidad de encontrar gemas en 0.1% por nivel." },
+        };
+
+        const BASE_LIQUIDS = {
+            'glycerin': { name: 'Glicerina', icon: '💧' },
+            'strawberry': { name: 'Aroma Fresa', icon: '🍓' },
+            'mint': { name: 'Aroma Menta', icon: '🌿' },
+            'banana': { name: 'Aroma Plátano', icon: '🍌' },
+        };
+
+        const CRAFTING_RECIPES = [
+            { ingredients: ['strawberry', 'mint'].sort(), result: { id: 'fresamint', name: 'Fosolado de Fresa', bonus: { type: 'multiplier', value: 1.25 }, duration: 300 } }, // +25% sig for 5 mins
+            { ingredients: ['strawberry', 'banana'].sort(), result: { id: 'fresabanana', name: 'Batido Tropical', bonus: { type: 'multiplier', value: 1.5 }, duration: 180 } }, // +50% sig for 3 mins
+            { ingredients: ['mint', 'mint'].sort(), result: { id: 'doblementa', name: 'Explosión Glacial', bonus: { type: 'crit_chance', value: 0.10 }, duration: 120 } }, // +10% crit chance for 2 mins
+            { ingredients: ['banana', 'banana'].sort(), result: { id: 'potassium_power', name: 'Doble Potasio', bonus: { type: 'afk_multiplier', value: 1.5 }, duration: 600 } }, // +50% AFK earnings for 10 mins
+            { ingredients: ['strawberry', 'strawberry'].sort(), result: { id: 'berry_blast', name: 'Explosión de Bayas', bonus: { type: 'chest_chance', value: 0.05 }, duration: 300 } }, // +5% chest find chance for 5 mins
+            { ingredients: ['glycerin', 'glycerin'].sort(), result: { id: 'nube', name: 'Nube Densa', bonus: { type: 'no_battery_drain' }, duration: 60 } }, // No battery drain for 1 min
+            { ingredients: ['glycerin', 'strawberry'].sort(), result: { id: 'sweet_cloud', name: 'Nube Dulce', bonus: { type: 'multiplier', value: 1.1 }, duration: 900 } }, // +10% sig for 15 mins
+            { ingredients: ['glycerin', 'mint'].sort(), result: { id: 'cool_cloud', name: 'Nube Fresca', bonus: { type: 'crit_chance', value: 0.02 }, duration: 900 } }, // +2% crit chance for 15 mins
+            { ingredients: ['glycerin', 'banana'].sort(), result: { id: 'mellow_cloud', name: 'Nube de Ensueño', bonus: { type: 'afk_multiplier', value: 1.1 }, duration: 1800 } }, // +10% AFK for 30 mins
+        ];
+
+        const SHOP_FLAVORS = {
+            'mint_burst': { name: 'Ráfaga de Menta', cost: 500000, currency: 'sig', bonus: { type: 'crit_chance', value: 0.05 }, duration: 120 },
+            'strawberry_boost': { name: 'Impulso de Fresa', cost: 2000000, currency: 'sig', bonus: { type: 'multiplier', value: 1.5 }, duration: 300 },
+            'gem_essence': { name: 'Esencia de Gema', cost: 50, currency: 'gems', bonus: { type: 'gem_chance', value: 0.01 }, duration: 600 },
+            'tycoon_elixir': { name: 'Elixir del Magnate', cost: 150, currency: 'gems', bonus: { type: 'multiplier', value: 2.0 }, duration: 900 },
+            'battery_chew': { name: 'Chicle de Batería', cost: 10000000, currency: 'sig', bonus: { type: 'battery_saver', value: 0.5 }, duration: 600 }, // 50% less drain
+            'repair_tonic': { name: 'Tónico de Reparación', cost: 25000000, currency: 'sig', bonus: { type: 'instant_repair', value: 25 }, duration: 0 }, // Instant effect
+            'chest_magnet': { name: 'Imán de Cofres', cost: 75, currency: 'gems', bonus: { type: 'chest_chance', value: 0.05 }, duration: 600 }, // +5% chest chance
+            'time_potion': { name: 'Poción del Tiempo', cost: 200, currency: 'gems', bonus: { type: 'instant_afk', value: 3600 }, duration: 0 }, // 1 hour of AFK
         };
 
 
@@ -2471,11 +2618,11 @@
         ];
 
         const CRITICAL_UPGRADES = [
-            { cost: 10000, chance: 0.01, multiplier: 10 }, // 1% chance for x10
-            { cost: 50000, chance: 0.02, multiplier: 12 }, // 2% chance for x12
-            { cost: 250000, chance: 0.03, multiplier: 15 }, // 3% chance for x15
-            { cost: 1000000, chance: 0.04, multiplier: 20 }, // 4% chance for x20
-            { cost: 5000000, chance: 0.05, multiplier: 25 }, // 5% chance for x25
+            { cost: 25000, chance: 0.01, multiplier: 10 }, // 1% chance for x10
+            { cost: 100000, chance: 0.02, multiplier: 12 }, // 2% chance for x12
+            { cost: 500000, chance: 0.03, multiplier: 15 }, // 3% chance for x15
+            { cost: 2500000, chance: 0.04, multiplier: 20 }, // 4% chance for x20
+            { cost: 10000000, chance: 0.05, multiplier: 25 }, // 5% chance for x25
         ];
 
         const AFK_UPGRADES = [
@@ -2650,6 +2797,9 @@
             prestigeLevel: 0,
             prestigePoints: 0,
             prestigeUpgrades: {},
+            liquidInventory: {},
+            activeCraftedFlavor: null,
+            liquidDropChance: 0.02, // 2% chance to drop a liquid on click
             lastDailyClaim: null,
             afkLevel: 0,
             afkLastClaim: Date.now(),
@@ -2708,6 +2858,8 @@
         const btnRebirth = document.getElementById("btnRebirth");
         const btnPrestige = document.getElementById("btnPrestige");
         const prestigeModal = document.getElementById("prestigeModal");
+        const btnCrafting = document.getElementById("btnCrafting");
+        const craftingModal = document.getElementById("craftingModal");
         const btnConfig = document.getElementById('btnConfig');
         const configModal = document.getElementById('configModal');
         const langSelect = document.getElementById('langSelect');
@@ -3054,10 +3206,13 @@
             
             setTimeout(() => {
                 // Simple reward logic for now
-                const rewardAmount = Math.floor(Math.random() * 5000) + 1000;
+                // La recompensa será 60 segundos de tus ganancias por clic actuales.
+                const basePer = FOSOS[state.activeFosoIndex]?.perClick || 1;
+                const currentPerClick = basePer * state.perClickMult * (1 + state.rebirthBonus);
+                const rewardAmount = Math.floor(currentPerClick * 60 * (Math.random() * 0.5 + 0.75)); // Entre 75% y 125% de 60s de ganancias
                 state.sig += rewardAmount;
                 state.totalSigEarned += rewardAmount;
-                showToast(`¡El cofre contenía ${formatNum(rewardAmount)} ΣC!`, 'success');
+                showToast(`¡El cofre contenía ${formatNum(rewardAmount)} ΣC!`, 'success', 4000);
                 openChestsModal(); // Refresh the modal
             }, 500);
         }
@@ -3170,10 +3325,23 @@
             const isBroken = fosoHealth <= 0;
 
             const basePer = FOSOS[state.activeFosoIndex]?.perClick || 1; // Ganancia base del foso
+            
+            let craftedBonus = 1;
+            if (state.activeCraftedFlavor && state.activeCraftedFlavor.expires > Date.now()) {
+                const bonus = state.activeCraftedFlavor.bonus;
+                if (bonus.type === 'multiplier') {
+                    craftedBonus = state.activeCraftedFlavor.bonus.value;
+                }
+            }
+
+            let afkPrestigeBonus = 1;
+            if (state.prestigeUpgrades.afk_earnings) {
+                afkPrestigeBonus = 1 + (state.prestigeUpgrades.afk_earnings || 0) * PRESTIGE_UPGRADES.afk_earnings.bonus;
+            }
             const prestigeBonus = 1 + (state.prestigeUpgrades.all_earnings || 0) * PRESTIGE_UPGRADES.all_earnings.bonus;
             const gemFosoBonus = 1 + state.gemFososOwned.length * 0.05;
             const comboBonus = state.combo.count > 1 ? 1 + (state.combo.count * 0.1) : 1;
-            let per = basePer * state.perClickMult * (1 + state.rebirthBonus) * comboBonus * petMultiplier * prestigeBonus * gemFosoBonus;
+            let per = basePer * state.perClickMult * (1 + state.rebirthBonus) * comboBonus * petMultiplier * prestigeBonus * gemFosoBonus * craftedBonus;
 
 
 
@@ -3412,9 +3580,19 @@
             const comboBonus = state.combo.count > 1 ? 1 + (state.combo.count * 0.1) : 1;
             let per = basePer * state.perClickMult * (1 + state.rebirthBonus) * comboBonus; // Aplicar multiplicadores y bonus de rebirth
             let isCritical = false;
+
+            let craftedBonus = 1;
+            let craftedCritBonus = 0;
+            if (state.activeCraftedFlavor && state.activeCraftedFlavor.expires > Date.now()) {
+                const bonus = state.activeCraftedFlavor.bonus;
+                if (bonus.type === 'multiplier') craftedBonus = bonus.value;
+                if (bonus.type === 'crit_chance') craftedCritBonus = bonus.value;
+                if (bonus.type === 'gem_chance') state.liquidDropChance += bonus.value; // Temporarily boost gem chance
+            }
+
             const prestigeBonus = 1 + (state.prestigeUpgrades.all_earnings || 0) * PRESTIGE_UPGRADES.all_earnings.bonus;
             const gemFosoBonus = 1 + state.gemFososOwned.length * 0.05;
-            per *= prestigeBonus * gemFosoBonus;
+            per *= prestigeBonus * gemFosoBonus * craftedBonus;
 
             // Apply event effects
             if (state.activeEvent?.id === 'frenzy') {
@@ -3422,10 +3600,10 @@
             }
 
             const prestigeCritBonus = (state.prestigeUpgrades.crit_chance || 0) * PRESTIGE_UPGRADES.crit_chance.bonus;
-            const critLevel = (state.upgradeLevels.critical || 0) + prestigeCritBonus;
+            const critLevel = state.upgradeLevels.critical || 0;
             if (critLevel > 0) {
                 const critUpgrade = CRITICAL_UPGRADES[critLevel - 1];
-                if (Math.random() < critUpgrade.chance) {
+                if (critUpgrade && Math.random() < critUpgrade.chance) {
                     per *= critUpgrade.multiplier;
                     isCritical = true;
                 }
@@ -3434,6 +3612,17 @@
             // Ganancia de gemas
             const gemPrestigeBonus = (state.prestigeUpgrades.gem_chance || 0) * PRESTIGE_UPGRADES.gem_chance.bonus;
             if (Math.random() < (0.001 + gemPrestigeBonus)) { state.gems += 1; showToast('+1 💎!', 'success'); }
+
+            // Ganancia de líquidos
+            if (Math.random() < state.liquidDropChance) {
+                gainRandomLiquid();
+            }
+
+            // Chest drop
+            let chestChance = CONFIG.chestDropChance;
+            if (state.activeCraftedFlavor && state.activeCraftedFlavor.expires > Date.now() && state.activeCraftedFlavor.bonus.type === 'chest_chance') {
+                chestChance += state.activeCraftedFlavor.bonus.value;
+            }
 
             state.sig += per;
             state.totalSigEarned += per;
@@ -3458,10 +3647,16 @@
             if (state.activeEvent?.id !== 'infinite_battery') {
                 const drainEff = Math.max(0.2, 1 - (state.activeFosoIndex * 0.05) - ((state.upgradeLevels.battery || 0) * 0.1));
                 const drain = CONFIG.baseBatteryDrainPerClick * drainEff;
-                state.battery = Math.max(0, state.battery - drain);
+                let finalDrain = drain;
+                if (state.activeCraftedFlavor && state.activeCraftedFlavor.expires > Date.now() && state.activeCraftedFlavor.bonus.type === 'battery_saver') {
+                    finalDrain *= (1 - state.activeCraftedFlavor.bonus.value);
+                }
+                state.battery = Math.max(0, state.battery - finalDrain);
             }
 
-            if (e) { // Only show animation for manual clicks
+            // The click handler can be called by the autoclicker with a null event
+            // We only want to show animations for manual clicks (where 'e' is a valid event object)
+            if (e) {
                 showClickAnimation(per, e.clientX, e.clientY, isCritical);
                 // Humo negro si está dañado
                 const isDamaged = (state.fosoConditions[state.activeFosoIndex] || 100) < 40;
@@ -3479,6 +3674,15 @@
             checkAchievements();
             checkTutorialProgress();
             render();
+        }
+
+        function gainRandomLiquid() {
+            const liquidIds = Object.keys(BASE_LIQUIDS);
+            const randomId = liquidIds[Math.floor(Math.random() * liquidIds.length)];
+            state.liquidInventory[randomId] = (state.liquidInventory[randomId] || 0) + 1;
+            const liquid = BASE_LIQUIDS[randomId];
+            showToast(`¡Has encontrado ${liquid.name}! ${liquid.icon}`, 'info');
+            document.getElementById('dotCrafting').classList.remove('hidden');
         }
         
         function syncCentralAppearance(activeIndex){
@@ -3679,7 +3883,7 @@
             const level = state.upgradeLevels.autoclicker || 0;
             if (level > 0) {
                 const cps = AUTOCLICKER_UPGRADES[level - 1].cps;
-                autoClickTimer = setInterval(() => {
+                autoClickTimer = setInterval(() => { // This interval calls handleCentralClick
                     if (state.powerOn && !isCharging && state.battery > 0 && document.visibilityState === 'visible') {
                         // Pasamos null para que no intente leer propiedades del evento
                         handleCentralClick(null); 
@@ -3693,7 +3897,13 @@
             const lastClaim = state.afkLastClaim || state.lastPlayed || now;
             const diffSeconds = Math.floor((now - lastClaim) / 1000);
             const afkLevel = state.upgradeLevels.afk || 0;
+            let craftedAfkBonus = 1;
+            if (state.activeCraftedFlavor && state.activeCraftedFlavor.expires > Date.now() && state.activeCraftedFlavor.bonus.type === 'afk_multiplier') {
+                craftedAfkBonus = state.activeCraftedFlavor.bonus.value;
+            }
+
             // showToast(`AFK check: ${diffSeconds}s since last claim. Level: ${afkLevel}`, "info"); // DEBUG
+            const prestigeAfkBonus = 1 + (state.prestigeUpgrades.afk_earnings || 0) * PRESTIGE_UPGRADES.afk_earnings.bonus;
             if (afkLevel > 0) {
                 const sph = AFK_UPGRADES[afkLevel - 1].sph;
                 const earnings = (sph / 3600) * diffSeconds * (state.afkMultiplier || 1);
@@ -3903,6 +4113,174 @@
                 showToast(`¡Mejora de prestigio '${upgrade.name}' comprada!`, 'success');
                 openPrestigeModal(); // Refresh
             }
+        }
+
+        function openCraftingModal() {
+            craftingModal.classList.remove('hidden');
+            document.getElementById('dotCrafting').classList.add('hidden');
+            renderLiquidInventory();
+            renderActiveFlavor();
+        }
+
+        function renderLiquidInventory() {
+            const grid = document.getElementById('liquidInventoryGrid');
+            grid.innerHTML = '';
+            for (const id in state.liquidInventory) {
+                if (state.liquidInventory[id] > 0) {
+                    const liquid = BASE_LIQUIDS[id];
+                    const item = document.createElement('div');
+                    item.className = 'liquid-item';
+                    item.draggable = true;
+                    item.dataset.liquidId = id;
+                    item.innerHTML = `
+                        <div class="liquid-icon">${liquid.icon}</div>
+                        <div class="liquid-name">${liquid.name}</div>
+                        <div class="liquid-count">x${state.liquidInventory[id]}</div>
+                    `;
+                    item.addEventListener('dragstart', handleDragStart);
+                    grid.appendChild(item);
+                }
+            }
+        }
+
+        function renderActiveFlavor() {
+            const detailsEl = document.getElementById('activeFlavorDetails');
+            if (state.activeCraftedFlavor && state.activeCraftedFlavor.expires > Date.now()) {
+                const flavor = state.activeCraftedFlavor;
+                const remaining = Math.ceil((flavor.expires - Date.now()) / 1000);
+                let bonusText = '';
+                if (flavor.bonus.type === 'multiplier') bonusText = `+${(flavor.bonus.value - 1) * 100}% ΣC`;
+                if (flavor.bonus.type === 'crit_chance') bonusText = `+${flavor.bonus.value * 100}% Prob. Crítico`;
+                if (flavor.bonus.type === 'afk_multiplier') bonusText = `+${(flavor.bonus.value - 1) * 100}% Ganancias AFK`;
+                if (flavor.bonus.type === 'battery_saver') bonusText = `-${flavor.bonus.value * 100}% Consumo Batería`;
+                if (flavor.bonus.type === 'chest_chance') bonusText = `+${flavor.bonus.value * 100}% Prob. Cofre`;
+                if (flavor.bonus.type === 'gem_chance') bonusText = `+${flavor.bonus.value * 100}% Prob. Gema`;
+                if (flavor.bonus.type === 'no_battery_drain') bonusText = `Batería no se gasta`;
+
+                detailsEl.innerHTML = `
+                    <strong>${flavor.name}</strong>
+                    <p class="metaTiny">Bonus: ${bonusText}</p>
+                    <p class="metaTiny">Tiempo restante: ${remaining}s</p>
+                `;
+            } else {
+                detailsEl.innerHTML = `<p class="metaTiny" data-lang="no_active_flavor">${LANGUAGES[state.lang || 'es']['no_active_flavor']}</p>`;
+            }
+        }
+
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.liquidId);
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const slot = e.target.closest('.crafting-slot');
+            if (!slot) return;
+            slot.classList.remove('over');
+            const liquidId = e.dataTransfer.getData('text/plain');
+            if (liquidId && BASE_LIQUIDS[liquidId]) {
+                slot.dataset.liquidId = liquidId;
+                slot.innerHTML = `<div class="liquid-icon">${BASE_LIQUIDS[liquidId].icon}</div>`;
+            }
+        }
+
+        function combineLiquids() {
+            const slots = document.querySelectorAll('#craftingSlots .crafting-slot');
+            const ingredients = Array.from(slots).map(slot => slot.dataset.liquidId).filter(id => id).sort();
+
+            if (ingredients.length < 2) {
+                showToast("Necesitas al menos 2 ingredientes.", "error");
+                return;
+            }
+
+            // Check inventory
+            const tempInventory = { ...state.liquidInventory };
+            for (const id of ingredients) {
+                if (!tempInventory[id] || tempInventory[id] <= 0) {
+                    showToast("No tienes suficientes líquidos.", "error");
+                    return;
+                }
+                tempInventory[id]--;
+            }
+
+            const recipe = CRAFTING_RECIPES.find(r => JSON.stringify(r.ingredients) === JSON.stringify(ingredients));
+
+            // Consume ingredients
+            state.liquidInventory = tempInventory;
+
+            if (recipe) {
+                if (state.activeCraftedFlavor && state.activeCraftedFlavor.expires > Date.now()) {
+                    if (!confirm("Ya tienes un sabor activo. ¿Quieres reemplazarlo? Perderás el bonus actual.")) {
+                        // Devolver ingredientes si el usuario cancela
+                        ingredients.forEach(id => state.liquidInventory[id]++);
+                        return;
+                    }
+                }
+                 const result = recipe.result;
+                 state.activeCraftedFlavor = {
+                     ...result,
+                     id: result.id,
+                     name: result.name,
+                     expires: Date.now() + (result.duration * 1000)
+                 };
+                 showToast(`¡Has creado ${result.name}!`, 'success');
+            } else {
+                showToast("La combinación ha fallado...", "error");
+            }
+
+            // Clear slots and update UI
+            slots.forEach(slot => {
+                delete slot.dataset.liquidId;
+                slot.innerHTML = '';
+            });
+            renderLiquidInventory();
+            renderActiveFlavor();
+        }
+
+        function buyShopFlavor(flavorId) {
+            const flavor = SHOP_FLAVORS[flavorId];
+            if (!flavor) return;
+
+            if (state.activeCraftedFlavor && state.activeCraftedFlavor.expires > Date.now()) {
+                if (!confirm("Ya tienes un sabor activo. ¿Quieres reemplazarlo? Perderás el bonus actual.")) {
+                    return;
+                }
+            }
+
+            if (flavor.currency === 'sig' && state.sig >= flavor.cost) {
+                state.sig -= flavor.cost;
+            } else if (flavor.currency === 'gems' && state.gems >= flavor.cost) {
+                state.gems -= flavor.cost;
+            } else {
+                showToast(`No tienes suficientes ${flavor.currency === 'sig' ? 'ΣC' : 'gemas'}.`, 'error');
+                return;
+            }
+
+            // Handle instant-effect flavors
+            if (flavor.duration === 0) {
+                if (flavor.bonus.type === 'instant_repair') {
+                    state.fosoConditions[state.activeFosoIndex] = Math.min(100, (state.fosoConditions[state.activeFosoIndex] || 100) + flavor.bonus.value);
+                    showToast(`Foso reparado en un ${flavor.bonus.value}%!`, 'success');
+                } else if (flavor.bonus.type === 'instant_afk') {
+                    const afkLevel = state.upgradeLevels.afk || 0;
+                    if (afkLevel > 0) {
+                        const sph = AFK_UPGRADES[afkLevel - 1].sph;
+                        const earnings = (sph / 3600) * flavor.bonus.value;
+                        state.sig += earnings;
+                        showToast(`¡Has ganado ${formatNum(earnings)} ΣC de la poción!`, 'success');
+                    } else {
+                        showToast('Compra mejoras AFK para usar esta poción.', 'warning');
+                    }
+                }
+                render();
+                return; // Don't set it as an active flavor
+            }
+
+            state.activeCraftedFlavor = {
+                ...flavor,
+                expires: Date.now() + (flavor.duration * 1000)
+            };
+            showToast(`¡Has activado ${flavor.name}!`, 'success');
+            render();
         }
 
         function checkTutorialProgress() {
@@ -4225,7 +4603,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadState();
-            checkMissionReset();
+            checkMissionReset(); // Must be before render
             renderWheel();
             calculateAfkEarnings();
             checkWheelCooldown();
@@ -4235,7 +4613,7 @@
             startTutorial();
 
             setInterval(saveState, CONFIG.autosaveMs);
-            setInterval(() => { render(); checkTutorialProgress(); updateMarketStatus(); updateEventUI(); }, CONFIG.uiTickMs);
+            setInterval(() => { render(); checkTutorialProgress(); updateMarketStatus(); updateEventUI(); renderActiveFlavor(); }, CONFIG.uiTickMs);
             setInterval(calculateAfkEarnings, 60000);
             setInterval(checkWheelCooldown, 1000);
             checkDailyReward(); // Initial check
@@ -4343,6 +4721,41 @@
                 document.getElementById('btnConfirmRebirth').addEventListener('click', handleRebirth);
             }
 
+            if(btnCrafting) btnCrafting.addEventListener('click', openCraftingModal);
+            if(craftingModal) {
+                craftingModal.querySelector('.close-btn').addEventListener('click', () => craftingModal.classList.add('hidden'));
+                document.getElementById('btnCombine').addEventListener('click', combineLiquids);
+                const slots = craftingModal.querySelectorAll('.crafting-slot');
+                slots.forEach(slot => {
+                    slot.addEventListener('dragover', (e) => { e.preventDefault(); slot.classList.add('over'); });
+                    slot.addEventListener('dragleave', () => slot.classList.remove('over'));
+                    slot.addEventListener('drop', handleDrop);
+                    slot.addEventListener('click', () => { // Clear slot on click
+                        delete slot.dataset.liquidId; slot.innerHTML = '';
+                    });
+                });
+            }
+
+            if(btnPrestige) btnPrestige.addEventListener('click', openPrestigeModal);
+            if(prestigeModal) {
+                prestigeModal.querySelector('.close-btn').addEventListener('click', () => {
+                    prestigeModal.classList.add('hidden');
+                });
+                document.getElementById('btnConfirmPrestige').addEventListener('click', handlePrestige);
+                prestigeModal.querySelector('#prestigeUpgradesGrid').addEventListener('click', (e) => {
+                    if (e.target.classList.contains('buy-prestige-btn')) buyPrestigeUpgrade(e.target.dataset.id);
+                });
+            }
+
+
+            
+            if(btnConfig) btnConfig.addEventListener('click', ()=> {
+              if(configModal) configModal.classList.remove('hidden');
+              chkSmoke.checked = state.settings.smokeEnabled;
+              chkClickNumbers.checked = state.settings.clickNumbersEnabled;
+              musicVolumeSlider.value = state.settings.musicVolume;
+              sfxVolumeSlider.value = state.settings.sfxVolume;
+            });
 
             
             if(btnConfig) btnConfig.addEventListener('click', ()=> {
@@ -4519,6 +4932,21 @@
                                 showToast('No tienes suficientes Sigmacoins.', 'error');
                             }
                         }
+                    } else if (gemFosoIndex !== undefined) {
+                        const index = parseInt(gemFosoIndex, 10);
+                        const item = GEM_FOSOS[index];
+                        if (!state.gemFososOwned.includes(index)) {
+                            if (state.gems >= item.cost) {
+                                state.gems -= item.cost;
+                                state.gemFososOwned.push(index);
+                                showToast(`¡Foso de Gema comprado! Bonus de ganancias +5%`, 'success');
+                                playSound('buySfx');
+                            } else {
+                                showToast('No tienes suficientes gemas.', 'error');
+                            }
+                        }
+                    } else if (flavorId) {
+                        buyShopFlavor(flavorId);
                     } else if (upgradeType) {
                         const level = state.upgradeLevels[upgradeType] || 0;
                         const upgrades = { autoclicker: AUTOCLICKER_UPGRADES, battery: BATTERY_UPGRADES, critical: CRITICAL_UPGRADES }[upgradeType];
