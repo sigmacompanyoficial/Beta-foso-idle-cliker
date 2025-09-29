@@ -149,6 +149,29 @@
   to   { transform: translate(-50%, -80px) scale(2.5); opacity: 0; }
 }
 
+/* --- Toast (Notificaciones) Estilo "Senior" --- */
+#toastContainer {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  z-index: 10002;
+  align-items: center;
+}
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--panel); color: #eef6ff;
+  padding: 10px 16px; border-radius: 10px;
+  border: 1px solid rgba(100, 116, 139, 0.4);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  font-weight: 600; font-size: 14px;
+  animation: toastIn 0.3s ease forwards, toastOut 0.3s ease 1.7s forwards;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
 @keyframes smokeUp {
   0% {
     transform: translate(-50%, 0) scale(0.8);
@@ -311,6 +334,27 @@
     from { transform: translateY(0); opacity: 1; }
     to   { transform: translateY(-60px); opacity: 0; }
 }
+
+/* Animación de vibración para combo máximo */
+@keyframes combo-shake {
+  0%, 100% { transform: translate(-1px, 1px) rotate(-1deg); }
+  25% { transform: translate(1px, 1px) rotate(1deg); }
+  50% { transform: translate(1px, -1px) rotate(-1deg); }
+  75% { transform: translate(-1px, -1px) rotate(1deg); }
+}
+.foso-combo-max {
+    animation: combo-shake 0.2s infinite;
+}
+
+/* Lluvia de Monedas */
+.coin-rain {
+    position: fixed; top: -50px; left: 0; width: 100%; height: 100vh;
+    pointer-events: none; z-index: 10003;
+}
+.coin {
+    position: absolute; font-size: 24px; animation: fall 5s linear forwards;
+}
+@keyframes fall { from { top: -50px; } to { top: 100vh; transform: rotate(720deg); } }
 
 
 /* Humo negro para foso dañado */
@@ -1915,30 +1959,6 @@
   </div>
 </div>
 
-<!-- Toast Container -->
-<div id="toastContainer" style="
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 9999;
-"></div>
-
-<!-- Modal AFK -->
-<div id="afkModal" class="modal hidden">
-  <div class="modal-content">
-    <span class="close-btn">&times;</span>
-    <h2 data-lang="afk_upgrades_title">⏰ Mejoras AFK</h2>
-    <p id="afkInfo"></p>
-    <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
-      <button id="btnUpgradeAFK" class="mata-btn" data-lang="upgrade">⬆️ Mejorar</button>
-      <button id="btnClaimAFK" class="mata-btn" data-lang="claim">💰 Reclamar</button>
-    </div>
-  </div>
-</div>
-
 <!-- Modal Ruleta -->
 <div id="wheelModal" class="modal hidden">
     <div class="modal-content">
@@ -2034,6 +2054,29 @@
             <div id="blackMarketGrid" class="shopGrid" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"></div>
         </div>
     </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toastContainer"></div>
+
+<!-- Modal AFK -->
+<div id="afkModal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+        <div class="modal-title" data-lang="afk_upgrades_title">⏰ Mejoras AFK</div>
+        <button class="close-btn" data-close>&times;</button>
+    </div>
+    <div class="modal-body" style="text-align: center;">
+        <p id="afkInfo" style="margin-bottom: 15px;"></p>
+        <div style="display:flex;gap:12px;justify-content:center;">
+            <button id="btnUpgradeAFK" class="mata-btn" data-lang="upgrade">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+                Mejorar
+            </button>
+            <button id="btnClaimAFK" class="mata-btn" style="background: var(--accent);" data-lang="claim">💰 Reclamar</button>
+        </div>
+    </div>
+  </div>
 </div>
 
 
@@ -2650,6 +2693,7 @@
             rechargeBaseSec: 60,
             eventInterval: 2 * 60 * 1000, // Check for event every 2 minutes
         };
+        CONFIG.overheatCps = 13; // Límite de clics por segundo
 
         const ACHIEVEMENTS = {
             CLICK_1: { id: 'CLICK_1', name: "Iniciado", description: "Haz 1 clic.", icon: "👆", reward: "+1% por clic (permanente)" },
@@ -2833,6 +2877,7 @@
             lastEventCheck: 0
         };
 
+
         // Audio elements
         let bgMusic, clickSfx, buySfx, successSfx, errorSfx, chestOpenSfx;
         let musicStarted = false;
@@ -2937,6 +2982,7 @@
         let eventInterval = null;
         let currentMaintenanceStep = 0;
         let tutorialHighlights = [];
+
 
         function translateUI() {
             const lang = state.lang || 'es';
@@ -3356,7 +3402,14 @@
                 maintenanceBarFill.style.backgroundPosition = `${position}% 0`;
             }
             // Animación de vibración y humo
-            centralFoso.classList.toggle('foso-shaking', fosoHealth < 40 && !isBroken);
+            centralFoso.classList.remove('foso-shaking', 'foso-combo-max'); // Limpiar clases de animación
+            if (state.combo.count >= CONFIG.comboMax) {
+                centralFoso.classList.add('foso-combo-max');
+            } else if (state.burned) {
+                centralFoso.classList.add('foso-shaking');
+            } else {
+                centralFoso.classList.toggle('foso-shaking', fosoHealth < 40 && !isBroken);
+            }
             if (centralScreen) {
                 centralScreen.setAttribute('fill', isBroken ? '#c0392b' : '#000');
             }
@@ -3561,6 +3614,7 @@
             if (state.burned) {
                 showToast('El foso está quemado. Compra/selecciona otro.', "info");
                 return;
+
             }
             if (state.battery <= 0) {
                 showToast('Batería agotada.', "info");
@@ -3574,6 +3628,7 @@
                 return;
             }
 
+            state.clicksThisSecond = (state.clicksThisSecond || 0) + 1;
             updateCombo();
 
             const basePer = FOSOS[state.activeFosoIndex]?.perClick || 1; // Ganancia base del foso
@@ -3715,42 +3770,23 @@
 
 
         function showToast(message, type = "info", duration = 3000) {
-            const container = document.getElementById("toastContainer");
-            if (!container) return;
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
 
-            const toast = document.createElement("div");
-            toast.textContent = message;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+            const colors = { success: '#27ae60', error: '#e74c3c', warning: '#f39c12', info: '#3498db' };
 
-            toast.style.padding = "10px 16px";
-            toast.style.borderRadius = "12px";
-            toast.style.fontWeight = "bold";
-            toast.style.color = "#fff";
-            toast.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
-            toast.style.opacity = "0";
-            toast.style.transition = "opacity 0.3s, transform 0.3s";
-            toast.style.transform = "translateY(-10px)";
+            toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span> ${message}`;
+            toast.style.borderLeft = `4px solid ${colors[type] || '#3498db'}`;
 
-            if (type === "success") {
-                toast.style.background = "#27ae60";
-                playSound('successSfx');
-            } else if (type === "error") {
-                toast.style.background = "#e74c3c";
-                playSound('errorSfx');
-            } else if (type === "warning") {
-                toast.style.background = "#f39c12";
-            } else toast.style.background = "#3498db";
+            if (type === 'success') playSound('successSfx');
+            if (type === 'error') playSound('errorSfx');
 
             container.appendChild(toast);
 
-            requestAnimationFrame(() => {
-                toast.style.opacity = "1";
-                toast.style.transform = "translateY(0)";
-            });
-
             setTimeout(() => {
-                toast.style.opacity = "0";
-                toast.style.transform = "translateY(-10px)";
-                setTimeout(() => toast.remove(), 300);
+                toast.remove();
             }, duration);
         }
 
@@ -4613,10 +4649,45 @@
             startTutorial();
 
             setInterval(saveState, CONFIG.autosaveMs);
+
+            // Intervalo para la mecánica de quemado
+            setInterval(() => {
+                if ((state.clicksThisSecond || 0) > CONFIG.overheatCps) {
+                    state.burned = true;
+                    showToast('¡Has quemado el foso! Necesita mantenimiento.', 'error');
+                    render();
+                }
+                state.clicksThisSecond = 0;
+            }, 1000);
+
             setInterval(() => { render(); checkTutorialProgress(); updateMarketStatus(); updateEventUI(); renderActiveFlavor(); }, CONFIG.uiTickMs);
             setInterval(calculateAfkEarnings, 60000);
             setInterval(checkWheelCooldown, 1000);
             checkDailyReward(); // Initial check
+
+            // Lluvia de monedas periódica
+            setInterval(() => {
+                const rainContainer = document.createElement('div');
+                rainContainer.className = 'coin-rain';
+                document.body.appendChild(rainContainer);
+
+                for (let i = 0; i < 50; i++) {
+                    const coin = document.createElement('div');
+                    coin.className = 'coin';
+                    coin.textContent = 'Σ';
+                    coin.style.left = `${Math.random() * 100}vw`;
+                    coin.style.animationDelay = `${Math.random() * 4}s`;
+                    coin.style.fontSize = `${Math.random() * 16 + 12}px`;
+                    coin.style.opacity = `${Math.random() * 0.5 + 0.5}`;
+                    rainContainer.appendChild(coin);
+                }
+
+                showToast("¡Lluvia de Sigmacoins!", "success", 4000);
+
+                setTimeout(() => {
+                    rainContainer.remove();
+                }, 5000); // Duración de la animación + delay
+            }, 20 * 60 * 1000); // 20 minutos
 
             eventInterval = setInterval(triggerRandomEvent, CONFIG.eventInterval);
             if (Date.now() > state.market.nextUpdate) {
@@ -4835,6 +4906,7 @@
             if(afkModal) afkModal.querySelector('.close-btn').addEventListener('click', () => afkModal.classList.add('hidden'));
             if(btnClaimAFK) btnClaimAFK.addEventListener('click', claimAfkEarnings);
             if(btnUpgradeAFK) btnUpgradeAFK.addEventListener('click', upgradeAfk);
+            afkModal.querySelectorAll('[data-close]').forEach(btn => btn.addEventListener('click', () => afkModal.classList.add('hidden')));
 
             if(btnWheel) {
                 btnWheel.addEventListener('click', () => {
@@ -4918,6 +4990,11 @@
                         if (state.fososOwned.includes(index)) {
                             state.activeFosoIndex = index;
                             showToast(`Foso ${item.name} equipado.`, 'info');
+                            // Al equipar un foso nuevo, se "arregla" si el anterior estaba quemado
+                            if (state.burned) {
+                                state.burned = false;
+                                showToast('Foso nuevo equipado, ¡listo para usar!', 'success');
+                            }
                         } else {
                             if (state.sig >= currentCost) {
                                 state.sig -= currentCost;
